@@ -1,11 +1,12 @@
 ---
 import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 
 interface Props {
   title: string;
   description: string;
-  path: string; // z.B. "/gespraeche/"
-  image?: string; // absolute oder site-relative OG-Image-URL
+  path: string; // bereits base-path-bewusster Pfad, siehe Layout.astro::fullPath
+  image?: string; // site-relativer Pfad (ohne Unterpfad) für das OG-Image
   type?: 'website' | 'article' | 'video.other';
   noindex?: boolean;
 }
@@ -20,8 +21,9 @@ const {
 } = Astro.props;
 
 const canonicalUrl = new URL(path, siteConfig.siteUrl).toString();
-const imageUrl = new URL(image, siteConfig.siteUrl).toString();
-const fullTitle = path === '/' ? title : `${title} · ${siteConfig.projectName}`;
+const imageUrl = new URL(withBase(image), siteConfig.siteUrl).toString();
+const isHome = path === withBase('/');
+const fullTitle = isHome ? title : `${title} · ${siteConfig.projectName}`;
 ---
 
 <title>{fullTitle}</title>

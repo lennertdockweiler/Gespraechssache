@@ -4,6 +4,7 @@ import EpisodeCard from '@/components/EpisodeCard.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { getCollection } from 'astro:content';
 import { categories, siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 
 const episodes = (await getCollection('episodes')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -13,8 +14,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
-    { '@type': 'ListItem', position: 2, name: 'Gespräche', item: siteConfig.siteUrl + '/gespraeche/' },
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Gespräche', item: siteConfig.siteUrl + withBase('/gespraeche/') },
   ],
 };
 ---

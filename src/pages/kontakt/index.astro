@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 ---
 
 <Layout
@@ -15,7 +16,7 @@ import { siteConfig } from '@/config/site';
 
       <p class="mt-6 text-stone">
         Für Gastvorschläge nutze bitte das{' '}
-        <a href="/gast-vorschlagen/" class="text-ink underline decoration-line hover:text-accent">
+        <a href={withBase('/gast-vorschlagen/')} class="text-ink underline decoration-line hover:text-accent">
           Gast-vorschlagen-Formular
         </a>. Für alle anderen Anfragen – Presse, Kooperationen, Sonstiges:
       </p>

@@ -1,5 +1,6 @@
 ---
 import PlaceholderVisual from './PlaceholderVisual.astro';
+import { withBase } from '@/utils/paths';
 ---
 
 <section class="border-b border-line bg-ink text-paper">
@@ -15,13 +16,13 @@ import PlaceholderVisual from './PlaceholderVisual.astro';
       </p>
       <div class="mt-9 flex flex-col gap-3 sm:flex-row">
         <a
-          href="/gespraeche/"
+          href={withBase('/gespraeche/')}
           class="rounded-full bg-paper px-6 py-3 text-center text-sm font-medium text-ink transition-colors hover:bg-accent hover:text-paper"
         >
           Gespräche entdecken
         </a>
         <a
-          href="/gast-vorschlagen/"
+          href={withBase('/gast-vorschlagen/')}
           class="rounded-full border border-paper/30 px-6 py-3 text-center text-sm font-medium text-paper transition-colors hover:border-accent-soft hover:text-accent-soft"
         >
           Gast vorschlagen

@@ -10,6 +10,7 @@ import ScrollProgress from '@/components/ScrollProgress.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 
 interface Props {
   title: string;
@@ -44,11 +45,17 @@ const accentStyle = accentOverride
   ? `--color-accent: ${accentOverride.accent}; --color-accent-soft: ${accentOverride.accentSoft};`
   : undefined;
 
+// `path` kommt von den Seiten als logischer Pfad ohne Unterpfad
+// (z.B. "/gespraeche/"). Hier einmal zentral base-path-bewusst gemacht,
+// damit einzelne Seiten das nicht selbst tun müssen.
+const fullPath = withBase(path);
+const homeUrl = siteConfig.siteUrl + withBase('/');
+
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: siteConfig.projectName,
-  url: siteConfig.siteUrl,
+  url: homeUrl,
   description: siteConfig.tagline,
 };
 
@@ -56,7 +63,7 @@ const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: siteConfig.projectName,
-  url: siteConfig.siteUrl,
+  url: homeUrl,
   inLanguage: siteConfig.locale,
 };
 
@@ -68,11 +75,11 @@ const allSchemas = [organizationSchema, websiteSchema, ...structuredData];
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#18140f" />
 
-    <SEO title={title} description={description} path={path} image={image} type={type} noindex={noindex} />
+    <SEO title={title} description={description} path={fullPath} image={image} type={type} noindex={noindex} />
 
     {
       allSchemas.map((schema) => (

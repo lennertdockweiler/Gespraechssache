@@ -4,6 +4,7 @@ import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import EpisodeCard from '@/components/EpisodeCard.astro';
 import { getCollection, getEntry } from 'astro:content';
 import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 
 export async function getStaticPaths() {
   const episodes = await getCollection('episodes');
@@ -35,9 +36,9 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
-    { '@type': 'ListItem', position: 2, name: 'Gespräche', item: siteConfig.siteUrl + '/gespraeche/' },
-    { '@type': 'ListItem', position: 3, name: episode.data.title, item: siteConfig.siteUrl + path },
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Gespräche', item: siteConfig.siteUrl + withBase('/gespraeche/') },
+    { '@type': 'ListItem', position: 3, name: episode.data.title, item: siteConfig.siteUrl + withBase(path) },
   ],
 };
 
@@ -67,7 +68,7 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
 >
   <article class="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20">
     <nav class="text-xs text-stone" aria-label="Breadcrumb">
-      <a href="/gespraeche/" class="hover:text-accent">Gespräche</a>
+      <a href={withBase('/gespraeche/')} class="hover:text-accent">Gespräche</a>
       <span aria-hidden="true"> / </span>
       <span>{episode.data.title}</span>
     </nav>
@@ -80,7 +81,7 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
     </h1>
     {guest && (
       <p class="mt-4 text-lg text-stone">
-        Mit <a href={`/menschen/${guest.slug}/`} class="text-ink underline decoration-line hover:text-accent">{guest.data.name}</a> · {guest.data.profession}
+        Mit <a href={withBase(`/menschen/${guest.slug}/`)} class="text-ink underline decoration-line hover:text-accent">{guest.data.name}</a> · {guest.data.profession}
       </p>
     )}
 

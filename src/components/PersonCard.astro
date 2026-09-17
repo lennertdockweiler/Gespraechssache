@@ -1,13 +1,14 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import PlaceholderVisual from './PlaceholderVisual.astro';
+import { withBase } from '@/utils/paths';
 
 interface Props {
   person: CollectionEntry<'people'>;
 }
 
 const { person } = Astro.props;
-const href = `/menschen/${person.slug}/`;
+const href = withBase(`/menschen/${person.slug}/`);
 ---
 
 <a href={href} class="group block">

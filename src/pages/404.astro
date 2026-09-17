@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import { withBase } from '@/utils/paths';
 ---
 
 <Layout
@@ -16,7 +17,7 @@ import Layout from '@/layouts/Layout.astro';
       Geschichten muss man eben erst noch finden.
     </p>
     <a
-      href="/"
+      href={withBase('/')}
       class="mt-8 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
     >
       Zur Startseite

@@ -4,6 +4,7 @@ import PersonCard from '@/components/PersonCard.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 
 const people = await getCollection('people');
 
@@ -11,8 +12,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
-    { '@type': 'ListItem', position: 2, name: 'Menschen', item: siteConfig.siteUrl + '/menschen/' },
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Menschen', item: siteConfig.siteUrl + withBase('/menschen/') },
   ],
 };
 ---

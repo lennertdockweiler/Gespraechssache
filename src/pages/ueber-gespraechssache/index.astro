@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 
 const values = [
   'Fehler', 'Umwege', 'Zweifel', 'Entscheidungen', 'Leidenschaften', 'Erfahrungen', 'Lebenswege', 'Erkenntnisse',
@@ -11,8 +12,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
-    { '@type': 'ListItem', position: 2, name: 'Über das Projekt', item: siteConfig.siteUrl + '/ueber-gespraechssache/' },
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Über das Projekt', item: siteConfig.siteUrl + withBase('/ueber-gespraechssache/') },
   ],
 };
 ---

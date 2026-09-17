@@ -11,6 +11,7 @@ import PlatformLinks from './PlatformLinks.astro';
 import Newsletter from './Newsletter.astro';
 import SectionHeading from './SectionHeading.astro';
 import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/paths';
 
 const episodes = (await getCollection('episodes')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -32,7 +33,7 @@ const people = (await getCollection('people')).slice(0, 4);
       title="Gespräche entdecken"
       description="Eine wachsende Sammlung von Interviews mit Menschen, die etwas zu erzählen haben."
     />
-    <a href="/gespraeche/" class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
+    <a href={withBase('/gespraeche/')} class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
       Alle Gespräche ansehen →
     </a>
   </div>
@@ -53,7 +54,7 @@ const people = (await getCollection('people')).slice(0, 4);
       title="Menschen mit Geschichten"
       description="Nicht Prominenz entscheidet, sondern die Geschichte. Ein Ausschnitt der Menschen, die bei Gesprächssache zu Wort kommen."
     />
-    <a href="/menschen/" class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
+    <a href={withBase('/menschen/')} class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
       Alle Menschen ansehen →
     </a>
   </div>
@@ -71,7 +72,7 @@ const people = (await getCollection('people')).slice(0, 4);
       description="Das Straßenformat von Gesprächssache: kurze, spontane Antworten auf eine wiederkehrende Frage."
     />
     <a
-      href="/kurz-gefragt/"
+      href={withBase('/kurz-gefragt/')}
       class="mt-8 inline-block rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
     >
       Kurz gefragt ansehen
@@ -99,7 +100,7 @@ const people = (await getCollection('people')).slice(0, 4);
     Wir suchen nicht nach dem größten Namen, sondern nach Menschen, die etwas zu erzählen haben.
   </p>
   <a
-    href="/gast-vorschlagen/"
+    href={withBase('/gast-vorschlagen/')}
     class="mt-8 inline-block rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-paper transition-opacity hover:opacity-90"
   >
     Gast vorschlagen

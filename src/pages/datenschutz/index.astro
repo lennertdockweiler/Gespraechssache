@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import { withBase } from '@/utils/paths';
 ---
 
 <Layout
@@ -36,7 +37,7 @@ import Layout from '@/layouts/Layout.astro';
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">3. Formular „Gast vorschlagen"</h2>
         <p class="mt-3 text-stone">
-          Über das Formular unter <a href="/gast-vorschlagen/" class="underline decoration-line hover:text-accent">/gast-vorschlagen/</a>
+          Über das Formular unter <a href={withBase('/gast-vorschlagen/')} class="underline decoration-line hover:text-accent">/gast-vorschlagen/</a>
           werden Name, E-Mail-Adresse und freiwillige Angaben zur vorgeschlagenen Person
           übermittelt, um den Vorschlag zu bearbeiten und ggf. Kontakt aufzunehmen. In V1 ist noch
           kein Versand-Backend angebunden (siehe README.md). Sobald ein Dienst angebunden wird,

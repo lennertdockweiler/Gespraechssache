@@ -2,6 +2,7 @@
 import { getEntry } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import PlaceholderVisual from './PlaceholderVisual.astro';
+import { withBase } from '@/utils/paths';
 
 interface Props {
   episode: CollectionEntry<'episodes'>;
@@ -10,7 +11,7 @@ interface Props {
 
 const { episode } = Astro.props;
 const guest = await getEntry(episode.data.guest);
-const href = `/gespraeche/${episode.slug}/`;
+const href = withBase(`/gespraeche/${episode.slug}/`);
 const searchable = `${episode.data.title} ${guest?.data.name ?? ''} ${guest?.data.profession ?? ''} ${episode.data.category}`.toLowerCase();
 ---
 

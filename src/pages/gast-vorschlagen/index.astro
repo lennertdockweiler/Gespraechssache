@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
 
 const steps = [
   { title: 'Kontakt', description: 'Du oder jemand anderes schlägt einen Gast über dieses Formular vor.' },
@@ -15,8 +16,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
-    { '@type': 'ListItem', position: 2, name: 'Gast vorschlagen', item: siteConfig.siteUrl + '/gast-vorschlagen/' },
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Gast vorschlagen', item: siteConfig.siteUrl + withBase('/gast-vorschlagen/') },
   ],
 };
 ---
