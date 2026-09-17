@@ -12,7 +12,7 @@ import sitemap from '@astrojs/sitemap';
 // Links laufen bereits base-path-bewusst über src/utils/paths.ts und
 // brauchen dafür keine weitere Anpassung.
 const SITE_URL = 'https://lennertdockweiler.github.io';
-const BASE_PATH = '/Gespr-chssache';
+const BASE_PATH = '/gespraechssache';
 
 export default defineConfig({
   site: SITE_URL,
