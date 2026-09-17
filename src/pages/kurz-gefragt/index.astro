@@ -35,11 +35,23 @@ const breadcrumbSchema = {
 
     <div class="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
       {
-        clips.map((clip) => (
-          <div class="hover-media rounded-lg">
-            <PlaceholderVisual aspect="vertical" label={clip.data.question} sublabel={clip.data.personLabel} class="rounded-lg" />
-          </div>
-        ))
+        clips.map((clip) => {
+          // Sobald ein Clip veröffentlicht ist, führt die Kachel direkt zum
+          // Original auf der jeweiligen Plattform (Instagram vor TikTok vor
+          // YouTube Shorts) statt nur den Platzhalter anzuzeigen.
+          const externalUrl = clip.data.instagramUrl ?? clip.data.tiktokUrl ?? clip.data.youtubeShortUrl;
+          const Tag = externalUrl ? 'a' : 'div';
+          return (
+            <Tag
+              class="hover-media block rounded-lg"
+              href={externalUrl}
+              target={externalUrl ? '_blank' : undefined}
+              rel={externalUrl ? 'noopener noreferrer' : undefined}
+            >
+              <PlaceholderVisual aspect="vertical" label={clip.data.question} sublabel={clip.data.personLabel} class="rounded-lg" />
+            </Tag>
+          );
+        })
       }
     </div>
 
