@@ -1,0 +1,37 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { siteConfig } from '@/config/site';
+---
+
+<Layout
+  title="Kontakt"
+  description="Kontakt zu Gesprächssache – für Presse, Kooperationen oder allgemeine Anfragen."
+  path="/kontakt/"
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <div class="max-w-xl" data-reveal>
+      <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">Kontakt</p>
+      <h1 class="mt-2 font-serif text-4xl text-ink sm:text-5xl">Sag hallo.</h1>
+
+      <p class="mt-6 text-stone">
+        Für Gastvorschläge nutze bitte das{' '}
+        <a href="/gast-vorschlagen/" class="text-ink underline decoration-line hover:text-accent">
+          Gast-vorschlagen-Formular
+        </a>. Für alle anderen Anfragen – Presse, Kooperationen, Sonstiges:
+      </p>
+
+      {siteConfig.contactEmail ? (
+        <a
+          href={`mailto:${siteConfig.contactEmail}`}
+          class="mt-6 inline-block rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
+        >
+          {siteConfig.contactEmail}
+        </a>
+      ) : (
+        <p class="mt-6 rounded-lg border border-dashed border-line px-4 py-3 text-sm text-stone">
+          Kontakt-E-Mail folgt in Kürze. (TODO: contactEmail in src/config/site.ts eintragen.)
+        </p>
+      )}
+    </div>
+  </div>
+</Layout>

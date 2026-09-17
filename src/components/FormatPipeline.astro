@@ -1,0 +1,57 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const steps = [
+  {
+    label: 'Gespräch',
+    duration: '1–4 Stunden',
+    description: 'Das vollständige, weitgehend ungeschnittene Interview. Tiefe und Kontext.',
+  },
+  {
+    label: 'Best of',
+    duration: '20–45 Minuten',
+    description: 'Die stärksten Fragen, Antworten und Momente – zugänglich zusammengeschnitten.',
+  },
+  {
+    label: 'Shorts',
+    duration: '30–90 Sekunden',
+    description: 'Einzelne Ausschnitte für Instagram, TikTok und YouTube Shorts.',
+  },
+  {
+    label: 'Podcast',
+    duration: 'unterwegs hören',
+    description: 'Das ganze Gespräch als Audio – für Spotify, Apple Podcasts & Co.',
+  },
+];
+---
+
+<section class="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+  <SectionHeading
+    eyebrow="Ein Gespräch, viele Formate"
+    title="Ein Mensch. Ein Gespräch. Viele Perspektiven."
+    description="Aus jedem Interview entsteht ein ganzes Ökosystem an Inhalten – vom langen Original bis zum kurzen Clip."
+    align="center"
+    class="mx-auto"
+  />
+
+  <ol class="mt-16 grid gap-0 sm:grid-cols-4" data-reveal data-reveal-delay="120">
+    {
+      steps.map((step, i) => (
+        <li class="relative flex flex-col items-center gap-3 px-4 text-center">
+          {i > 0 && (
+            <span
+              class="absolute left-0 top-6 hidden h-px w-full -translate-x-1/2 bg-line sm:block"
+              aria-hidden="true"
+            />
+          )}
+          <span class="relative flex h-12 w-12 items-center justify-center rounded-full border border-line bg-paper font-mono text-sm text-accent">
+            {i + 1}
+          </span>
+          <h3 class="font-serif text-xl text-ink">{step.label}</h3>
+          <p class="font-mono text-[0.65rem] uppercase tracking-label text-stone">{step.duration}</p>
+          <p class="text-sm text-stone">{step.description}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

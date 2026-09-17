@@ -1,0 +1,82 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import EpisodeCard from '@/components/EpisodeCard.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { getCollection } from 'astro:content';
+import { categories, siteConfig } from '@/config/site';
+
+const episodes = (await getCollection('episodes')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Gespräche', item: siteConfig.siteUrl + '/gespraeche/' },
+  ],
+};
+---
+
+<Layout
+  title="Gespräche"
+  description="Alle Long-Form-Gespräche von Gesprächssache: Interviews mit Menschen, die etwas zu erzählen haben – filterbar nach Thema."
+  path="/gespraeche/"
+  structuredData={[breadcrumbSchema]}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <SectionHeading
+      eyebrow="Archiv"
+      title="Gespräche"
+      description="Alle veröffentlichten Interviews an einem Ort – filterbar nach Thema, durchsuchbar nach Gast oder Titel."
+    />
+
+    <div class="mt-10 flex flex-col gap-5 border-y border-line py-6 sm:flex-row sm:items-center sm:justify-between">
+      <div id="episode-filter" class="flex flex-wrap gap-2" role="group" aria-label="Nach Kategorie filtern">
+        <button
+          type="button"
+          data-filter-value="Alle"
+          aria-pressed="true"
+          class="rounded-full border border-ink bg-ink px-4 py-1.5 text-sm text-paper transition-colors"
+        >
+          Alle
+        </button>
+        {
+          categories.map((category) => (
+            <button
+              type="button"
+              data-filter-value={category}
+              aria-pressed="false"
+              class="rounded-full border border-line px-4 py-1.5 text-sm text-ink transition-colors hover:border-accent hover:text-accent"
+            >
+              {category}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="sm:w-64">
+        <label for="episode-search" class="sr-only">Gespräche durchsuchen</label>
+        <input
+          id="episode-search"
+          type="search"
+          placeholder="Suche nach Gast oder Titel …"
+          class="w-full rounded-full border border-line bg-paper px-4 py-2 text-sm text-ink placeholder:text-stone/60 focus:border-accent"
+        />
+      </div>
+    </div>
+
+    <div class="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+      {episodes.map((episode) => <EpisodeCard episode={episode} />)}
+    </div>
+
+    <p id="episode-empty-state" class="hidden py-16 text-center text-stone">
+      Keine Gespräche gefunden. Versuche einen anderen Filter oder Suchbegriff.
+    </p>
+  </div>
+</Layout>
+
+<script>
+  import '@/scripts/episode-filter';
+</script>

@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------------------------------------------------
+   DESIGN TOKENS
+   Zurückhaltende Premium-Farbwelt: warmes Papierweiß, nahezu Schwarz,
+   warme Grau-/Beigetöne und eine einzelne, gedeckte Akzentfarbe (Terrakotta).
+   Zentral definiert, damit sich die Marke später konsistent auf YouTube,
+   Social, Podcast-Cover und Print übertragen lässt.
+   ------------------------------------------------------------------------- */
+:root {
+  --color-paper: #f6f2ea;
+  --color-paper-soft: #efe9dd;
+  --color-ink: #18140f;
+  --color-ink-soft: #2b241d;
+  --color-stone: #635a4a;
+  --color-stone-light: #a89d8c;
+  --color-sand: #e3d9c4;
+  --color-accent: #b1502f;
+  --color-accent-soft: #d98a63;
+  --color-line: #ded3bd;
+
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: 'Inter Variable', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-weight: 480;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-paper);
+}
+
+a {
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* -------------------------------------------------------------------------
+   SCROLL REVEAL
+   Sanftes Fade/Translate für editorialen Bild- und Textreveal.
+   Wird per JS (src/scripts/reveal.ts) durch IntersectionObserver getriggert.
+   Ohne JS bzw. bei reduced motion bleibt Inhalt sofort sichtbar.
+   ------------------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.8s var(--ease-editorial),
+    transform 0.8s var(--ease-editorial);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Subtiler Image-Scale beim Hover, editorial statt verspielt. */
+.hover-media {
+  overflow: hidden;
+}
+
+.hover-media img,
+.hover-media svg {
+  transition: transform 0.7s var(--ease-editorial);
+}
+
+.hover-media:hover img,
+.hover-media:hover svg {
+  transform: scale(1.035);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-media img,
+  .hover-media svg {
+    transition: none;
+  }
+
+  .hover-media:hover img,
+  .hover-media:hover svg {
+    transform: none;
+  }
+}
+
+/* Scroll-Progress-Bar, siehe ScrollProgress.astro */
+#scroll-progress {
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* -------------------------------------------------------------------------
+   PROSE CONTENT
+   Leichtgewichtiges Styling für aus Markdown gerenderten Content (Episoden-
+   und Personen-Beschreibungen), ohne eine zusätzliche Typography-Plugin-
+   Abhängigkeit einzuführen.
+   ------------------------------------------------------------------------- */
+.prose-content {
+  line-height: 1.75;
+}
+
+.prose-content p + p {
+  margin-top: 1.25em;
+}
+
+.prose-content a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--color-line);
+}
+
+.prose-content a:hover {
+  color: var(--color-accent);
+}
+
+.prose-content h2,
+.prose-content h3 {
+  margin-top: 1.75em;
+  margin-bottom: 0.5em;
+}
+
+.prose-content ul,
+.prose-content ol {
+  margin-top: 1em;
+  padding-left: 1.25em;
+}
+
+.prose-content ul {
+  list-style: disc;
+}
+
+.prose-content ol {
+  list-style: decimal;
+}
+
+.prose-content blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: 1em;
+  font-style: italic;
+  color: var(--color-ink-soft);
+}

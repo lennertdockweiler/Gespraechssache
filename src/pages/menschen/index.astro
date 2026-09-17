@@ -1,0 +1,37 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PersonCard from '@/components/PersonCard.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config/site';
+
+const people = await getCollection('people');
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Menschen', item: siteConfig.siteUrl + '/menschen/' },
+  ],
+};
+---
+
+<Layout
+  title="Menschen"
+  description="Die Menschen hinter den Gesprächssache-Interviews: Unternehmer, Wissenschaftlerinnen, Kreative, Sportler und Menschen mit ungewöhnlichen Lebenswegen."
+  path="/menschen/"
+  structuredData={[breadcrumbSchema]}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <SectionHeading
+      eyebrow="Die Gäste"
+      title="Menschen"
+      description="Nicht Prominenz entscheidet, sondern die Geschichte. Hier sind die Menschen, die bei Gesprächssache zu Wort kommen."
+    />
+
+    <div class="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+      {people.map((person) => <PersonCard person={person} />)}
+    </div>
+  </div>
+</Layout>

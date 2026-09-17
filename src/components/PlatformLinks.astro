@@ -1,0 +1,35 @@
+---
+// Plattform-Kacheln für die „Gesprächssache überall hören und sehen"-Sektion.
+// Links kommen zentral aus src/config/site.ts. Solange eine URL fehlt (null),
+// wird die Kachel sichtbar als „bald verfügbar" markiert statt verlinkt.
+import { platforms } from '@/config/site';
+
+const entries = Object.entries(platforms);
+---
+
+<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+  {
+    entries.map(([, platform]) => {
+      const available = Boolean(platform.url);
+      const Tag = available ? 'a' : 'div';
+      return (
+        <Tag
+          href={available ? platform.url! : undefined}
+          target={available ? '_blank' : undefined}
+          rel={available ? 'noopener noreferrer' : undefined}
+          class:list={[
+            'flex flex-col gap-2 rounded-xl border px-4 py-4 transition-colors',
+            available
+              ? 'border-line bg-paper-soft hover:border-accent hover:text-accent'
+              : 'border-dashed border-line/70 text-stone',
+          ]}
+        >
+          <span class="text-sm font-medium">{platform.label}</span>
+          <span class="font-mono text-[0.65rem] uppercase tracking-label text-stone">
+            {available ? 'Öffnen ↗' : 'Bald verfügbar'}
+          </span>
+        </Tag>
+      );
+    })
+  }
+</div>

@@ -1,0 +1,183 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { siteConfig } from '@/config/site';
+
+const steps = [
+  { title: 'Kontakt', description: 'Du oder jemand anderes schlägt einen Gast über dieses Formular vor.' },
+  { title: 'Kurzes Vorgespräch', description: 'Ein unverbindliches Gespräch, um Thema und Geschichte kennenzulernen.' },
+  { title: 'Termin & Drehort', description: 'Gemeinsam wird ein Termin und ein passender Ort gefunden.' },
+  { title: 'Gespräch', description: 'Ausreichend Zeit für ein echtes, ruhiges Gespräch – ohne Zeitdruck.' },
+  { title: 'Veröffentlichung', description: 'Das Gespräch wird geschnitten und in Absprache veröffentlicht.' },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Gast vorschlagen', item: siteConfig.siteUrl + '/gast-vorschlagen/' },
+  ],
+};
+---
+
+<Layout
+  title="Gast vorschlagen"
+  description="Kennst du jemanden, mit dem Gesprächssache sprechen sollte? Schlage einen Gast vor – entscheidend ist nicht Prominenz, sondern eine gute Geschichte."
+  path="/gast-vorschlagen/"
+  structuredData={[breadcrumbSchema]}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <div class="max-w-2xl" data-reveal>
+      <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">Mitmachen</p>
+      <h1 class="mt-2 font-serif text-4xl text-ink sm:text-5xl">
+        Kennst du jemanden, mit dem wir sprechen sollten?
+      </h1>
+      <p class="mt-4 text-lg text-stone">
+        Wir suchen nicht nach dem größten Namen, sondern nach Menschen, die etwas zu erzählen
+        haben.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-14 lg:grid-cols-[1fr_1fr]">
+      <form id="guest-form" class="flex flex-col gap-6" data-reveal>
+        <fieldset class="flex flex-col gap-2">
+          <legend class="mb-1 text-sm font-medium text-ink">Wer schlägst du vor?</legend>
+          <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
+            <label class="flex items-center gap-2 text-sm text-ink">
+              <input
+                type="radio"
+                id="nominate-other"
+                name="nomineeType"
+                value="other"
+                checked
+                class="accent-accent"
+              />
+              Ich schlage eine andere Person vor
+            </label>
+            <label class="flex items-center gap-2 text-sm text-ink">
+              <input
+                type="radio"
+                id="nominate-self"
+                name="nomineeType"
+                value="self"
+                class="accent-accent"
+              />
+              Ich schlage mich selbst vor
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="flex flex-col gap-1.5 text-sm text-ink">
+            Dein Name
+            <input
+              type="text"
+              name="yourName"
+              required
+              class="rounded-lg border border-line bg-paper px-4 py-2.5 focus:border-accent"
+            />
+          </label>
+          <label class="flex flex-col gap-1.5 text-sm text-ink">
+            Deine E-Mail
+            <input
+              type="email"
+              name="yourEmail"
+              required
+              class="rounded-lg border border-line bg-paper px-4 py-2.5 focus:border-accent"
+            />
+          </label>
+        </div>
+
+        <label id="guest-name-field" class="flex flex-col gap-1.5 text-sm text-ink">
+          Name der vorgeschlagenen Person
+          <input
+            type="text"
+            name="nomineeName"
+            class="rounded-lg border border-line bg-paper px-4 py-2.5 focus:border-accent"
+          />
+        </label>
+
+        <label class="flex flex-col gap-1.5 text-sm text-ink">
+          Was macht diese Person?
+          <textarea
+            name="nomineeProfession"
+            rows="2"
+            required
+            class="rounded-lg border border-line bg-paper px-4 py-2.5 focus:border-accent"
+          ></textarea>
+        </label>
+
+        <label class="flex flex-col gap-1.5 text-sm text-ink">
+          Warum sollten wir mit ihr sprechen?
+          <textarea
+            name="reason"
+            rows="3"
+            required
+            class="rounded-lg border border-line bg-paper px-4 py-2.5 focus:border-accent"
+          ></textarea>
+        </label>
+
+        <label class="flex flex-col gap-1.5 text-sm text-ink">
+          Welche Themen oder Erfahrungen wären besonders interessant?
+          <textarea
+            name="topics"
+            rows="3"
+            class="rounded-lg border border-line bg-paper px-4 py-2.5 focus:border-accent"
+          ></textarea>
+        </label>
+
+        <label class="flex flex-col gap-1.5 text-sm text-ink">
+          Website / Social Media / sonstiger Link
+          <input
+            type="text"
+            name="link"
+            placeholder="https://…"
+            class="rounded-lg border border-line bg-paper px-4 py-2.5 focus:border-accent"
+          />
+        </label>
+
+        <button
+          id="guest-form-submit"
+          type="submit"
+          class="mt-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent disabled:opacity-60"
+        >
+          Gast vorschlagen
+        </button>
+        <p id="guest-form-status" class="text-sm text-stone" role="status"></p>
+      </form>
+
+      <div>
+        <SectionHeading eyebrow="Für potenzielle Gäste" title="Wie läuft ein Gespräch ab?" />
+
+        <ol class="mt-8 flex flex-col gap-6">
+          {
+            steps.map((step, i) => (
+              <li class="flex gap-4">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line font-mono text-xs text-accent">
+                  {i + 1}
+                </span>
+                <div>
+                  <h3 class="font-serif text-lg text-ink">{step.title}</h3>
+                  <p class="mt-0.5 text-sm text-stone">{step.description}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="mt-10 rounded-xl border border-line bg-paper-soft p-6">
+          <p class="text-sm text-stone">
+            Ein Gespräch bei Gesprächssache ist kein klassisches Frage-Antwort-Verhör. Wir nehmen
+            uns Zeit, bereiten uns auf jeden Gast vor und schaffen eine entspannte Atmosphäre, in
+            der echtes Interesse an der Person im Mittelpunkt steht.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import '@/scripts/guest-form';
+</script>

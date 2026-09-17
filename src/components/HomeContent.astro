@@ -1,0 +1,107 @@
+---
+// Inhalt der Startseite, ausgelagert aus src/pages/index.astro, damit die
+// Farbvergleichs-Routen (/burgunder/, /petrol/) exakt dieselbe Struktur und
+// exakt dieselben Komponenten verwenden – ohne jegliche Duplikation.
+import Hero from './Hero.astro';
+import FeaturedEpisode from './FeaturedEpisode.astro';
+import EpisodeCard from './EpisodeCard.astro';
+import PersonCard from './PersonCard.astro';
+import FormatPipeline from './FormatPipeline.astro';
+import PlatformLinks from './PlatformLinks.astro';
+import Newsletter from './Newsletter.astro';
+import SectionHeading from './SectionHeading.astro';
+import { getCollection } from 'astro:content';
+
+const episodes = (await getCollection('episodes')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const featured = episodes.find((e) => e.data.featured) ?? episodes[0];
+const recentEpisodes = episodes.filter((e) => e.slug !== featured?.slug).slice(0, 3);
+
+const people = (await getCollection('people')).slice(0, 4);
+---
+
+<Hero />
+
+{featured && <FeaturedEpisode episode={featured} />}
+
+<section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <SectionHeading
+      eyebrow="Archiv"
+      title="Gespräche entdecken"
+      description="Eine wachsende Sammlung von Interviews mit Menschen, die etwas zu erzählen haben."
+    />
+    <a href="/gespraeche/" class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
+      Alle Gespräche ansehen →
+    </a>
+  </div>
+
+  <div class="mt-10 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+    {recentEpisodes.map((episode) => <EpisodeCard episode={episode} />)}
+  </div>
+</section>
+
+<div class="border-t border-line">
+  <FormatPipeline />
+</div>
+
+<section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <SectionHeading
+      eyebrow="Die Gäste"
+      title="Menschen mit Geschichten"
+      description="Nicht Prominenz entscheidet, sondern die Geschichte. Ein Ausschnitt der Menschen, die bei Gesprächssache zu Wort kommen."
+    />
+    <a href="/menschen/" class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
+      Alle Menschen ansehen →
+    </a>
+  </div>
+
+  <div class="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+    {people.map((person) => <PersonCard person={person} />)}
+  </div>
+</section>
+
+<section class="border-t border-line bg-paper-soft" data-reveal>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8">
+    <SectionHeading
+      eyebrow="Kurz gefragt"
+      title="Eine Frage. Fremde Menschen. Unerwartete Antworten."
+      description="Das Straßenformat von Gesprächssache: kurze, spontane Antworten auf eine wiederkehrende Frage."
+    />
+    <a
+      href="/kurz-gefragt/"
+      class="mt-8 inline-block rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
+    >
+      Kurz gefragt ansehen
+    </a>
+  </div>
+</section>
+
+<section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
+  <SectionHeading
+    eyebrow="Überall verfügbar"
+    title="Gesprächssache überall hören und sehen"
+    align="center"
+    class="mx-auto"
+  />
+  <div class="mt-10">
+    <PlatformLinks />
+  </div>
+</section>
+
+<Newsletter />
+
+<section class="mx-auto max-w-content px-5 py-20 text-center sm:px-8 sm:py-28" data-reveal>
+  <h2 class="font-serif text-3xl text-ink sm:text-4xl">Kennst du jemanden, mit dem wir sprechen sollten?</h2>
+  <p class="mx-auto mt-4 max-w-[52ch] text-stone">
+    Wir suchen nicht nach dem größten Namen, sondern nach Menschen, die etwas zu erzählen haben.
+  </p>
+  <a
+    href="/gast-vorschlagen/"
+    class="mt-8 inline-block rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-paper transition-opacity hover:opacity-90"
+  >
+    Gast vorschlagen
+  </a>
+</section>

@@ -1,0 +1,41 @@
+---
+import PlaceholderVisual from './PlaceholderVisual.astro';
+---
+
+<section class="border-b border-line bg-ink text-paper">
+  <div class="mx-auto grid max-w-content gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16">
+    <div data-reveal>
+      <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent-soft">Gesprächssache</p>
+      <h1 class="mt-4 font-serif text-4xl leading-[1.06] sm:text-5xl lg:text-6xl">
+        Jeder Mensch hat etwas zu erzählen.
+      </h1>
+      <p class="mt-6 max-w-[46ch] text-base text-paper/70 sm:text-lg">
+        Gespräche mit Menschen über ihre Arbeit, ihre Entscheidungen, Erfahrungen, Leidenschaften
+        und die Geschichten, die sie geprägt haben.
+      </p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a
+          href="/gespraeche/"
+          class="rounded-full bg-paper px-6 py-3 text-center text-sm font-medium text-ink transition-colors hover:bg-accent hover:text-paper"
+        >
+          Gespräche entdecken
+        </a>
+        <a
+          href="/gast-vorschlagen/"
+          class="rounded-full border border-paper/30 px-6 py-3 text-center text-sm font-medium text-paper transition-colors hover:border-accent-soft hover:text-accent-soft"
+        >
+          Gast vorschlagen
+        </a>
+      </div>
+    </div>
+
+    <div class="hover-media rounded-xl" data-reveal data-reveal-delay="150">
+      <PlaceholderVisual
+        aspect="video"
+        label="Interview-Visual"
+        sublabel="Foto oder Video folgt – einfach austauschbar"
+        class="rounded-xl"
+      />
+    </div>
+  </div>
+</section>

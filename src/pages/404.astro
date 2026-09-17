@@ -1,0 +1,25 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout
+  title="Seite nicht gefunden"
+  description="Diese Seite existiert nicht oder wurde verschoben."
+  path="/404/"
+  noindex={true}
+>
+  <div class="mx-auto flex max-w-content flex-col items-center px-5 py-28 text-center sm:px-8">
+    <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">404</p>
+    <h1 class="mt-3 font-serif text-4xl text-ink sm:text-5xl">Diese Seite gibt es nicht.</h1>
+    <p class="mt-4 max-w-[46ch] text-stone">
+      Vielleicht wurde der Link falsch getippt, oder die Seite ist noch nicht gebaut. Manche
+      Geschichten muss man eben erst noch finden.
+    </p>
+    <a
+      href="/"
+      class="mt-8 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
+    >
+      Zur Startseite
+    </a>
+  </div>
+</Layout>

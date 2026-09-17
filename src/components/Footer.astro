@@ -1,0 +1,77 @@
+---
+import Logo from './Logo.astro';
+import { footerNav, legalNav, platforms, siteConfig } from '@/config/site';
+
+const year = new Date().getFullYear();
+const socialEntries = Object.entries(platforms).filter(([, p]) => p.url);
+---
+
+<footer class="border-t border-line bg-ink text-paper">
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8">
+    <div class="grid gap-12 sm:grid-cols-2 md:grid-cols-4">
+      <div class="md:col-span-1">
+        <Logo class="text-paper" />
+        <p class="mt-4 max-w-[26ch] text-sm text-paper/60">{siteConfig.tagline}</p>
+      </div>
+
+      <div>
+        <h2 class="font-mono text-[0.65rem] uppercase tracking-label text-paper/50">Navigation</h2>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {
+            footerNav.map((item) => (
+              <li>
+                <a href={item.href} class="text-sm text-paper/80 hover:text-accent-soft">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="font-mono text-[0.65rem] uppercase tracking-label text-paper/50">Plattformen</h2>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {
+            socialEntries.length > 0 ? (
+              socialEntries.map(([, p]) => (
+                <li>
+                  <a
+                    href={p.url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm text-paper/80 hover:text-accent-soft"
+                  >
+                    {p.label}
+                  </a>
+                </li>
+              ))
+            ) : (
+              <li class="text-sm text-paper/60">Folgt in Kürze</li>
+            )
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="font-mono text-[0.65rem] uppercase tracking-label text-paper/50">Rechtliches</h2>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {
+            legalNav.map((item) => (
+              <li>
+                <a href={item.href} class="text-sm text-paper/80 hover:text-accent-soft">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-col gap-2 border-t border-paper/10 pt-6 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {year} {siteConfig.projectName}</p>
+      <p>Gestaltet als eigenständige Medienmarke · V1</p>
+    </div>
+  </div>
+</footer>

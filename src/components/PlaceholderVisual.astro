@@ -1,0 +1,57 @@
+---
+// Hochwertiger, klar erkennbarer Platzhalter für Fotos/Videos, die in V1
+// noch fehlen (Portraits, Thumbnails, Street-Clips). Abstrakt/typografisch
+// statt Stockfoto – siehe Vorgabe „keine erfundenen Personen/Bilder".
+//
+// aspect: 'video' (16:9, Episoden-Thumbnails) | 'portrait' (4:5, Personen)
+//         | 'vertical' (9:16, Kurz-gefragt-Clips)
+interface Props {
+  aspect?: 'video' | 'portrait' | 'vertical';
+  label?: string;
+  sublabel?: string;
+  class?: string;
+}
+
+const { aspect = 'video', label = 'Platzhalter', sublabel, class: className = '' } = Astro.props;
+
+const aspectClass = {
+  video: 'aspect-video',
+  portrait: 'aspect-[4/5]',
+  vertical: 'aspect-[9/16]',
+}[aspect];
+---
+
+<div
+  class={`relative w-full ${aspectClass} overflow-hidden bg-sand text-ink ${className}`}
+  role="img"
+  aria-label={`Platzhaltergrafik: ${label}${sublabel ? ', ' + sublabel : ''}`}
+>
+  <svg
+    class="absolute inset-0 h-full w-full opacity-70"
+    viewBox="0 0 400 400"
+    preserveAspectRatio="xMidYMid slice"
+    aria-hidden="true"
+  >
+    <rect width="400" height="400" fill="var(--color-sand)"></rect>
+    <path
+      d="M40 260C40 180 105 120 185 120"
+      stroke="var(--color-stone-light)"
+      stroke-width="2"
+      fill="none"
+    ></path>
+    <path
+      d="M360 150C360 230 295 290 215 290"
+      stroke="var(--color-stone-light)"
+      stroke-width="2"
+      fill="none"
+    ></path>
+    <circle cx="40" cy="260" r="4" fill="var(--color-accent)"></circle>
+    <circle cx="360" cy="150" r="4" fill="var(--color-accent)"></circle>
+  </svg>
+
+  <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
+    <span class="font-mono text-[0.65rem] uppercase tracking-label text-stone">Platzhalter</span>
+    <span class="font-serif text-lg leading-tight text-ink/80 sm:text-xl">{label}</span>
+    {sublabel && <span class="text-xs text-stone">{sublabel}</span>}
+  </div>
+</div>

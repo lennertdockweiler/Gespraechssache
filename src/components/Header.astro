@@ -1,0 +1,108 @@
+---
+import Logo from './Logo.astro';
+import { primaryNav } from '@/config/site';
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string) {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
+  <div class="mx-auto flex max-w-content items-center justify-between px-5 py-4 sm:px-8">
+    <a href="/" class="text-ink transition-opacity hover:opacity-70">
+      <Logo />
+    </a>
+
+    <nav class="hidden items-center gap-8 md:flex" aria-label="Hauptnavigation">
+      {
+        primaryNav.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'text-sm tracking-widish transition-colors hover:text-accent',
+              isActive(item.href) ? 'text-ink font-medium' : 'text-stone',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden items-center gap-4 md:flex">
+      <a
+        href="/gast-vorschlagen/"
+        class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent"
+      >
+        Gast vorschlagen
+      </a>
+    </div>
+
+    <button
+      id="mobile-nav-toggle"
+      type="button"
+      class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink md:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-nav-panel"
+      aria-label="Menü öffnen"
+    >
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+        <path d="M0 1H20" stroke="currentColor" stroke-width="1.5"></path>
+        <path d="M0 7H20" stroke="currentColor" stroke-width="1.5"></path>
+        <path d="M0 13H20" stroke="currentColor" stroke-width="1.5"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div
+    id="mobile-nav-panel"
+    class="fixed inset-0 z-50 hidden bg-ink/40 md:hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Mobile Navigation"
+  >
+    <div class="ml-auto flex h-full w-[82%] max-w-sm flex-col bg-paper px-6 py-6 shadow-xl">
+      <div class="flex items-center justify-between">
+        <Logo />
+        <button
+          id="mobile-nav-close"
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink"
+          aria-label="Menü schließen"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="1.5"></path>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="mt-10 flex flex-col gap-1" aria-label="Mobile Hauptnavigation">
+        {
+          primaryNav.map((item) => (
+            <a
+              href={item.href}
+              class="border-b border-line py-4 font-serif text-2xl text-ink"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <a
+        href="/gast-vorschlagen/"
+        class="mt-8 rounded-full bg-ink px-5 py-3 text-center text-sm font-medium text-paper"
+      >
+        Gast vorschlagen
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  import '@/scripts/mobile-nav';
+</script>

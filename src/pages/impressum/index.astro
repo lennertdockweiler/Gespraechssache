@@ -1,0 +1,51 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout
+  title="Impressum"
+  description="Impressum von Gesprächssache."
+  path="/impressum/"
+  noindex={true}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <div class="max-w-prose" data-reveal>
+      <h1 class="font-serif text-4xl text-ink sm:text-5xl">Impressum</h1>
+
+      <div class="mt-8 rounded-lg border border-dashed border-accent/50 bg-paper-soft p-5 text-sm text-stone">
+        <strong class="text-ink">Platzhalter-Inhalt.</strong> Dieses Impressum muss vor
+        Veröffentlichung mit den tatsächlichen, rechtlich verbindlichen Angaben ergänzt und
+        idealerweise juristisch geprüft werden. Es wurden bewusst keine Adress- oder Kontaktdaten
+        erfunden.
+      </div>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">Angaben gemäß § 5 TMG</h2>
+        <p class="mt-3 text-stone">
+          [TODO: Name und Anschrift des Anbieters/der verantwortlichen Person eintragen]
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">Kontakt</h2>
+        <p class="mt-3 text-stone">
+          E-Mail: [TODO: Kontakt-E-Mail eintragen]<br />
+          Telefon: [TODO: optional]
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">Umsatzsteuer-ID</h2>
+        <p class="mt-3 text-stone">
+          [TODO: Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz eintragen,
+          falls vorhanden]
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+        <p class="mt-3 text-stone">[TODO: Name und Anschrift eintragen]</p>
+      </section>
+    </div>
+  </div>
+</Layout>

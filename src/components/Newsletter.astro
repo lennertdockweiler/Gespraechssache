@@ -1,0 +1,53 @@
+---
+// Zurückhaltende Newsletter-Sektion. Kein Backend in V1 – Formular ist ein
+// Integration Point: sobald ein Anbieter (z.B. ein simpler Double-Opt-in-
+// Dienst) feststeht, wird `action`/`ENDPOINT` hier bzw. in guest-form.ts
+// analog ergänzt.
+---
+
+<section class="border-y border-line bg-paper-soft" data-reveal>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <div class="mx-auto max-w-xl text-center">
+      <h2 class="font-serif text-3xl text-ink sm:text-4xl">Kein Gespräch verpassen.</h2>
+      <p class="mt-3 text-stone">
+        Neue Episoden, ausgewählte Momente und gelegentliche Notizen aus der Arbeit an
+        Gesprächssache – direkt per E-Mail.
+      </p>
+
+      <form
+        id="newsletter-form"
+        class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center"
+      >
+        <label for="newsletter-email" class="sr-only">E-Mail-Adresse</label>
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          required
+          placeholder="deine@email.de"
+          class="w-full rounded-full border border-line bg-paper px-5 py-3 text-sm text-ink placeholder:text-stone/60 focus:border-accent sm:w-72"
+        />
+        <button
+          type="submit"
+          class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
+        >
+          Updates erhalten
+        </button>
+      </form>
+      <p id="newsletter-status" class="mt-3 text-xs text-stone" role="status"></p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Kein Newsletter-Backend in V1 angebunden – UI + Integration Point.
+  const form = document.getElementById('newsletter-form');
+  const status = document.getElementById('newsletter-status');
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (status) {
+      status.textContent =
+        'Newsletter-Anbindung folgt in einer späteren Version. Formular ist technisch vorbereitet.';
+    }
+  });
+</script>

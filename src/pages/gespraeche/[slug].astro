@@ -1,0 +1,170 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
+import EpisodeCard from '@/components/EpisodeCard.astro';
+import { getCollection, getEntry } from 'astro:content';
+import { siteConfig } from '@/config/site';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('episodes');
+  return episodes.map((episode) => ({
+    params: { slug: episode.slug },
+    props: { episode },
+  }));
+}
+
+const { episode } = Astro.props;
+const { Content } = await episode.render();
+const guest = await getEntry(episode.data.guest);
+
+const allEpisodes = await getCollection('episodes');
+const similarEpisodes = allEpisodes
+  .filter((e) => e.slug !== episode.slug && e.data.category === episode.data.category)
+  .slice(0, 3);
+
+const path = `/gespraeche/${episode.slug}/`;
+
+const platformLinks = [
+  { label: 'Geschnittene Version (YouTube)', url: episode.data.youtubeCut },
+  { label: 'Ganzes Gespräch (YouTube)', url: episode.data.youtubeFull },
+  { label: 'Spotify', url: episode.data.spotify },
+  { label: 'Apple Podcasts', url: episode.data.applePodcast },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Gespräche', item: siteConfig.siteUrl + '/gespraeche/' },
+    { '@type': 'ListItem', position: 3, name: episode.data.title, item: siteConfig.siteUrl + path },
+  ],
+};
+
+// VideoObject nur ausspielen, wenn es sich um eine echte, keine Platzhalter-
+// Episode handelt – es werden keine erfundenen Video-/Thumbnail-Daten
+// strukturiert ausgezeichnet.
+const videoSchema = !episode.data.placeholder
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name: episode.data.title,
+      description: episode.data.description,
+      uploadDate: episode.data.date.toISOString(),
+      ...(episode.data.youtubeFull ? { contentUrl: episode.data.youtubeFull } : {}),
+    }
+  : null;
+
+const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcrumbSchema];
+---
+
+<Layout
+  title={episode.data.title}
+  description={episode.data.description}
+  path={path}
+  type="video.other"
+  structuredData={structuredData}
+>
+  <article class="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20">
+    <nav class="text-xs text-stone" aria-label="Breadcrumb">
+      <a href="/gespraeche/" class="hover:text-accent">Gespräche</a>
+      <span aria-hidden="true"> / </span>
+      <span>{episode.data.title}</span>
+    </nav>
+
+    <p class="mt-6 font-mono text-[0.65rem] uppercase tracking-label text-accent">
+      {episode.data.category} · Episode {episode.data.episodeNumber}
+    </p>
+    <h1 class="mt-2 max-w-3xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
+      {episode.data.title}
+    </h1>
+    {guest && (
+      <p class="mt-4 text-lg text-stone">
+        Mit <a href={`/menschen/${guest.slug}/`} class="text-ink underline decoration-line hover:text-accent">{guest.data.name}</a> · {guest.data.profession}
+      </p>
+    )}
+
+    <div class="mt-10 rounded-xl">
+      <PlaceholderVisual aspect="video" label={episode.data.title} sublabel={guest?.data.name} class="rounded-xl" />
+    </div>
+
+    <div class="mt-10 grid gap-12 lg:grid-cols-[1fr_320px]">
+      <div>
+        <div class="prose-content max-w-prose text-ink/90">
+          <Content />
+        </div>
+
+        {episode.data.chapters.length > 0 && (
+          <div class="mt-12">
+            <h2 class="font-serif text-2xl text-ink">Kapitel</h2>
+            <ol class="mt-4 flex flex-col gap-2">
+              {episode.data.chapters.map((chapter) => (
+                <li class="flex gap-4 border-b border-line py-2 text-sm">
+                  <span class="font-mono text-stone">{chapter.timestamp}</span>
+                  <span class="text-ink">{chapter.title}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </div>
+
+      <aside class="flex flex-col gap-6">
+        <div class="rounded-xl border border-line p-6">
+          <dl class="flex flex-col gap-3 text-sm">
+            <div class="flex justify-between">
+              <dt class="text-stone">Datum</dt>
+              <dd class="text-ink">
+                {episode.data.date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-stone">Ganzes Gespräch</dt>
+              <dd class="text-ink">{episode.data.durationFull}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-stone">Best of</dt>
+              <dd class="text-ink">{episode.data.durationCut}</dd>
+            </div>
+          </dl>
+
+          <div class="mt-6 flex flex-col gap-2.5">
+            {platformLinks.map((link) =>
+              link.url ? (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="rounded-full bg-ink px-4 py-2.5 text-center text-sm font-medium text-paper transition-colors hover:bg-accent"
+                >
+                  {link.label} ↗
+                </a>
+              ) : (
+                <span class="rounded-full border border-dashed border-line px-4 py-2.5 text-center text-sm text-stone">
+                  {link.label} · bald verfügbar
+                </span>
+              ),
+            )}
+          </div>
+        </div>
+
+        {episode.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {episode.data.tags.map((tag) => (
+              <span class="rounded-full bg-paper-soft px-3 py-1 text-xs text-stone">{tag}</span>
+            ))}
+          </div>
+        )}
+      </aside>
+    </div>
+
+    {similarEpisodes.length > 0 && (
+      <div class="mt-20 border-t border-line pt-14">
+        <h2 class="font-serif text-2xl text-ink">Ähnliche Gespräche</h2>
+        <div class="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {similarEpisodes.map((e) => <EpisodeCard episode={e} />)}
+        </div>
+      </div>
+    )}
+  </article>
+</Layout>

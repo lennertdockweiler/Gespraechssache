@@ -1,0 +1,98 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
+import EpisodeCard from '@/components/EpisodeCard.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/config/site';
+
+export async function getStaticPaths() {
+  const people = await getCollection('people');
+  return people.map((person) => ({
+    params: { slug: person.slug },
+    props: { person },
+  }));
+}
+
+const { person } = Astro.props;
+const { Content } = await person.render();
+
+const allEpisodes = await getCollection('episodes');
+const episodes = allEpisodes.filter((e) => e.data.guest.id === person.id);
+
+const path = `/menschen/${person.slug}/`;
+
+const socialLinks = [
+  { label: 'Website', url: person.data.website },
+  { label: 'Instagram', url: person.data.socials?.instagram },
+  { label: 'TikTok', url: person.data.socials?.tiktok },
+  { label: 'LinkedIn', url: person.data.socials?.linkedin },
+].filter((link) => link.url);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Menschen', item: siteConfig.siteUrl + '/menschen/' },
+    { '@type': 'ListItem', position: 3, name: person.data.name, item: siteConfig.siteUrl + path },
+  ],
+};
+---
+
+<Layout
+  title={person.data.name}
+  description={`${person.data.name} – ${person.data.profession}. Porträt und Gespräche bei Gesprächssache.`}
+  path={path}
+  structuredData={[breadcrumbSchema]}
+>
+  <article class="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20">
+    <nav class="text-xs text-stone" aria-label="Breadcrumb">
+      <a href="/menschen/" class="hover:text-accent">Menschen</a>
+      <span aria-hidden="true"> / </span>
+      <span>{person.data.name}</span>
+    </nav>
+
+    <div class="mt-8 grid gap-10 lg:grid-cols-[280px_1fr] lg:items-start">
+      <PlaceholderVisual aspect="portrait" label={person.data.name} sublabel={person.data.profession} class="rounded-xl" />
+
+      <div>
+        <h1 class="font-serif text-4xl text-ink sm:text-5xl">{person.data.name}</h1>
+        <p class="mt-2 text-lg text-stone">{person.data.profession}</p>
+
+        {person.data.shortQuote && (
+          <blockquote class="mt-6 border-l-2 border-accent pl-4 font-serif text-xl italic text-ink/80">
+            „{person.data.shortQuote}"
+          </blockquote>
+        )}
+
+        <div class="prose-content mt-6 max-w-prose text-ink/90">
+          <Content />
+        </div>
+
+        {socialLinks.length > 0 && (
+          <div class="mt-6 flex flex-wrap gap-3">
+            {socialLinks.map((link) => (
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rounded-full border border-line px-4 py-2 text-sm text-ink hover:border-accent hover:text-accent"
+              >
+                {link.label} ↗
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+
+    {episodes.length > 0 && (
+      <div class="mt-20 border-t border-line pt-14">
+        <h2 class="font-serif text-2xl text-ink">Gespräche mit {person.data.name}</h2>
+        <div class="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {episodes.map((episode) => <EpisodeCard episode={episode} />)}
+        </div>
+      </div>
+    )}
+  </article>
+</Layout>

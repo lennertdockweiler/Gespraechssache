@@ -1,0 +1,77 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout
+  title="Datenschutz"
+  description="Datenschutzerklärung von Gesprächssache."
+  path="/datenschutz/"
+  noindex={true}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <div class="max-w-prose" data-reveal>
+      <h1 class="font-serif text-4xl text-ink sm:text-5xl">Datenschutzerklärung</h1>
+
+      <div class="mt-8 rounded-lg border border-dashed border-accent/50 bg-paper-soft p-5 text-sm text-stone">
+        <strong class="text-ink">Entwurf, kein Rechtsdokument.</strong> Diese Seite ist ein
+        strukturelles Gerüst für V1 und muss vor Veröffentlichung durch eine tatsächlich
+        rechtssichere, auf die konkret eingesetzten Dienste (Hosting, Formular-Backend,
+        Analyse-Tools, Video-/Podcast-Einbettungen) zugeschnittene Datenschutzerklärung ersetzt
+        bzw. juristisch geprüft werden.
+      </div>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">1. Verantwortlicher</h2>
+        <p class="mt-3 text-stone">[TODO: Name und Anschrift des Verantwortlichen eintragen]</p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">2. Hosting und Server-Logfiles</h2>
+        <p class="mt-3 text-stone">
+          [TODO: Hosting-Anbieter eintragen, sobald final gewählt, sowie Umfang der dort
+          verarbeiteten Server-Logfiles.]
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">3. Formular „Gast vorschlagen"</h2>
+        <p class="mt-3 text-stone">
+          Über das Formular unter <a href="/gast-vorschlagen/" class="underline decoration-line hover:text-accent">/gast-vorschlagen/</a>
+          werden Name, E-Mail-Adresse und freiwillige Angaben zur vorgeschlagenen Person
+          übermittelt, um den Vorschlag zu bearbeiten und ggf. Kontakt aufzunehmen. In V1 ist noch
+          kein Versand-Backend angebunden (siehe README.md). Sobald ein Dienst angebunden wird,
+          muss dieser Abschnitt um den konkreten Anbieter, die Rechtsgrundlage (Art. 6 Abs. 1 lit.
+          b/f DSGVO) und die Speicherdauer ergänzt werden.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">4. Newsletter</h2>
+        <p class="mt-3 text-stone">
+          Die Newsletter-Anmeldung ist aktuell nur als Oberfläche vorbereitet und technisch noch
+          nicht mit einem Versanddienst verbunden. Sobald ein Anbieter angebunden wird, wird diese
+          Erklärung entsprechend ergänzt (inkl. Double-Opt-in-Verfahren und Widerrufsrecht).
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">5. Eingebettete Inhalte (YouTube, Spotify, Apple Podcasts)</h2>
+        <p class="mt-3 text-stone">
+          Sobald Episoden-Seiten echte Video- oder Audio-Einbettungen externer Plattformen
+          enthalten, werden hier die jeweiligen Anbieter, übermittelten Daten und – falls
+          eingesetzt – die verwendete datenschutzfreundliche Einbindung (z.B. Zwei-Klick-Lösung)
+          beschrieben.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">6. Rechte der betroffenen Person</h2>
+        <p class="mt-3 text-stone">
+          Nutzer:innen haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der
+          Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung ihrer
+          personenbezogenen Daten. [TODO: Kontaktweg für die Ausübung dieser Rechte ergänzen.]
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>
