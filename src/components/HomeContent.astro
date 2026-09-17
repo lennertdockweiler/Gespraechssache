@@ -10,6 +10,8 @@ import FormatPipeline from './FormatPipeline.astro';
 import PlatformLinks from './PlatformLinks.astro';
 import Newsletter from './Newsletter.astro';
 import SectionHeading from './SectionHeading.astro';
+import LatestYouTubeVideos from './LatestYouTubeVideos.astro';
+import InstagramFeed from './InstagramFeed.astro';
 import { getCollection } from 'astro:content';
 import { withBase } from '@/utils/paths';
 
@@ -42,6 +44,8 @@ const people = (await getCollection('people')).slice(0, 4);
     {recentEpisodes.map((episode) => <EpisodeCard episode={episode} />)}
   </div>
 </section>
+
+<LatestYouTubeVideos />
 
 <div class="border-t border-line">
   <FormatPipeline />
@@ -79,6 +83,8 @@ const people = (await getCollection('people')).slice(0, 4);
     </a>
   </div>
 </section>
+
+<InstagramFeed />
 
 <section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
   <SectionHeading

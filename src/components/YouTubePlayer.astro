@@ -1,0 +1,50 @@
+---
+// Offizieller YouTube-Embedded-Player, als Lazy-Load-Facade umgesetzt:
+// Zunächst nur ein Standbild (offizielles YouTube-Thumbnail-Bildformat)
+// mit Play-Button; der eigentliche <iframe> (youtube-nocookie.com) wird
+// erst bei Klick/Tastaturaktivierung nachgeladen (src/scripts/youtube-facade.ts).
+// Das spart initiales JavaScript/Requests und vermeidet, dass beim reinen
+// Seitenaufruf bereits Verbindungen zu YouTube aufgebaut werden.
+import { extractYouTubeId } from '@/lib/youtube';
+
+interface Props {
+  url: string;
+  title: string;
+  class?: string;
+}
+
+const { url, title, class: className = '' } = Astro.props;
+const videoId = extractYouTubeId(url);
+---
+
+{
+  videoId && (
+    <div
+      data-yt-facade
+      data-video-id={videoId}
+      role="button"
+      tabindex="0"
+      aria-label={`Video abspielen: ${title}`}
+      class={`group relative aspect-video w-full cursor-pointer overflow-hidden bg-ink ${className}`}
+    >
+      <img
+        src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      <span class="absolute inset-0 flex items-center justify-center bg-ink/25 transition-colors group-hover:bg-ink/10">
+        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-paper/95 text-ink shadow-lg transition-transform group-hover:scale-105">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      </span>
+    </div>
+  )
+}
+
+<script>
+  import '@/scripts/youtube-facade';
+</script>

@@ -5,6 +5,16 @@ on:
     branches: [main]
   # Manuelles Auslösen über den "Run workflow"-Button im Actions-Tab.
   workflow_dispatch:
+  # Regelmäßiger Rebuild: Ersatz für serverseitiges Cache-Revalidation auf
+  # einer rein statischen Seite ohne eigene Serverlaufzeit. Die YouTube-/
+  # Instagram-Integrationen (src/lib/youtube.ts, src/lib/instagram.ts)
+  # rufen die jeweilige API nur beim Build auf, nie bei einem Seitenaufruf
+  # im Browser – dieser Trigger sorgt dafür, dass "neueste Inhalte" auch
+  # ohne einen neuen Push nach spätestens einer Stunde aktualisiert werden.
+  # Solange YOUTUBE_*/INSTAGRAM_*-Secrets (siehe .env.example) nicht gesetzt
+  # sind, ist dieser Lauf ein reiner No-Op-Rebuild ohne externe Requests.
+  schedule:
+    - cron: '0 * * * *'
 
 permissions:
   contents: read
@@ -35,6 +45,14 @@ jobs:
 
       - name: Bauen
         run: npm run build
+        env:
+          # Repository-Secrets, siehe .env.example für Bedeutung/Beschaffung.
+          # Fehlen sie (noch), bauen YouTube-/Instagram-Abschnitte einfach
+          # nicht mit – kein Fehler.
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_CHANNEL_ID: ${{ secrets.YOUTUBE_CHANNEL_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
 
       - name: Pages konfigurieren
         uses: actions/configure-pages@v5

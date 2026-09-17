@@ -71,6 +71,45 @@ Anbindung in `src/scripts/guest-form.ts`, Konstante `ENDPOINT`:
 Der Newsletter (`Newsletter.astro`) ist nach demselben Muster vorbereitet, aber
 noch ohne Anbieter.
 
+## YouTube- und Instagram-Integration
+
+Zwei zusätzliche, rein additive Bereiche laden automatisch Inhalte von den
+offiziellen APIs von YouTube und Instagram – und rendern einfach nichts,
+solange die zugehörigen Environment-Variablen fehlen:
+
+- **„Neu auf dem Kanal"** (Startseite): neueste Video-Uploads über die
+  offizielle **YouTube Data API v3**. Logik in `src/lib/youtube.ts`,
+  Darstellung in `src/components/LatestYouTubeVideos.astro` und
+  `src/components/YouTubePlayer.astro` (Lazy-Load-Facade, echter Embed
+  erst bei Klick, über die datenschutzfreundlichere Domain
+  `youtube-nocookie.com`). Derselbe `YouTubePlayer` wird auch auf
+  Episoden-Detailseiten genutzt, sobald eine Episode `placeholder: false`
+  ist und eine echte `youtubeCut`/`youtubeFull`-URL trägt.
+- **„Gedanken & Begegnungen"** (Startseite): neueste Beiträge über die
+  offizielle **Instagram API with Instagram Login** (Meta Graph API,
+  erfordert einen Instagram Business-/Creator-Account). Logik in
+  `src/lib/instagram.ts`, Darstellung in
+  `src/components/InstagramFeed.astro` (eigene Kachel-Optik, kein
+  Standard-Widget; Klick öffnet den Originalbeitrag auf instagram.com).
+
+Beide Module rufen ihre API **ausschließlich zur Build-Zeit** auf (aus
+Astro-Frontmatter, nie aus Client-JavaScript) – bei einem rein statischen
+Deployment ohne Serverlaufzeit ist das der Weg, um Requests serverseitig zu
+halten und den API-Key/Token niemals ins Client-Bundle zu geben. Weil ein
+Seitenaufruf im Browser nie einen API-Request auslöst, übernimmt der
+`schedule`-Trigger in `.github/workflows/deploy.yml` (stündlicher Rebuild)
+die Rolle der serverseitigen Cache-Revalidation.
+
+Benötigte Environment-Variablen: siehe `.env.example`. Für lokale
+Entwicklung in `.env` eintragen; für das GitHub-Pages-Deployment als
+Repository-Secrets hinterlegen (Settings → Secrets and variables →
+Actions), niemals in `.env.example` oder eine andere committete Datei.
+
+Bekannte Einschränkung: Instagrams `media_url` ist eine befristete,
+signierte CDN-URL. Sie wird bei jedem (geplanten) Rebuild frisch geladen
+und nicht dauerhaft gespeichert/rehostet – bleibt die Seite sehr lange
+ungebaut, kann ein einzelnes Bild bis zum nächsten Rebuild veraltet sein.
+
 ## Plattform-Links / Social Accounts pflegen
 
 Alle externen Links (YouTube, Spotify, Apple Podcasts, Instagram, TikTok, …)

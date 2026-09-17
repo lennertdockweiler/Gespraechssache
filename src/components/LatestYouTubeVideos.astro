@@ -1,0 +1,55 @@
+---
+// Zeigt die neuesten Video-Uploads des Gesprächssache-Hauptkanals, geladen
+// über die offizielle YouTube Data API v3 (src/lib/youtube.ts). Rendert
+// bewusst NICHT, solange YOUTUBE_API_KEY/YOUTUBE_CHANNEL_ID nicht gesetzt
+// sind oder der Abruf fehlschlägt – siehe getLatestChannelVideos().
+import SectionHeading from './SectionHeading.astro';
+import YouTubePlayer from './YouTubePlayer.astro';
+import { getLatestChannelVideos } from '@/lib/youtube';
+
+const videos = await getLatestChannelVideos(3);
+---
+
+{
+  videos.length > 0 && (
+    <section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <SectionHeading
+          eyebrow="YouTube"
+          title="Neu auf dem Kanal"
+          description="Automatisch geladen über die offizielle YouTube Data API – neueste Uploads zuerst."
+        />
+      </div>
+
+      <div class="mt-10 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {videos.map((video) => (
+          <div>
+            <YouTubePlayer
+              url={`https://www.youtube.com/watch?v=${video.videoId}`}
+              title={video.title}
+              class="rounded-lg"
+            />
+            <h3 class="mt-4 font-serif text-xl leading-snug text-ink">{video.title}</h3>
+            <div class="mt-2 flex items-center gap-3 text-xs text-stone">
+              <time datetime={video.publishedAt}>
+                {new Date(video.publishedAt).toLocaleDateString('de-DE', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+            </div>
+            <a
+              href={`https://www.youtube.com/watch?v=${video.videoId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-1 inline-block text-sm font-medium text-accent hover:underline"
+            >
+              Auf YouTube ansehen ↗
+            </a>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}

@@ -56,17 +56,40 @@ import { withBase } from '@/utils/paths';
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">5. Eingebettete Inhalte (YouTube, Spotify, Apple Podcasts)</h2>
+        <h2 class="font-serif text-2xl text-ink">5. YouTube-Einbettungen</h2>
         <p class="mt-3 text-stone">
-          Sobald Episoden-Seiten echte Video- oder Audio-Einbettungen externer Plattformen
-          enthalten, werden hier die jeweiligen Anbieter, übermittelten Daten und – falls
-          eingesetzt – die verwendete datenschutzfreundliche Einbindung (z.B. Zwei-Klick-Lösung)
-          beschrieben.
+          Auf Episoden-Detailseiten und in der Sektion „Neu auf dem Kanal" auf der Startseite
+          kann ein Video über den offiziellen YouTube-Player eingebunden sein. Technisch kommt
+          zunächst nur ein Vorschaubild ohne Verbindung zu YouTube zur Anzeige; erst durch einen
+          bewussten Klick auf das Vorschaubild wird der eigentliche Player von der
+          datenschutzfreundlicheren Domain <code>youtube-nocookie.com</code> nachgeladen (offiziell
+          von YouTube dokumentierte „erweiterter Datenschutzmodus"-Einbindung). Ab diesem Klick
+          verarbeitet Google (Google Ireland Ltd. bzw. Google LLC) u.a. IP-Adresse und
+          Nutzungsdaten gemäß eigener Datenschutzerklärung. Die Vorschaubilder selbst werden über
+          die offizielle, öffentlich erreichbare YouTube-Thumbnail-URL geladen (i.ytimg.com); auch
+          dabei erhält Google die IP-Adresse des Aufrufs. [TODO: Rechtsgrundlage/Einwilligungslösung
+          juristisch festlegen, insbesondere ob eine Consent-Lösung vor dem Laden der
+          Vorschaubilder erforderlich ist.]
         </p>
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">6. Rechte der betroffenen Person</h2>
+        <h2 class="font-serif text-2xl text-ink">6. Instagram-Beiträge („Gedanken &amp; Begegnungen")</h2>
+        <p class="mt-3 text-stone">
+          Sofern konfiguriert, lädt die Startseite in der Sektion „Gedanken &amp; Begegnungen" die
+          neuesten Beiträge des offiziellen Gesprächssache-Instagram-Accounts über die offizielle
+          Instagram-API (Meta Platforms Ireland Ltd. bzw. Meta Platforms, Inc.). Die Abfrage selbst
+          erfolgt serverseitig beim Bauen der Website, nicht im Browser der Besucher:innen. Die
+          angezeigten Bilder werden jedoch direkt von Instagrams eigenen Servern geladen (kein
+          eigenes Hosting) – dadurch erhält Meta bei jedem Seitenaufruf dieser Sektion die
+          IP-Adresse und Nutzungsdaten der Besucher:innen. Ein Klick auf einen Beitrag führt auf
+          die Originalseite auf instagram.com. [TODO: Rechtsgrundlage/Einwilligungslösung
+          juristisch festlegen.]
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">7. Rechte der betroffenen Person</h2>
         <p class="mt-3 text-stone">
           Nutzer:innen haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der
           Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung ihrer

@@ -1,0 +1,52 @@
+---
+// "Gedanken & Begegnungen": eigene, editoriale Kachel-Darstellung der
+// neuesten Beiträge des offiziellen Gesprächssache-Instagram-Accounts,
+// geladen über die offizielle Instagram-/Meta-Graph-API (src/lib/instagram.ts).
+// Bewusst kein klassisches Instagram-Widget – gleiche Karten-/Hover-Sprache
+// wie der Rest der Seite (siehe .hover-media in global.css). Klick öffnet
+// den Originalbeitrag auf instagram.com; Bilder werden nur zur Build-Zeit
+// direkt von Instagrams CDN eingebunden, nicht rehostet.
+//
+// Rendert nichts, solange INSTAGRAM_ACCESS_TOKEN/INSTAGRAM_USER_ID nicht
+// gesetzt sind oder der Abruf fehlschlägt – siehe getLatestInstagramPosts().
+import SectionHeading from './SectionHeading.astro';
+import { getLatestInstagramPosts } from '@/lib/instagram';
+
+const posts = await getLatestInstagramPosts(6);
+---
+
+{
+  posts.length > 0 && (
+    <section class="border-t border-line bg-paper-soft" data-reveal>
+      <div class="mx-auto max-w-content px-5 py-16 sm:px-8">
+        <SectionHeading
+          eyebrow="Instagram"
+          title="Gedanken & Begegnungen"
+          description="Kurze Eindrücke, spontane Begegnungen und Gedanken – automatisch geladen vom offiziellen Gesprächssache-Instagram-Account."
+        />
+
+        <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {posts.map((post) => {
+            const image = post.mediaType === 'VIDEO' ? post.thumbnailUrl : post.mediaUrl;
+            const caption = post.caption ? post.caption.slice(0, 140) : 'Beitrag auf Instagram öffnen';
+            return (
+              <a
+                href={post.permalink}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={caption}
+                class="hover-media group block aspect-square overflow-hidden rounded-lg bg-sand"
+              >
+                {image && <img src={image} alt="" loading="lazy" decoding="async" class="h-full w-full object-cover" />}
+              </a>
+            );
+          })}
+        </div>
+
+        <p class="mt-6 text-xs text-stone">
+          Inhalte von Instagram · ein Klick öffnet den Originalbeitrag auf instagram.com.
+        </p>
+      </div>
+    </section>
+  )
+}

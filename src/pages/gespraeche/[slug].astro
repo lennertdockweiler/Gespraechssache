@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import EpisodeCard from '@/components/EpisodeCard.astro';
+import YouTubePlayer from '@/components/YouTubePlayer.astro';
 import { getCollection, getEntry } from 'astro:content';
 import { siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
@@ -24,6 +25,14 @@ const similarEpisodes = allEpisodes
   .slice(0, 3);
 
 const path = `/gespraeche/${episode.slug}/`;
+
+// Nur bei einer echten (nicht Platzhalter-)Episode mit hinterlegter
+// YouTube-URL den offiziellen Embed anzeigen – sonst bleibt es beim
+// typografischen Platzhalter. Bevorzugt die geschnittene Version, da sie
+// als redaktioneller Einstieg gedacht ist.
+const heroVideoUrl = !episode.data.placeholder
+  ? episode.data.youtubeCut ?? episode.data.youtubeFull ?? null
+  : null;
 
 const platformLinks = [
   { label: 'Geschnittene Version (YouTube)', url: episode.data.youtubeCut },
@@ -86,7 +95,11 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
     )}
 
     <div class="mt-10 rounded-xl">
-      <PlaceholderVisual aspect="video" label={episode.data.title} sublabel={guest?.data.name} class="rounded-xl" />
+      {heroVideoUrl ? (
+        <YouTubePlayer url={heroVideoUrl} title={episode.data.title} class="rounded-xl" />
+      ) : (
+        <PlaceholderVisual aspect="video" label={episode.data.title} sublabel={guest?.data.name} class="rounded-xl" />
+      )}
     </div>
 
     <div class="mt-10 grid gap-12 lg:grid-cols-[1fr_320px]">
