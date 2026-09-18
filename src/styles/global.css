@@ -5,9 +5,10 @@
 /* -------------------------------------------------------------------------
    DESIGN TOKENS
    Zurückhaltende Premium-Farbwelt: warmes Papierweiß, nahezu Schwarz,
-   warme Grau-/Beigetöne und eine einzelne, gedeckte Akzentfarbe (Terrakotta).
-   Zentral definiert, damit sich die Marke später konsistent auf YouTube,
-   Social, Podcast-Cover und Print übertragen lässt.
+   warme Grau-/Beigetöne und eine einzelne, gedeckte Akzentfarbe (Petrol –
+   final entschieden, siehe Git-Historie zum früheren A/B-Vergleich mit
+   Burgunder/Terrakotta). Zentral definiert, damit sich die Marke später
+   konsistent auf YouTube, Social, Podcast-Cover und Print übertragen lässt.
    ------------------------------------------------------------------------- */
 :root {
   --color-paper: #f6f2ea;
@@ -17,8 +18,8 @@
   --color-stone: #635a4a;
   --color-stone-light: #a89d8c;
   --color-sand: #e3d9c4;
-  --color-accent: #b1502f;
-  --color-accent-soft: #d98a63;
+  --color-accent: #35615d;
+  --color-accent-soft: #7fa39f;
   --color-line: #ded3bd;
 
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);

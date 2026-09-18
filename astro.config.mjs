@@ -21,10 +21,7 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false,
     }),
-    sitemap({
-      // Temporäre Farbvergleichs-Routen (noindex) gehören nicht in die Sitemap.
-      filter: (page) => !page.includes('/burgunder/') && !page.includes('/petrol/'),
-    }),
+    sitemap(),
   ],
   trailingSlash: 'always',
   build: {
