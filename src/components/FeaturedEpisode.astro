@@ -1,65 +1,74 @@
 ---
 import { getEntry } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 import PlaceholderVisual from './PlaceholderVisual.astro';
+import YouTubePlayer from './YouTubePlayer.astro';
+import type { GespraechItem } from '@/lib/gespraeche';
 import { withBase } from '@/utils/paths';
 
 interface Props {
-  episode: CollectionEntry<'episodes'>;
+  item: GespraechItem;
 }
 
-const { episode } = Astro.props;
-const guest = await getEntry(episode.data.guest);
-const href = withBase(`/gespraeche/${episode.slug}/`);
+const { item } = Astro.props;
+const guest = item.curated ? await getEntry(item.curated.data.guest) : null;
+const href = withBase(`/gespraeche/${item.slug}/`);
+const showVideo = item.videoId && !item.curated?.data.placeholder;
 ---
 
 <section class="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-24" data-reveal>
   <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">Neuestes Gespräch</p>
 
   <div class="mt-6 grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-12">
-    <a href={href} class="hover-media block rounded-lg">
-      <PlaceholderVisual aspect="video" label={episode.data.title} sublabel={guest?.data.name} />
-    </a>
+    {
+      showVideo ? (
+        <YouTubePlayer url={`https://www.youtube.com/watch?v=${item.videoId}`} title={item.title} class="rounded-lg" />
+      ) : (
+        <a href={href} class="hover-media block rounded-lg">
+          <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} />
+        </a>
+      )
+    }
 
     <div>
       <h2 class="font-serif text-3xl leading-tight text-ink sm:text-4xl">
-        <a href={href} class="hover:text-accent">{episode.data.title}</a>
+        <a href={href} class="hover:text-accent">{item.title}</a>
       </h2>
       <p class="mt-3 text-base text-stone">
-        {guest?.data.name} · {guest?.data.profession}
+        {guest ? `${guest.data.name} · ${guest.data.profession}` : 'Neu vom YouTube-Kanal'}
       </p>
-      <p class="mt-4 max-w-prose text-stone">{episode.data.description}</p>
+      <p class="mt-4 max-w-prose text-stone">{item.teaser}</p>
 
-      <dl class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-stone">
-        <div class="flex items-center gap-1.5">
-          <dt class="font-mono text-[0.65rem] uppercase tracking-label">Ganzes Gespräch</dt>
-          <dd>{episode.data.durationFull}</dd>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <dt class="font-mono text-[0.65rem] uppercase tracking-label">Best of</dt>
-          <dd>{episode.data.durationCut}</dd>
-        </div>
-      </dl>
+      {item.curated && (
+        <dl class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-stone">
+          <div class="flex items-center gap-1.5">
+            <dt class="font-mono text-[0.65rem] uppercase tracking-label">Ganzes Gespräch</dt>
+            <dd>{item.curated.data.durationFull}</dd>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <dt class="font-mono text-[0.65rem] uppercase tracking-label">Best of</dt>
+            <dd>{item.curated.data.durationCut}</dd>
+          </div>
+        </dl>
+      )}
 
       <div class="mt-7 flex flex-wrap gap-3">
-        <a
-          href={href}
-          class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent"
-        >
-          Geschnittene Version ansehen
-        </a>
-        <a
-          href={href}
-          class="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-        >
-          Ganzes Gespräch ansehen
-        </a>
-        <a
-          href={href}
-          class="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-        >
-          Als Podcast hören
-        </a>
+        {item.curated ? (
+          <>
+            <a href={href} class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent">
+              Geschnittene Version ansehen
+            </a>
+            <a href={href} class="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent">
+              Ganzes Gespräch ansehen
+            </a>
+            <a href={href} class="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent">
+              Als Podcast hören
+            </a>
+          </>
+        ) : (
+          <a href={href} class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent">
+            Gespräch ansehen
+          </a>
+        )}
       </div>
     </div>
   </div>

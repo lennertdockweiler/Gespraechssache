@@ -2,13 +2,13 @@
 import Layout from '@/layouts/Layout.astro';
 import EpisodeCard from '@/components/EpisodeCard.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import { getCollection } from 'astro:content';
+import { getGespraeche } from '@/lib/gespraeche';
 import { categories, siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
-const episodes = (await getCollection('episodes')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+// Automatisch aus YouTube geladene Kanal-Uploads, angereichert um
+// redaktionelle Episoden – siehe src/lib/gespraeche.ts.
+const gespraeche = await getGespraeche();
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -69,7 +69,7 @@ const breadcrumbSchema = {
     </div>
 
     <div class="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-      {episodes.map((episode) => <EpisodeCard episode={episode} />)}
+      {gespraeche.map((item) => <EpisodeCard item={item} />)}
     </div>
 
     <p id="episode-empty-state" class="hidden py-16 text-center text-stone">

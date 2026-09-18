@@ -9,23 +9,24 @@ import FormatPipeline from './FormatPipeline.astro';
 import PlatformLinks from './PlatformLinks.astro';
 import Newsletter from './Newsletter.astro';
 import SectionHeading from './SectionHeading.astro';
-import LatestYouTubeVideos from './LatestYouTubeVideos.astro';
 import InstagramFeed from './InstagramFeed.astro';
 import { getCollection } from 'astro:content';
+import { getGespraeche } from '@/lib/gespraeche';
 import { withBase } from '@/utils/paths';
 
-const episodes = (await getCollection('episodes')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
-const featured = episodes.find((e) => e.data.featured) ?? episodes[0];
-const recentEpisodes = episodes.filter((e) => e.slug !== featured?.slug).slice(0, 3);
+// getGespraeche() vereint redaktionelle Episoden mit automatisch über die
+// YouTube Data API geladenen Kanal-Uploads (siehe src/lib/gespraeche.ts) –
+// ein neues Video erscheint dadurch ohne weiteres Zutun hier.
+const gespraeche = await getGespraeche();
+const featured = gespraeche.find((g) => g.curated?.data.featured) ?? gespraeche[0];
+const recentGespraeche = gespraeche.filter((g) => g.slug !== featured?.slug).slice(0, 3);
 
 const people = (await getCollection('people')).slice(0, 4);
 ---
 
 <Hero />
 
-{featured && <FeaturedEpisode episode={featured} />}
+{featured && <FeaturedEpisode item={featured} />}
 
 <section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
   <div class="flex flex-wrap items-end justify-between gap-4">
@@ -40,11 +41,9 @@ const people = (await getCollection('people')).slice(0, 4);
   </div>
 
   <div class="mt-10 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-    {recentEpisodes.map((episode) => <EpisodeCard episode={episode} />)}
+    {recentGespraeche.map((item) => <EpisodeCard item={item} />)}
   </div>
 </section>
-
-<LatestYouTubeVideos />
 
 <div class="border-t border-line">
   <FormatPipeline />

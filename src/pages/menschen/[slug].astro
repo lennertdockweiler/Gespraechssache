@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import EpisodeCard from '@/components/EpisodeCard.astro';
 import { getCollection } from 'astro:content';
+import { getGespraeche } from '@/lib/gespraeche';
 import { siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
@@ -17,8 +18,8 @@ export async function getStaticPaths() {
 const { person } = Astro.props;
 const { Content } = await person.render();
 
-const allEpisodes = await getCollection('episodes');
-const episodes = allEpisodes.filter((e) => e.data.guest.id === person.id);
+const allGespraeche = await getGespraeche();
+const episodes = allGespraeche.filter((item) => item.curated?.data.guest.id === person.id);
 
 const path = `/menschen/${person.slug}/`;
 
@@ -91,7 +92,7 @@ const breadcrumbSchema = {
       <div class="mt-20 border-t border-line pt-14">
         <h2 class="font-serif text-2xl text-ink">Gespräche mit {person.data.name}</h2>
         <div class="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {episodes.map((episode) => <EpisodeCard episode={episode} />)}
+          {episodes.map((item) => <EpisodeCard item={item} />)}
         </div>
       </div>
     )}

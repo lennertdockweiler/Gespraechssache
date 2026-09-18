@@ -3,43 +3,47 @@ import Layout from '@/layouts/Layout.astro';
 import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import EpisodeCard from '@/components/EpisodeCard.astro';
 import YouTubePlayer from '@/components/YouTubePlayer.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
+import { getGespraeche } from '@/lib/gespraeche';
+import type { GespraechItem } from '@/lib/gespraeche';
 import { siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
 export async function getStaticPaths() {
-  const episodes = await getCollection('episodes');
-  return episodes.map((episode) => ({
-    params: { slug: episode.slug },
-    props: { episode },
+  const items = await getGespraeche();
+  return items.map((item) => ({
+    params: { slug: item.slug },
+    props: { item },
   }));
 }
 
-const { episode } = Astro.props;
-const { Content } = await episode.render();
-const guest = await getEntry(episode.data.guest);
+const { item } = Astro.props as { item: GespraechItem };
+const episode = item.curated; // redaktionelle Anreicherung, falls vorhanden
+const { Content } = episode ? await episode.render() : { Content: null };
+const guest = episode ? await getEntry(episode.data.guest) : null;
 
-const allEpisodes = await getCollection('episodes');
-const similarEpisodes = allEpisodes
-  .filter((e) => e.slug !== episode.slug && e.data.category === episode.data.category)
-  .slice(0, 3);
+const allItems = await getGespraeche();
+const similarItems = item.category
+  ? allItems.filter((i) => i.slug !== item.slug && i.category === item.category).slice(0, 3)
+  : [];
 
-const path = `/gespraeche/${episode.slug}/`;
+const path = `/gespraeche/${item.slug}/`;
 
-// Nur bei einer echten (nicht Platzhalter-)Episode mit hinterlegter
-// YouTube-URL den offiziellen Embed anzeigen – sonst bleibt es beim
-// typografischen Platzhalter. Bevorzugt die geschnittene Version, da sie
-// als redaktioneller Einstieg gedacht ist.
-const heroVideoUrl = !episode.data.placeholder
-  ? episode.data.youtubeCut ?? episode.data.youtubeFull ?? null
+// Nur bei einem echten (nicht Platzhalter-)Video den offiziellen Embed
+// anzeigen – sonst bleibt es beim typografischen Platzhalter. Automatisch
+// aus YouTube geladene Einträge haben praktisch immer eine echte Video-ID.
+const heroVideoUrl = item.videoId && !episode?.data.placeholder
+  ? `https://www.youtube.com/watch?v=${item.videoId}`
   : null;
 
-const platformLinks = [
-  { label: 'Geschnittene Version (YouTube)', url: episode.data.youtubeCut },
-  { label: 'Ganzes Gespräch (YouTube)', url: episode.data.youtubeFull },
-  { label: 'Spotify', url: episode.data.spotify },
-  { label: 'Apple Podcasts', url: episode.data.applePodcast },
-];
+const platformLinks = episode
+  ? [
+      { label: 'Geschnittene Version (YouTube)', url: episode.data.youtubeCut },
+      { label: 'Ganzes Gespräch (YouTube)', url: episode.data.youtubeFull },
+      { label: 'Spotify', url: episode.data.spotify },
+      { label: 'Apple Podcasts', url: episode.data.applePodcast },
+    ]
+  : [];
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -47,21 +51,21 @@ const breadcrumbSchema = {
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
     { '@type': 'ListItem', position: 2, name: 'Gespräche', item: siteConfig.siteUrl + withBase('/gespraeche/') },
-    { '@type': 'ListItem', position: 3, name: episode.data.title, item: siteConfig.siteUrl + withBase(path) },
+    { '@type': 'ListItem', position: 3, name: item.title, item: siteConfig.siteUrl + withBase(path) },
   ],
 };
 
-// VideoObject nur ausspielen, wenn es sich um eine echte, keine Platzhalter-
-// Episode handelt – es werden keine erfundenen Video-/Thumbnail-Daten
-// strukturiert ausgezeichnet.
-const videoSchema = !episode.data.placeholder
+// VideoObject nur ausspielen, wenn es sich um ein echtes (nicht
+// Platzhalter-)Video handelt – es werden keine erfundenen Video-/
+// Thumbnail-Daten strukturiert ausgezeichnet.
+const videoSchema = heroVideoUrl
   ? {
       '@context': 'https://schema.org',
       '@type': 'VideoObject',
-      name: episode.data.title,
-      description: episode.data.description,
-      uploadDate: episode.data.date.toISOString(),
-      ...(episode.data.youtubeFull ? { contentUrl: episode.data.youtubeFull } : {}),
+      name: item.title,
+      description: item.teaser,
+      uploadDate: item.date.toISOString(),
+      contentUrl: heroVideoUrl,
     }
   : null;
 
@@ -69,8 +73,8 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
 ---
 
 <Layout
-  title={episode.data.title}
-  description={episode.data.description}
+  title={item.title}
+  description={item.teaser}
   path={path}
   type="video.other"
   structuredData={structuredData}
@@ -79,14 +83,20 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
     <nav class="text-xs text-stone" aria-label="Breadcrumb">
       <a href={withBase('/gespraeche/')} class="hover:text-accent">Gespräche</a>
       <span aria-hidden="true"> / </span>
-      <span>{episode.data.title}</span>
+      <span>{item.title}</span>
     </nav>
 
-    <p class="mt-6 font-mono text-[0.65rem] uppercase tracking-label text-accent">
-      {episode.data.category} · Episode {episode.data.episodeNumber}
-    </p>
+    {
+      episode ? (
+        <p class="mt-6 font-mono text-[0.65rem] uppercase tracking-label text-accent">
+          {episode.data.category} · Episode {episode.data.episodeNumber}
+        </p>
+      ) : (
+        <p class="mt-6 font-mono text-[0.65rem] uppercase tracking-label text-accent">Neu vom YouTube-Kanal</p>
+      )
+    }
     <h1 class="mt-2 max-w-3xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
-      {episode.data.title}
+      {item.title}
     </h1>
     {guest && (
       <p class="mt-4 text-lg text-stone">
@@ -96,19 +106,19 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
 
     <div class="mt-10 rounded-xl">
       {heroVideoUrl ? (
-        <YouTubePlayer url={heroVideoUrl} title={episode.data.title} class="rounded-xl" />
+        <YouTubePlayer url={heroVideoUrl} title={item.title} class="rounded-xl" />
       ) : (
-        <PlaceholderVisual aspect="video" label={episode.data.title} sublabel={guest?.data.name} class="rounded-xl" />
+        <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} class="rounded-xl" />
       )}
     </div>
 
     <div class="mt-10 grid gap-12 lg:grid-cols-[1fr_320px]">
       <div>
         <div class="prose-content max-w-prose text-ink/90">
-          <Content />
+          {Content ? <Content /> : <p>{item.teaser}</p>}
         </div>
 
-        {episode.data.chapters.length > 0 && (
+        {episode && episode.data.chapters.length > 0 && (
           <div class="mt-12">
             <h2 class="font-serif text-2xl text-ink">Kapitel</h2>
             <ol class="mt-4 flex flex-col gap-2">
@@ -129,40 +139,57 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
             <div class="flex justify-between">
               <dt class="text-stone">Datum</dt>
               <dd class="text-ink">
-                {episode.data.date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}
+                {item.date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}
               </dd>
             </div>
-            <div class="flex justify-between">
-              <dt class="text-stone">Ganzes Gespräch</dt>
-              <dd class="text-ink">{episode.data.durationFull}</dd>
-            </div>
-            <div class="flex justify-between">
-              <dt class="text-stone">Best of</dt>
-              <dd class="text-ink">{episode.data.durationCut}</dd>
-            </div>
+            {episode && (
+              <>
+                <div class="flex justify-between">
+                  <dt class="text-stone">Ganzes Gespräch</dt>
+                  <dd class="text-ink">{episode.data.durationFull}</dd>
+                </div>
+                <div class="flex justify-between">
+                  <dt class="text-stone">Best of</dt>
+                  <dd class="text-ink">{episode.data.durationCut}</dd>
+                </div>
+              </>
+            )}
           </dl>
 
           <div class="mt-6 flex flex-col gap-2.5">
-            {platformLinks.map((link) =>
-              link.url ? (
+            {episode ? (
+              platformLinks.map((link) =>
+                link.url ? (
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-full bg-ink px-4 py-2.5 text-center text-sm font-medium text-paper transition-colors hover:bg-accent"
+                  >
+                    {link.label} ↗
+                  </a>
+                ) : (
+                  <span class="rounded-full border border-dashed border-line px-4 py-2.5 text-center text-sm text-stone">
+                    {link.label} · bald verfügbar
+                  </span>
+                ),
+              )
+            ) : (
+              item.videoId && (
                 <a
-                  href={link.url}
+                  href={`https://www.youtube.com/watch?v=${item.videoId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="rounded-full bg-ink px-4 py-2.5 text-center text-sm font-medium text-paper transition-colors hover:bg-accent"
                 >
-                  {link.label} ↗
+                  Direkt auf YouTube ansehen ↗
                 </a>
-              ) : (
-                <span class="rounded-full border border-dashed border-line px-4 py-2.5 text-center text-sm text-stone">
-                  {link.label} · bald verfügbar
-                </span>
-              ),
+              )
             )}
           </div>
         </div>
 
-        {episode.data.tags.length > 0 && (
+        {episode && episode.data.tags.length > 0 && (
           <div class="flex flex-wrap gap-2">
             {episode.data.tags.map((tag) => (
               <span class="rounded-full bg-paper-soft px-3 py-1 text-xs text-stone">{tag}</span>
@@ -172,11 +199,11 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
       </aside>
     </div>
 
-    {similarEpisodes.length > 0 && (
+    {similarItems.length > 0 && (
       <div class="mt-20 border-t border-line pt-14">
         <h2 class="font-serif text-2xl text-ink">Ähnliche Gespräche</h2>
         <div class="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {similarEpisodes.map((e) => <EpisodeCard episode={e} />)}
+          {similarItems.map((i) => <EpisodeCard item={i} />)}
         </div>
       </div>
     )}

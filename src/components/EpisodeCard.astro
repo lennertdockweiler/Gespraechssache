@@ -1,53 +1,66 @@
 ---
 import { getEntry } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 import PlaceholderVisual from './PlaceholderVisual.astro';
+import type { GespraechItem } from '@/lib/gespraeche';
 import { withBase } from '@/utils/paths';
 
 interface Props {
-  episode: CollectionEntry<'episodes'>;
-  priority?: boolean;
+  item: GespraechItem;
 }
 
-const { episode } = Astro.props;
-const guest = await getEntry(episode.data.guest);
-const href = withBase(`/gespraeche/${episode.slug}/`);
-const searchable = `${episode.data.title} ${guest?.data.name ?? ''} ${guest?.data.profession ?? ''} ${episode.data.category}`.toLowerCase();
+const { item } = Astro.props;
+const guest = item.curated ? await getEntry(item.curated.data.guest) : null;
+const href = withBase(`/gespraeche/${item.slug}/`);
+const searchable = `${item.title} ${guest?.data.name ?? ''} ${guest?.data.profession ?? ''} ${item.category ?? ''}`.toLowerCase();
 ---
 
 <article
   data-episode-card
-  data-category={episode.data.category}
+  data-category={item.category ?? ''}
   data-searchable={searchable}
   class="group"
 >
   <a href={href} class="block">
     <div class="hover-media rounded-lg">
-      <PlaceholderVisual
-        aspect="video"
-        label={episode.data.title}
-        sublabel={guest?.data.name}
-      />
+      {
+        item.thumbnailUrl ? (
+          <img
+            src={item.thumbnailUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="aspect-video w-full rounded-lg object-cover"
+          />
+        ) : (
+          <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} />
+        )
+      }
     </div>
     <div class="mt-4 flex items-start justify-between gap-3">
       <div>
-        <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">
-          {episode.data.category}
-        </p>
+        {item.category && (
+          <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">{item.category}</p>
+        )}
         <h3 class="mt-1 font-serif text-xl leading-snug text-ink group-hover:text-accent">
-          {episode.data.title}
+          {item.title}
         </h3>
-        <p class="mt-1 text-sm text-stone">
-          {guest?.data.name} · {guest?.data.profession}
-        </p>
+        {guest && (
+          <p class="mt-1 text-sm text-stone">
+            {guest.data.name} · {guest.data.profession}
+          </p>
+        )}
       </div>
     </div>
     <div class="mt-2 flex items-center gap-3 text-xs text-stone">
-      <time datetime={episode.data.date.toISOString()}>
-        {episode.data.date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}
+      <time datetime={item.date.toISOString()}>
+        {item.date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}
       </time>
-      <span aria-hidden="true">·</span>
-      <span>{episode.data.durationCut} (Best of)</span>
+      {item.curated && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>{item.curated.data.durationCut} (Best of)</span>
+        </>
+      )}
     </div>
   </a>
 </article>

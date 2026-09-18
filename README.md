@@ -30,16 +30,43 @@ src/
   styles/global.css        Design-Tokens (Farben, Motion) + globale Basisstile
 ```
 
-## Neue Episode hinzufügen
+## Wie neue Gespräche auf die Website kommen
 
-1. Datei anlegen: `src/content/episodes/episode-006.md` (Dateiname = spätere URL
-   `/gespraeche/episode-006/`).
-2. Frontmatter ausfüllen (siehe bestehende Dateien als Vorlage), insbesondere
-   `guest` mit dem Slug einer existierenden Person aus `src/content/people/`.
-3. `placeholder: false` setzen, sobald es sich um eine echte, veröffentlichte
-   Episode handelt (steuert u.a., ob VideoObject-Structured-Data ausgegeben wird).
-4. Fertig — die Episode erscheint automatisch in `/gespraeche/`, in der Filterliste,
-   auf der Personenseite des Gasts und ggf. auf der Startseite (bei `featured: true`).
+`/gespraeche/` wird **automatisch** aus den neuesten Uploads des in
+`YOUTUBE_CHANNEL_ID` konfigurierten YouTube-Kanals befüllt (siehe
+`src/lib/gespraeche.ts`) — ein neu hochgeladenes Video erscheint dort ohne
+jedes weitere Zutun, spätestens nach dem nächsten (stündlichen) Rebuild,
+zunächst mit Titel/Beschreibung/Datum/Thumbnail direkt von YouTube.
+
+Redaktionelle Dateien in `src/content/episodes/*.md` sind **optional** und
+reichern ein bereits automatisch erschienenes Video nachträglich an
+(Kategorie, Gast-Verknüpfung, Kapitel, Zitate, ausführlicher Text, Podcast-
+Links). Eine Episode wird über ihre `youtubeCut`- oder `youtubeFull`-URL mit
+dem passenden Video verknüpft — steht dort dieselbe Video-ID wie in einem
+automatisch geladenen Upload, übernimmt die redaktionelle Datei die
+Anzeige komplett (Auto-Version verschwindet, die kuratierte Version bleibt
+unter derselben URL).
+
+So legst du eine redaktionelle Anreicherung an:
+
+1. Datei anlegen: `src/content/episodes/mein-slug.md` (Dateiname = Slug =
+   spätere URL `/gespraeche/mein-slug/` — **weicht damit von der
+   automatischen `/gespraeche/<videoId>/`-URL ab**; wurde das Video vorher
+   schon automatisch gelistet, ändert sich seine URL beim Anlegen der
+   redaktionellen Datei).
+2. Frontmatter ausfüllen (siehe `episode-001.md` als Vorlage), insbesondere
+   `guest` (Slug einer Person aus `src/content/people/`) und `youtubeCut`/
+   `youtubeFull` mit der echten YouTube-URL des Videos.
+3. `placeholder: false` setzen, sobald es sich um ein echtes, veröffentlichtes
+   Gespräch handelt (steuert u.a., ob VideoObject-Structured-Data ausgegeben
+   wird).
+4. Fertig — erscheint automatisch in `/gespraeche/`, in der Filterliste, auf
+   der Personenseite des Gasts und ggf. als „Neuestes Gespräch" auf der
+   Startseite (bei `featured: true`).
+
+Ohne jede redaktionelle Datei funktioniert `/gespraeche/` ebenfalls — dann
+zeigt jede Seite eben nur das, was YouTube liefert (kein Gast, keine
+Kategorie, kein Podcast-Link), statt einer vollen Magazin-Aufbereitung.
 
 ## Neuen Gast hinzufügen
 
@@ -73,18 +100,19 @@ noch ohne Anbieter.
 
 ## YouTube- und Instagram-Integration
 
-Zwei zusätzliche, rein additive Bereiche laden automatisch Inhalte von den
-offiziellen APIs von YouTube und Instagram – und rendern einfach nichts,
-solange die zugehörigen Environment-Variablen fehlen:
+Zwei zusätzliche Bereiche laden automatisch Inhalte von den offiziellen
+APIs von YouTube und Instagram – und rendern einfach nichts (bzw. fallen
+auf rein redaktionelle Inhalte zurück), solange die zugehörigen
+Environment-Variablen fehlen:
 
-- **„Neu auf dem Kanal"** (Startseite): neueste Video-Uploads über die
-  offizielle **YouTube Data API v3**. Logik in `src/lib/youtube.ts`,
-  Darstellung in `src/components/LatestYouTubeVideos.astro` und
+- **`/gespraeche/`** (Startseite + Übersicht + Detailseiten): neueste
+  Video-Uploads über die offizielle **YouTube Data API v3**, siehe
+  vorherigen Abschnitt „Wie neue Gespräche auf die Website kommen". Logik
+  in `src/lib/youtube.ts` (Abruf) und `src/lib/gespraeche.ts`
+  (Zusammenführung mit redaktionellen Episoden). Darstellung u.a. über
   `src/components/YouTubePlayer.astro` (Lazy-Load-Facade, echter Embed
   erst bei Klick, über die datenschutzfreundlichere Domain
-  `youtube-nocookie.com`). Derselbe `YouTubePlayer` wird auch auf
-  Episoden-Detailseiten genutzt, sobald eine Episode `placeholder: false`
-  ist und eine echte `youtubeCut`/`youtubeFull`-URL trägt.
+  `youtube-nocookie.com`).
 - **„Gedanken & Begegnungen"** (Startseite): neueste Beiträge über die
   offizielle **Instagram API with Instagram Login** (Meta Graph API,
   erfordert einen Instagram Business-/Creator-Account). Logik in
