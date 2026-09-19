@@ -1,0 +1,80 @@
+---
+// Zweiter, bewusst zurückhaltender Bereich neben /gespraeche/: die
+// vollständigen, ungeschnittenen Gespräche vom Uncut-YouTube-Kanal.
+// Automatisch befüllt wie /gespraeche/ (src/lib/youtube.ts), aber ohne
+// redaktionelle Anreicherung und ohne Verknüpfung zu den Best-of-Versionen
+// – ein bewusst einfacher, eigenständiger Nebenbereich. Der Fokus der
+// Website bleibt auf /gespraeche/: kein Eintrag in der Hauptnavigation,
+// nur im Footer sowie als dezenter Link von /gespraeche/ aus verlinkt.
+import Layout from '@/layouts/Layout.astro';
+import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { getLatestUncutVideos } from '@/lib/youtube';
+import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
+
+const videos = await getLatestUncutVideos(24);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Ganze Gespräche', item: siteConfig.siteUrl + withBase('/ganze-gespraeche/') },
+  ],
+};
+---
+
+<Layout
+  title="Ganze Gespräche"
+  description="Die vollständigen, ungeschnittenen Gespräche von Gesprächssache – für alle, die noch tiefer einsteigen wollen."
+  path="/ganze-gespraeche/"
+  structuredData={[breadcrumbSchema]}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <SectionHeading
+      eyebrow="Unkonzentriert. Unbearbeitet. Ganz."
+      title="Ganze Gespräche"
+      description="Für alle, die es genau wissen wollen: hier stehen die Gespräche vollständig und ungeschnitten. Die redaktionell aufbereiteten Highlights gibt es unter „Gespräche“."
+    />
+
+    <p class="mt-6 text-sm text-stone">
+      <a href={withBase('/gespraeche/')} class="text-accent hover:underline">← Zurück zu den Gesprächen</a>
+    </p>
+
+    {
+      videos.length > 0 ? (
+        <div class="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+          {videos.map((video) => (
+            <a href={withBase(`/ganze-gespraeche/${video.videoId}/`)} class="group block">
+              <div class="hover-media rounded-lg">
+                {video.thumbnailUrl ? (
+                  <img
+                    src={video.thumbnailUrl}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    class="aspect-video w-full rounded-lg object-cover"
+                  />
+                ) : (
+                  <PlaceholderVisual aspect="video" label={video.title} />
+                )}
+              </div>
+              <h2 class="mt-4 font-serif text-xl leading-snug text-ink group-hover:text-accent">{video.title}</h2>
+              <time class="mt-1 block text-xs text-stone" datetime={video.publishedAt}>
+                {new Date(video.publishedAt).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="mt-16 rounded-xl border border-line bg-paper-soft p-8 text-center sm:p-10">
+          <p class="text-stone">
+            Hier erscheinen die ganzen Gespräche automatisch, sobald der Uncut-Kanal eingerichtet und
+            veröffentlicht ist.
+          </p>
+        </div>
+      )
+    }
+  </div>
+</Layout>

@@ -8,6 +8,7 @@
 interface ImportMetaEnv {
   readonly YOUTUBE_API_KEY?: string;
   readonly YOUTUBE_CHANNEL_ID_MAIN?: string;
+  readonly YOUTUBE_CHANNEL_ID_UNCUT?: string;
   readonly INSTAGRAM_ACCESS_TOKEN?: string;
   readonly INSTAGRAM_USER_ID?: string;
   // PUBLIC_-Präfix: von Astro/Vite bewusst ins Client-Bundle aufgenommen

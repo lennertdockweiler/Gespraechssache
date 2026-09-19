@@ -50,6 +50,7 @@ export const primaryNav = [
 
 export const footerNav = [
   { label: 'Gespräche', href: '/gespraeche/' },
+  { label: 'Ganze Gespräche', href: '/ganze-gespraeche/' },
   { label: 'Menschen', href: '/menschen/' },
   { label: 'Kurz gefragt', href: '/kurz-gefragt/' },
   { label: 'Gast vorschlagen', href: '/gast-vorschlagen/' },

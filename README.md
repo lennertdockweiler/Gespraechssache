@@ -68,6 +68,24 @@ Ohne jede redaktionelle Datei funktioniert `/gespraeche/` ebenfalls — dann
 zeigt jede Seite eben nur das, was YouTube liefert (kein Gast, keine
 Kategorie, kein Podcast-Link), statt einer vollen Magazin-Aufbereitung.
 
+### Zweiter Bereich: „Ganze Gespräche" (Uncut-Kanal)
+
+`/ganze-gespraeche/` ist ein bewusst einfacher, zweiter Bereich für den
+separaten YouTube-Kanal mit den vollständigen, ungeschnittenen Gesprächen
+(`YOUTUBE_CHANNEL_ID_UNCUT`). Funktioniert nach demselben Automatik-Prinzip
+wie `/gespraeche/` (neues Video → erscheint automatisch), aber **ohne**
+redaktionelle Anreicherung und **ohne** automatische Verknüpfung zu einer
+Best-of-Version auf dem Hauptkanal — das wäre ohne verlässlichen
+gemeinsamen Schlüssel zwischen beiden Kanälen zu fehleranfällig
+(Verwechslungsgefahr).
+
+Der Fokus der Website bleibt bewusst auf `/gespraeche/`: „Ganze Gespräche"
+taucht nicht in der Hauptnavigation auf, nur im Footer sowie als dezenter
+Link am Ende der Gespräche-Übersicht. Wer eine einzelne Best-of-Episode
+manuell mit ihrer Uncut-Version verlinken möchte, trägt deren URL wie
+gehabt im `youtubeFull`-Feld der redaktionellen Episoden-Datei ein (siehe
+oben) — das war schon vorher möglich und bleibt der einzige Verknüpfungsweg.
+
 ## Neuen Gast hinzufügen
 
 1. Datei anlegen: `src/content/people/vorname-nachname.md` (Dateiname = Slug =

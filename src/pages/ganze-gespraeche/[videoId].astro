@@ -1,0 +1,71 @@
+---
+// Detailseite für ein einzelnes, vollständiges Gespräch vom Uncut-Kanal.
+// Bewusst einfach: nur echte Daten von YouTube (Titel, Beschreibung,
+// Datum, Embed), keine redaktionelle Anreicherung, keine Gast-Verknüpfung
+// – siehe src/pages/ganze-gespraeche/index.astro für die Einordnung.
+import Layout from '@/layouts/Layout.astro';
+import YouTubePlayer from '@/components/YouTubePlayer.astro';
+import { getLatestUncutVideos } from '@/lib/youtube';
+import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
+
+export async function getStaticPaths() {
+  const videos = await getLatestUncutVideos(24);
+  return videos.map((video) => ({
+    params: { videoId: video.videoId },
+    props: { video },
+  }));
+}
+
+const { video } = Astro.props;
+const path = `/ganze-gespraeche/${video.videoId}/`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Ganze Gespräche', item: siteConfig.siteUrl + withBase('/ganze-gespraeche/') },
+    { '@type': 'ListItem', position: 3, name: video.title, item: siteConfig.siteUrl + withBase(path) },
+  ],
+};
+
+const videoSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: video.title,
+  description: video.description,
+  uploadDate: video.publishedAt,
+  contentUrl: `https://www.youtube.com/watch?v=${video.videoId}`,
+};
+---
+
+<Layout
+  title={video.title}
+  description={video.description || video.title}
+  path={path}
+  type="video.other"
+  structuredData={[breadcrumbSchema, videoSchema]}
+>
+  <article class="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20">
+    <nav class="text-xs text-stone" aria-label="Breadcrumb">
+      <a href={withBase('/ganze-gespraeche/')} class="hover:text-accent">Ganze Gespräche</a>
+      <span aria-hidden="true"> / </span>
+      <span>{video.title}</span>
+    </nav>
+
+    <p class="mt-6 font-mono text-[0.65rem] uppercase tracking-label text-accent">Ganzes Gespräch</p>
+    <h1 class="mt-2 max-w-3xl font-serif text-4xl leading-tight text-ink sm:text-5xl">{video.title}</h1>
+    <time class="mt-4 block text-sm text-stone" datetime={video.publishedAt}>
+      {new Date(video.publishedAt).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}
+    </time>
+
+    <div class="mt-10 rounded-xl">
+      <YouTubePlayer url={`https://www.youtube.com/watch?v=${video.videoId}`} title={video.title} class="rounded-xl" />
+    </div>
+
+    {video.description && (
+      <div class="prose-content mt-10 max-w-prose whitespace-pre-line text-ink/90">{video.description}</div>
+    )}
+  </article>
+</Layout>

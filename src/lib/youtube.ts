@@ -75,39 +75,41 @@ export function extractYouTubeId(url: string | null | undefined): string | null 
   }
 }
 
-// Modul-lokaler Cache: verhindert, dass innerhalb EINES Build-Laufs
-// mehrere Komponenten (z.B. Startseite + /gespraeche) denselben Request
-// mehrfach auslösen.
-let uploadsPlaylistIdCache: string | null | undefined;
-let latestVideosCache: YouTubeVideo[] | null = null;
+// Modul-lokale Caches, jeweils pro Kanal-ID: verhindern, dass innerhalb
+// EINES Build-Laufs mehrere Komponenten (z.B. Startseite + /gespraeche,
+// oder Haupt- und Uncut-Kanal) denselben Request mehrfach auslösen.
+const uploadsPlaylistIdCache = new Map<string, string | null>();
+const latestVideosCache = new Map<string, YouTubeVideo[]>();
 
 async function getUploadsPlaylistId(apiKey: string, channelId: string): Promise<string | null> {
-  if (uploadsPlaylistIdCache !== undefined) return uploadsPlaylistIdCache;
+  const cached = uploadsPlaylistIdCache.get(channelId);
+  if (cached !== undefined) return cached;
 
   const url = `${API_BASE}/channels?part=contentDetails&id=${encodeURIComponent(channelId)}&key=${apiKey}`;
   const response = await fetch(url);
   if (!response.ok) {
-    uploadsPlaylistIdCache = null;
+    uploadsPlaylistIdCache.set(channelId, null);
     return null;
   }
 
   const data = (await response.json()) as YouTubeChannelsResponse;
-  uploadsPlaylistIdCache = data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads ?? null;
-  return uploadsPlaylistIdCache;
+  const uploadsPlaylistId = data.items?.[0]?.contentDetails?.relatedPlaylists?.uploads ?? null;
+  uploadsPlaylistIdCache.set(channelId, uploadsPlaylistId);
+  return uploadsPlaylistId;
 }
 
 /**
- * Lädt die neuesten Video-Uploads des in YOUTUBE_CHANNEL_ID_MAIN konfigurierten
- * Kanals über `playlistItems.list` auf der Uploads-Playlist des Kanals.
- * Das ist der von Google empfohlene, quota-schonende Weg (1 Unit statt
- * 100 Units bei `search.list`), um "neueste Videos eines Kanals" zu lesen.
+ * Lädt die neuesten Video-Uploads eines YouTube-Kanals über
+ * `playlistItems.list` auf dessen Uploads-Playlist. Das ist der von Google
+ * empfohlene, quota-schonende Weg (1 Unit statt 100 Units bei
+ * `search.list`), um "neueste Videos eines Kanals" zu lesen.
  */
-export async function getLatestChannelVideos(maxResults = 6): Promise<YouTubeVideo[]> {
-  if (latestVideosCache) return latestVideosCache;
+async function getLatestVideosForChannel(channelId: string, maxResults: number): Promise<YouTubeVideo[]> {
+  const cached = latestVideosCache.get(channelId);
+  if (cached) return cached;
 
   const apiKey = import.meta.env.YOUTUBE_API_KEY;
-  const channelId = import.meta.env.YOUTUBE_CHANNEL_ID_MAIN;
-  if (!apiKey || !channelId) return [];
+  if (!apiKey) return [];
 
   try {
     const uploadsPlaylistId = await getUploadsPlaylistId(apiKey, channelId);
@@ -132,7 +134,7 @@ export async function getLatestChannelVideos(maxResults = 6): Promise<YouTubeVid
           '',
       }));
 
-    latestVideosCache = videos;
+    latestVideosCache.set(channelId, videos);
     return videos;
   } catch {
     // Netzwerkfehler, Quota-Überschreitung, ungültiger Key, o.ä.
@@ -140,4 +142,29 @@ export async function getLatestChannelVideos(maxResults = 6): Promise<YouTubeVid
     // könnten – siehe Security-Hinweise im Abschlussbericht.
     return [];
   }
+}
+
+/**
+ * Neueste Uploads des Hauptkanals (YOUTUBE_CHANNEL_ID_MAIN) – treibt die
+ * automatische "Gespräche"-Befüllung an (src/lib/gespraeche.ts).
+ */
+export async function getLatestChannelVideos(maxResults = 6): Promise<YouTubeVideo[]> {
+  const channelId = import.meta.env.YOUTUBE_CHANNEL_ID_MAIN;
+  if (!channelId) return [];
+  return getLatestVideosForChannel(channelId, maxResults);
+}
+
+/**
+ * Neueste Uploads des zweiten, ungeschnittenen Kanals
+ * (YOUTUBE_CHANNEL_ID_UNCUT) – treibt den separaten "Ganze Gespräche"-
+ * Bereich an (src/pages/ganze-gespraeche/). Bewusst kein Versuch, diese
+ * automatisch mit einem Hauptkanal-Video zu verknüpfen (zu fehleranfällig
+ * ohne verlässlichen gemeinsamen Schlüssel) – beide Bereiche laufen
+ * unabhängig nebeneinander; eine Verknüpfung ist weiterhin manuell über
+ * das `youtubeFull`-Feld einer redaktionellen Episode möglich.
+ */
+export async function getLatestUncutVideos(maxResults = 12): Promise<YouTubeVideo[]> {
+  const channelId = import.meta.env.YOUTUBE_CHANNEL_ID_UNCUT;
+  if (!channelId) return [];
+  return getLatestVideosForChannel(channelId, maxResults);
 }

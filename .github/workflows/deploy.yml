@@ -51,6 +51,7 @@ jobs:
           # nicht mit – kein Fehler.
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_CHANNEL_ID_MAIN: ${{ secrets.YOUTUBE_CHANNEL_ID_MAIN }}
+          YOUTUBE_CHANNEL_ID_UNCUT: ${{ secrets.YOUTUBE_CHANNEL_ID_UNCUT }}
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
           INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
           PUBLIC_FORMSPREE_ENDPOINT: ${{ secrets.PUBLIC_FORMSPREE_ENDPOINT }}
