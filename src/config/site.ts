@@ -16,10 +16,8 @@ export interface PlatformLink {
 export const siteConfig = {
   projectName: 'Gesprächssache',
   tagline: 'Interessante Menschen. Gute Fragen. Echte Gespräche.',
-  // Muss mit `site` in astro.config.mjs übereinstimmen (reine Origin, ohne
-  // Unterpfad – der Unterpfad kommt über src/utils/paths.ts::withBase()
-  // dazu). TODO: bei Umzug auf eigene Domain hier anpassen.
-  siteUrl: 'https://lennertdockweiler.github.io',
+  // Muss mit `site` in astro.config.mjs übereinstimmen.
+  siteUrl: 'https://gesprächssache.de',
   // TODO: echte Kontakt-/Presse-Adresse eintragen, sobald vorhanden.
   contactEmail: null as string | null,
   locale: 'de-DE',
