@@ -15,7 +15,7 @@
 // Beschreibung, Datum, Thumbnail), nicht mit erfundenen Inhalten.
 //
 // Damit ist "neues Video hochladen → erscheint auf der Website" End-to-End
-// automatisch, sobald YOUTUBE_API_KEY/YOUTUBE_CHANNEL_ID gesetzt sind
+// automatisch, sobald YOUTUBE_API_KEY/YOUTUBE_CHANNEL_ID_MAIN gesetzt sind
 // (siehe .env.example) – redaktionelle Pflege bleibt optional und
 // erweitert eine automatisch entstandene Seite nachträglich, statt sie zu
 // ersetzen.

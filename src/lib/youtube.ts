@@ -97,7 +97,7 @@ async function getUploadsPlaylistId(apiKey: string, channelId: string): Promise<
 }
 
 /**
- * Lädt die neuesten Video-Uploads des in YOUTUBE_CHANNEL_ID konfigurierten
+ * Lädt die neuesten Video-Uploads des in YOUTUBE_CHANNEL_ID_MAIN konfigurierten
  * Kanals über `playlistItems.list` auf der Uploads-Playlist des Kanals.
  * Das ist der von Google empfohlene, quota-schonende Weg (1 Unit statt
  * 100 Units bei `search.list`), um "neueste Videos eines Kanals" zu lesen.
@@ -106,7 +106,7 @@ export async function getLatestChannelVideos(maxResults = 6): Promise<YouTubeVid
   if (latestVideosCache) return latestVideosCache;
 
   const apiKey = import.meta.env.YOUTUBE_API_KEY;
-  const channelId = import.meta.env.YOUTUBE_CHANNEL_ID;
+  const channelId = import.meta.env.YOUTUBE_CHANNEL_ID_MAIN;
   if (!apiKey || !channelId) return [];
 
   try {

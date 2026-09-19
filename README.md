@@ -33,7 +33,7 @@ src/
 ## Wie neue Gespräche auf die Website kommen
 
 `/gespraeche/` wird **automatisch** aus den neuesten Uploads des in
-`YOUTUBE_CHANNEL_ID` konfigurierten YouTube-Kanals befüllt (siehe
+`YOUTUBE_CHANNEL_ID_MAIN` konfigurierten YouTube-Kanals befüllt (siehe
 `src/lib/gespraeche.ts`) — ein neu hochgeladenes Video erscheint dort ohne
 jedes weitere Zutun, spätestens nach dem nächsten (stündlichen) Rebuild,
 zunächst mit Titel/Beschreibung/Datum/Thumbnail direkt von YouTube.
@@ -161,7 +161,7 @@ automatisch bereitgestellte `GITHUB_TOKEN` darf das nicht). Einrichtung:
    beschränken.
 3. Unter „Permissions" **nur** `Secrets` → `Read and write` aktivieren —
    sonst nichts. So bleibt der Schaden im Fall eines Leaks minimal.
-4. Den erzeugten Token als Repository-Secret `SECRETS_ADMIN_TOKEN`
+4. Den erzeugten Token als Repository-Secret `GH_PAT_SECRETS_WRITE`
    hinterlegen (Settings → Secrets and variables → Actions).
 
 Ohne dieses Secret überspringt der Workflow sich selbst (kein Fehler, siehe
@@ -185,32 +185,29 @@ Auch **Gespräche** lassen sich dort redaktionell anreichern (siehe „Wie
 neue Gespräche auf die Website kommen" oben) — die automatische
 YouTube-Befüllung bleibt davon unberührt.
 
-### Einmalige Einrichtung (nur du kannst das tun)
+### Anmeldung
 
-Sveltia CMS meldet sich über deinen eigenen GitHub-Account an. Dafür ist
-ein kleiner, kostenloser Cloudflare-Worker nötig, der ausschließlich den
-GitHub-Login-Austausch übernimmt (Sveltia selbst bietet keinen
-Rundum-Login-Service an, damit dein Repository-Zugriff nicht über einen
-fremden Dienst läuft):
+Da ausschließlich du selbst das CMS bedienst, meldet sich Sveltia CMS
+direkt über einen persönlichen **GitHub Personal Access Token (PAT)** an,
+den du im Login-Bildschirm von `/admin/` einfügst — ohne OAuth-App oder
+zusätzlichen Cloudflare-Worker (dafür fehlt in `public/admin/config.yml`
+bewusst ein `base_url`-Eintrag unter `backend`, das ist kein Fehler,
+sondern schaltet genau diesen Login-Modus ein).
 
-1. Repository https://github.com/sveltia/sveltia-cms-auth öffnen und der
-   dortigen Anleitung folgen, um den Worker auf Cloudflare zu deployen
-   (Cloudflare-Account nötig, kostenlose Stufe reicht). Danach hast du eine
-   Worker-URL wie `https://sveltia-cms-auth.<dein-name>.workers.dev`.
-2. Auf GitHub eine neue OAuth App anlegen (github.com/settings/developers
-   → „New OAuth App"), Homepage-URL und „Authorization callback URL" auf
-   die Worker-URL setzen (genaue Callback-Pfadangabe siehe README des
-   Worker-Repos).
-3. Die dabei erzeugte Client-ID/Client-Secret als Environment-Variablen im
-   Cloudflare-Worker hinterlegen (Worker-Dashboard → Settings → Variables),
-   inkl. `ALLOWED_DOMAINS=lennertdockweiler.github.io` (verhindert, dass
-   fremde Seiten deinen Worker mitbenutzen).
-4. In `public/admin/config.yml` den Platzhalter `base_url` durch deine
-   Worker-URL ersetzen und committen.
-5. `/admin/` auf der Live-Seite öffnen und mit GitHub anmelden.
+Einrichtung des PAT (einmalig, danach im Browser gespeichert):
 
-Ohne diese Einrichtung ist `/admin/` erreichbar, aber die Anmeldung
-schlägt fehl — der Rest der Website ist davon nicht betroffen.
+1. GitHub → Settings (deines Accounts) → Developer settings →
+   Fine-grained tokens → „Generate new token".
+2. Zugriff **nur** auf dieses eine Repository (`Gespraechssache`)
+   beschränken.
+3. Unter „Permissions" **nur** `Contents` → `Read and write` aktivieren.
+4. Token beim Öffnen von `/admin/` in den Login-Bildschirm einfügen — nicht
+   als Repository-Secret hinterlegen (er ist nur für dich persönlich, im
+   Browser gespeichert, bestimmt für manuelles Bedienen, kein
+   Build-/Deploy-Vorgang braucht ihn).
+
+Läuft der PAT irgendwann ab oder wird widerrufen, einfach einen neuen
+erzeugen und beim nächsten `/admin/`-Login eintragen.
 ## Plattform-Links / Social Accounts pflegen
 
 Alle externen Links (YouTube, Spotify, Apple Podcasts, Instagram, TikTok, …)

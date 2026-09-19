@@ -21,11 +21,11 @@ jobs:
         env:
           CURRENT_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
           # Eigener, minimal berechtigter Token NUR für Secrets-Schreibzugriff
-          # auf dieses Repository – siehe README.md, Abschnitt "Redaktion
-          # (CMS)"/"Instagram-Token" für die Einrichtung. Der von GitHub
+          # auf dieses Repository – siehe README.md, Abschnitt "Instagram-
+          # Token automatisch erneuern" für die Einrichtung. Der von GitHub
           # Actions automatisch bereitgestellte GITHUB_TOKEN reicht dafür
           # nicht aus (kein Schreibzugriff auf Secrets).
-          GH_TOKEN: ${{ secrets.SECRETS_ADMIN_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT_SECRETS_WRITE }}
         run: |
           set -euo pipefail
 
@@ -34,7 +34,7 @@ jobs:
             exit 0
           fi
           if [ -z "${GH_TOKEN:-}" ]; then
-            echo "SECRETS_ADMIN_TOKEN ist nicht gesetzt – kann kein Secret aktualisieren, überspringe." >&2
+            echo "GH_PAT_SECRETS_WRITE ist nicht gesetzt – kann kein Secret aktualisieren, überspringe." >&2
             exit 0
           fi
 
