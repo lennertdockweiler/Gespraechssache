@@ -2,11 +2,11 @@ backend:
   name: github
   repo: lennertdockweiler/Gespraechssache
   branch: main
-  # TODO: URL des selbst gehosteten OAuth-Authenticators eintragen, sobald
-  # unter Cloudflare Workers deployt (siehe README.md, Abschnitt "Redaktion
-  # (CMS)"). Ohne diesen Wert kann sich niemand im CMS anmelden.
-  # Beispiel: base_url: https://sveltia-cms-auth.dein-name.workers.dev
-  base_url: https://TODO-CLOUDFLARE-WORKER-URL-EINTRAGEN
+
+# Anmeldung erfolgt per persönlichem GitHub Access Token (PAT) direkt im
+  # CMS-Login-Screen – kein OAuth-Client/Cloudflare-Worker nötig, da nur
+  # ich (Lennert) das CMS bediene. Details siehe README.md.
+
 
 # Änderungen werden direkt (ohne Review-Umweg über Pull Requests) auf den
 # main-Branch committet – passend zu diesem Ein-Personen-Projekt. Jeder
