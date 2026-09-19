@@ -1,0 +1,162 @@
+backend:
+  name: github
+  repo: lennertdockweiler/Gespraechssache
+  branch: main
+  # TODO: URL des selbst gehosteten OAuth-Authenticators eintragen, sobald
+  # unter Cloudflare Workers deployt (siehe README.md, Abschnitt "Redaktion
+  # (CMS)"). Ohne diesen Wert kann sich niemand im CMS anmelden.
+  # Beispiel: base_url: https://sveltia-cms-auth.dein-name.workers.dev
+  base_url: https://TODO-CLOUDFLARE-WORKER-URL-EINTRAGEN
+
+# Änderungen werden direkt (ohne Review-Umweg über Pull Requests) auf den
+# main-Branch committet – passend zu diesem Ein-Personen-Projekt. Jeder
+# Commit löst automatisch den bestehenden Deploy-Workflow aus.
+publish_mode: simple
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: people
+    label: Menschen
+    folder: src/content/people
+    identifier_field: name
+    slug: '{{fields.name}}'
+    format: frontmatter
+    extension: md
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Beruf / Tätigkeit, name: profession, widget: string }
+      - { label: Kurzzitat, name: shortQuote, widget: string, required: false }
+      - {
+          label: Portrait,
+          name: portrait,
+          widget: image,
+          required: false,
+          hint: 'Wird als 4:5-Portrait ausgespielt. Leer lassen für den typografischen Platzhalter.',
+        }
+      - { label: Website, name: website, widget: string, required: false }
+      - label: Social Links
+        name: socials
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { label: Instagram, name: instagram, widget: string, required: false }
+          - { label: TikTok, name: tiktok, widget: string, required: false }
+          - { label: LinkedIn, name: linkedin, widget: string, required: false }
+          - { label: Website, name: website, widget: string, required: false }
+      - {
+          label: Nur Beispiel-/Platzhalterdaten,
+          name: placeholder,
+          widget: boolean,
+          default: false,
+          hint: 'Bei echten, veröffentlichten Personen deaktivieren.',
+        }
+      - { label: Kurzbiografie, name: body, widget: markdown }
+
+  - name: episodes
+    label: Gespräche (redaktionelle Anreicherung)
+    folder: src/content/episodes
+    identifier_field: title
+    slug: '{{fields.title}}'
+    format: frontmatter
+    extension: md
+    fields:
+      - { label: Titel, name: title, widget: string }
+      - {
+          label: Gast,
+          name: guest,
+          widget: relation,
+          collection: people,
+          search_fields: [name],
+          value_field: '{{slug}}',
+          display_fields: [name],
+        }
+      - { label: Episodennummer, name: episodeNumber, widget: number, value_type: int, min: 1 }
+      - { label: Teaser / Kurzbeschreibung, name: description, widget: text }
+      - { label: Datum, name: date, widget: datetime }
+      - { label: Dauer (ganzes Gespräch), name: durationFull, widget: string, hint: 'z.B. 2:14:30' }
+      - { label: Dauer (Best of), name: durationCut, widget: string, hint: 'z.B. 32:10' }
+      - label: Kategorie
+        name: category
+        widget: select
+        options:
+          - Unternehmertum
+          - Beruf
+          - Wissenschaft
+          - Sport
+          - Kreativität
+          - Lebensgeschichte
+          - Leidenschaft
+          - Gesellschaft
+          - Abenteuer
+      - { label: Tags, name: tags, widget: list, required: false, default: [] }
+      - {
+          label: Eigenes Thumbnail,
+          name: thumbnail,
+          widget: image,
+          required: false,
+          hint: 'Optional – ohne eigenes Bild wird automatisch das YouTube-Thumbnail des verknüpften Videos verwendet.',
+        }
+      - {
+          label: YouTube-URL (Best of / geschnitten),
+          name: youtubeCut,
+          widget: string,
+          required: false,
+          hint: 'Verknüpft diese redaktionelle Datei mit dem passenden, automatisch geladenen YouTube-Video.',
+        }
+      - { label: YouTube-URL (ganzes Gespräch), name: youtubeFull, widget: string, required: false }
+      - { label: Spotify-URL, name: spotify, widget: string, required: false }
+      - { label: Apple-Podcasts-URL, name: applePodcast, widget: string, required: false }
+      - { label: Instagram-Clip-URLs, name: instagramClips, widget: list, required: false, default: [] }
+      - { label: TikTok-Clip-URLs, name: tiktokClips, widget: list, required: false, default: [] }
+      - label: Kapitel
+        name: chapters
+        widget: list
+        required: false
+        default: []
+        fields:
+          - { label: Titel, name: title, widget: string }
+          - { label: Zeitstempel, name: timestamp, widget: string, hint: 'z.B. 00:00' }
+      - {
+          label: Auf Startseite hervorheben,
+          name: featured,
+          widget: boolean,
+          default: false,
+          hint: 'Nur ein Gespräch sollte gleichzeitig hervorgehoben sein.',
+        }
+      - {
+          label: Nur Beispiel-/Platzhalterdaten,
+          name: placeholder,
+          widget: boolean,
+          default: false,
+          hint: 'Bei echten, veröffentlichten Gesprächen deaktivieren.',
+        }
+      - { label: Ausführlicher Text, name: body, widget: markdown, required: false }
+
+  - name: streetInterviews
+    label: Kurz gefragt
+    folder: src/content/streetInterviews
+    identifier_field: question
+    slug: '{{fields.date}}-{{fields.personLabel}}'
+    format: frontmatter
+    extension: md
+    fields:
+      - { label: Frage, name: question, widget: string }
+      - {
+          label: Kurzbeschreibung der Person,
+          name: personLabel,
+          widget: string,
+          hint: 'Anonymisiert, z.B. "34, Handwerker" – keine echten Namen ohne Einwilligung.',
+        }
+      - { label: Datum, name: date, widget: datetime }
+      - { label: Instagram-URL, name: instagramUrl, widget: string, required: false }
+      - { label: TikTok-URL, name: tiktokUrl, widget: string, required: false }
+      - { label: YouTube-Shorts-URL, name: youtubeShortUrl, widget: string, required: false }
+      - {
+          label: Nur Beispiel-/Platzhalterdaten,
+          name: placeholder,
+          widget: boolean,
+          default: false,
+        }

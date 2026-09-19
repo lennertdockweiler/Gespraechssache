@@ -80,23 +80,28 @@ Kategorie, kein Podcast-Link), statt einer vollen Magazin-Aufbereitung.
 
 ## Formular „Gast vorschlagen" anbinden
 
-Das Formular unter `/gast-vorschlagen/` ist technisch vollständig vorbereitet
-(Validierung, Erfolgs-/Fehlerzustand, Feld-Logik für „mich selbst vorschlagen"),
-aber in V1 **nicht an ein Backend angebunden** — es gibt noch keinen Endpunkt.
+Das Formular unter `/gast-vorschlagen/` versendet über **Formspree**
+(https://formspree.io) — ein reiner Form-as-a-Service-Anbieter, der ohne
+eigenen Server mit GitHub Pages funktioniert. Logik in
+`src/scripts/guest-form.ts`, Endpunkt kommt aus der Environment-Variable
+`PUBLIC_FORMSPREE_ENDPOINT` (siehe `.env.example`). Fehlt sie, bleibt das
+Formular wie zuvor unverdrahtet und kommuniziert das transparent, statt
+einen Fehler zu zeigen.
 
-Anbindung in `src/scripts/guest-form.ts`, Konstante `ENDPOINT`:
+Einrichtung:
 
-- **Formspree / ähnliche Form-as-a-Service-Anbieter**: Endpunkt-URL eintragen,
-  fertig.
-- **Netlify Forms** (bei Deployment auf Netlify): `data-netlify="true"` und ein
-  verstecktes `form-name`-Feld zum `<form>` in
-  `src/pages/gast-vorschlagen/index.astro` ergänzen; clientseitiges `fetch` kann
-  dann entfallen, Netlify verarbeitet den nativen Form-POST.
-- **Eigene API-Route**: erfordert einen SSR-fähigen Astro-Adapter (aktuell ist
-  die Seite komplett statisch, `output: "static"`).
+1. Kostenloses Konto auf https://formspree.io anlegen.
+2. Neues Formular erstellen (z.B. „Gesprächssache – Gast vorschlagen").
+3. Die dort angezeigte Endpunkt-URL (`https://formspree.io/f/xxxxxxxx`) als
+   Repository-Secret `PUBLIC_FORMSPREE_ENDPOINT` in GitHub hinterlegen
+   (Settings → Secrets and variables → Actions) und für lokale Entwicklung
+   in `.env` eintragen.
+4. Formspree sendet eingehende Vorschläge standardmäßig per E-Mail an die
+   beim Konto hinterlegte Adresse — dort ggf. Benachrichtigungen/Weiterleitung
+   einrichten.
 
 Der Newsletter (`Newsletter.astro`) ist nach demselben Muster vorbereitet, aber
-noch ohne Anbieter.
+noch ohne Anbieter — dafür wurde bewusst noch kein Dienst festgelegt.
 
 ## YouTube- und Instagram-Integration
 
@@ -138,6 +143,74 @@ signierte CDN-URL. Sie wird bei jedem (geplanten) Rebuild frisch geladen
 und nicht dauerhaft gespeichert/rehostet – bleibt die Seite sehr lange
 ungebaut, kann ein einzelnes Bild bis zum nächsten Rebuild veraltet sein.
 
+### Instagram-Token automatisch erneuern
+
+`.github/workflows/refresh-instagram-token.yml` ruft alle 5 Tage
+automatisch den offiziellen Refresh-Endpunkt auf und aktualisiert das
+Repository-Secret `INSTAGRAM_ACCESS_TOKEN` mit dem neuen, wieder 60 Tage
+gültigen Token — ohne dass du manuell etwas tun musst, sobald einmal
+eingerichtet.
+
+Dafür braucht der Workflow einen zusätzlichen, eigenen Token mit
+Schreibrecht auf Secrets dieses Repositories (der von GitHub Actions
+automatisch bereitgestellte `GITHUB_TOKEN` darf das nicht). Einrichtung:
+
+1. GitHub → Settings (deines Accounts, nicht des Repos) → Developer settings
+   → Fine-grained tokens → „Generate new token".
+2. Zugriff **nur** auf dieses eine Repository (`Gespraechssache`)
+   beschränken.
+3. Unter „Permissions" **nur** `Secrets` → `Read and write` aktivieren —
+   sonst nichts. So bleibt der Schaden im Fall eines Leaks minimal.
+4. Den erzeugten Token als Repository-Secret `SECRETS_ADMIN_TOKEN`
+   hinterlegen (Settings → Secrets and variables → Actions).
+
+Ohne dieses Secret überspringt der Workflow sich selbst (kein Fehler, siehe
+Skript) — die Instagram-Integration funktioniert dann trotzdem weiter, bis
+das ursprüngliche Token nach 60 Tagen abläuft und manuell erneuert werden
+müsste.
+
+## Redaktion (CMS)
+
+Für Menschen und Kurz-gefragt-Clips (die keine externe Datenquelle wie
+YouTube haben) gibt es unter **`/admin/`** eine Editier-Oberfläche:
+[Sveltia CMS](https://github.com/sveltia/sveltia-cms), ein modernes,
+git-basiertes CMS. Es bearbeitet exakt dieselben Markdown-Dateien in
+`src/content/`, committet Änderungen direkt in dieses Repository (löst
+dadurch automatisch den bestehenden Deploy-Workflow aus) und braucht keine
+eigene Datenbank. Die Konfiguration liegt in `public/admin/config.yml` und
+bildet die drei Content-Collections (`people`, `episodes`,
+`streetInterviews`) sowie deren Schemas aus `src/content/config.ts` ab.
+
+Auch **Gespräche** lassen sich dort redaktionell anreichern (siehe „Wie
+neue Gespräche auf die Website kommen" oben) — die automatische
+YouTube-Befüllung bleibt davon unberührt.
+
+### Einmalige Einrichtung (nur du kannst das tun)
+
+Sveltia CMS meldet sich über deinen eigenen GitHub-Account an. Dafür ist
+ein kleiner, kostenloser Cloudflare-Worker nötig, der ausschließlich den
+GitHub-Login-Austausch übernimmt (Sveltia selbst bietet keinen
+Rundum-Login-Service an, damit dein Repository-Zugriff nicht über einen
+fremden Dienst läuft):
+
+1. Repository https://github.com/sveltia/sveltia-cms-auth öffnen und der
+   dortigen Anleitung folgen, um den Worker auf Cloudflare zu deployen
+   (Cloudflare-Account nötig, kostenlose Stufe reicht). Danach hast du eine
+   Worker-URL wie `https://sveltia-cms-auth.<dein-name>.workers.dev`.
+2. Auf GitHub eine neue OAuth App anlegen (github.com/settings/developers
+   → „New OAuth App"), Homepage-URL und „Authorization callback URL" auf
+   die Worker-URL setzen (genaue Callback-Pfadangabe siehe README des
+   Worker-Repos).
+3. Die dabei erzeugte Client-ID/Client-Secret als Environment-Variablen im
+   Cloudflare-Worker hinterlegen (Worker-Dashboard → Settings → Variables),
+   inkl. `ALLOWED_DOMAINS=lennertdockweiler.github.io` (verhindert, dass
+   fremde Seiten deinen Worker mitbenutzen).
+4. In `public/admin/config.yml` den Platzhalter `base_url` durch deine
+   Worker-URL ersetzen und committen.
+5. `/admin/` auf der Live-Seite öffnen und mit GitHub anmelden.
+
+Ohne diese Einrichtung ist `/admin/` erreichbar, aber die Anmeldung
+schlägt fehl — der Rest der Website ist davon nicht betroffen.
 ## Plattform-Links / Social Accounts pflegen
 
 Alle externen Links (YouTube, Spotify, Apple Podcasts, Instagram, TikTok, …)

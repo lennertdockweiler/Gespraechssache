@@ -7,15 +7,16 @@ import { defineCollection, z, reference } from 'astro:content';
 // Der Dateiname (ohne .md) wird als slug verwendet.
 const people = defineCollection({
   type: 'content',
-  schema: ({ image }) =>
+  schema: () =>
     z.object({
       name: z.string(),
       profession: z.string(),
       shortQuote: z.string().optional(),
-      // Portrait als hochgeladenes Bild. Solange keine echten Portraits
-      // vorliegen, bleibt das Feld leer und die Seite zeigt einen
-      // typografischen Platzhalter (siehe PlaceholderVisual.astro).
-      portrait: image().optional(),
+      // Portrait als Pfad relativ zum Public-Ordner (z.B. "/uploads/foo.jpg"),
+      // wie ihn das CMS (Sveltia, siehe public/admin/) beim Hochladen
+      // schreibt. Wird über withBase() ausgegeben. Solange leer, zeigt die
+      // Seite einen typografischen Platzhalter (siehe PlaceholderVisual.astro).
+      portrait: z.string().optional(),
       website: z.string().url().optional(),
       socials: z
         .object({
@@ -41,7 +42,7 @@ const episodeChapter = z.object({
 
 const episodes = defineCollection({
   type: 'content',
-  schema: ({ image }) =>
+  schema: () =>
     z.object({
       title: z.string(),
       guest: reference('people'),
@@ -62,7 +63,8 @@ const episodes = defineCollection({
         'Abenteuer',
       ]),
       tags: z.array(z.string()).default([]),
-      thumbnail: image().optional(),
+      // Wie portrait: Pfad relativ zum Public-Ordner, vom CMS hochgeladen.
+      thumbnail: z.string().optional(),
       // Externe Plattform-Links pro Episode. Bleiben leer, bis die
       // jeweilige Episode tatsächlich veröffentlicht wurde.
       youtubeFull: z.string().url().optional(),

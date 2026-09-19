@@ -13,7 +13,19 @@ const href = withBase(`/menschen/${person.slug}/`);
 
 <a href={href} class="group block">
   <div class="hover-media rounded-lg">
-    <PlaceholderVisual aspect="portrait" label={person.data.name} sublabel={person.data.profession} />
+    {
+      person.data.portrait ? (
+        <img
+          src={withBase(person.data.portrait)}
+          alt={person.data.name}
+          loading="lazy"
+          decoding="async"
+          class="aspect-[4/5] w-full rounded-lg object-cover"
+        />
+      ) : (
+        <PlaceholderVisual aspect="portrait" label={person.data.name} sublabel={person.data.profession} />
+      )
+    }
   </div>
   <h3 class="mt-4 font-serif text-lg text-ink group-hover:text-accent">{person.data.name}</h3>
   <p class="mt-0.5 text-sm text-stone">{person.data.profession}</p>

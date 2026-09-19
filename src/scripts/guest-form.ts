@@ -1,10 +1,13 @@
 // Progressive Enhancement für das Gast-vorschlagen-Formular.
 //
-// V1 hat noch kein Backend angebunden. Dieses Skript ist bewusst so gebaut,
-// dass es EINEN zentralen Punkt gibt, an dem später ein echter Endpunkt
-// (Netlify Forms, Formspree, eine eigene API-Route o.ä.) eingehängt wird –
-// siehe ENDPOINT weiter unten und README.md, Abschnitt "Formular anbinden".
-const ENDPOINT: string | null = null; // TODO: Formular-Endpunkt eintragen.
+// Versand über Formspree (https://formspree.io) – ein reiner Form-as-a-
+// Service-Anbieter, der mit statischem Hosting (GitHub Pages) funktioniert,
+// ohne eigenen Server. Die Formular-Endpunkt-URL ist keine geheime
+// Zugangsdaten (sie steht ohnehin im ausgelieferten Client-Bundle), wird
+// aber trotzdem über eine PUBLIC_-Environment-Variable statt hart codiert
+// gepflegt, siehe .env.example. Ohne gesetzten Wert bleibt das Formular wie
+// zuvor unverdrahtet und kommuniziert das transparent.
+const ENDPOINT: string | null = import.meta.env.PUBLIC_FORMSPREE_ENDPOINT ?? null;
 
 const form = document.getElementById('guest-form') as HTMLFormElement | null;
 const statusEl = document.getElementById('guest-form-status');

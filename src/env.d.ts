@@ -10,6 +10,9 @@ interface ImportMetaEnv {
   readonly YOUTUBE_CHANNEL_ID?: string;
   readonly INSTAGRAM_ACCESS_TOKEN?: string;
   readonly INSTAGRAM_USER_ID?: string;
+  // PUBLIC_-Präfix: von Astro/Vite bewusst ins Client-Bundle aufgenommen
+  // (siehe src/scripts/guest-form.ts) – keine geheimen Zugangsdaten.
+  readonly PUBLIC_FORMSPREE_ENDPOINT?: string;
 }
 
 interface ImportMeta {

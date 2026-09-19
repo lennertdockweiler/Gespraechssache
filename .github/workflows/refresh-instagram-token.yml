@@ -1,0 +1,63 @@
+name: Instagram-Token erneuern
+
+# Instagrams langlebige Access Tokens sind 60 Tage gültig und lassen sich
+# ab einem Mindestalter von 24 Stunden erneuern (offizieller Endpunkt
+# https://graph.instagram.com/refresh_access_token, siehe README.md).
+# Läuft alle 5 Tage – weit innerhalb der 60-Tage-Gültigkeit, mit großem
+# Sicherheitsabstand falls ein einzelner Lauf einmal fehlschlägt.
+on:
+  schedule:
+    - cron: '0 3 */5 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Token erneuern und Repository-Secret aktualisieren
+        env:
+          CURRENT_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          # Eigener, minimal berechtigter Token NUR für Secrets-Schreibzugriff
+          # auf dieses Repository – siehe README.md, Abschnitt "Redaktion
+          # (CMS)"/"Instagram-Token" für die Einrichtung. Der von GitHub
+          # Actions automatisch bereitgestellte GITHUB_TOKEN reicht dafür
+          # nicht aus (kein Schreibzugriff auf Secrets).
+          GH_TOKEN: ${{ secrets.SECRETS_ADMIN_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${CURRENT_TOKEN:-}" ]; then
+            echo "INSTAGRAM_ACCESS_TOKEN ist nicht gesetzt – Instagram-Integration noch nicht konfiguriert, überspringe."
+            exit 0
+          fi
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "SECRETS_ADMIN_TOKEN ist nicht gesetzt – kann kein Secret aktualisieren, überspringe." >&2
+            exit 0
+          fi
+
+          response=$(curl -sf "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${CURRENT_TOKEN}") || {
+            echo "Refresh-Request an graph.instagram.com fehlgeschlagen." >&2
+            exit 1
+          }
+
+          new_token=$(node -e "
+            let data = '';
+            process.stdin.on('data', (chunk) => { data += chunk; });
+            process.stdin.on('end', () => {
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.access_token) process.stdout.write(parsed.access_token);
+              } catch {}
+            });
+          " <<< "$response")
+
+          if [ -z "$new_token" ]; then
+            echo "Antwort enthielt kein access_token-Feld – Token-Wert nicht geloggt." >&2
+            exit 1
+          fi
+
+          echo "$new_token" | gh secret set INSTAGRAM_ACCESS_TOKEN --repo "${{ github.repository }}"
+          echo "INSTAGRAM_ACCESS_TOKEN erfolgreich erneuert."

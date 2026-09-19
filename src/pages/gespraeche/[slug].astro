@@ -107,6 +107,8 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
     <div class="mt-10 rounded-xl">
       {heroVideoUrl ? (
         <YouTubePlayer url={heroVideoUrl} title={item.title} class="rounded-xl" />
+      ) : item.thumbnailUrl ? (
+        <img src={item.thumbnailUrl} alt="" loading="lazy" decoding="async" class="aspect-video w-full rounded-xl object-cover" />
       ) : (
         <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} class="rounded-xl" />
       )}

@@ -22,6 +22,7 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { extractYouTubeId, getLatestChannelVideos } from './youtube';
+import { withBase } from '@/utils/paths';
 
 export interface GespraechItem {
   slug: string;
@@ -65,6 +66,10 @@ export async function getGespraeche(): Promise<GespraechItem[]> {
     const curated = curatedByVideoId.get(video.videoId) ?? null;
     if (curated) matchedCuratedSlugs.add(curated.slug);
 
+    // Ein im CMS/Frontmatter hinterlegtes Thumbnail geht vor dem
+    // automatisch von YouTube gelieferten Vorschaubild.
+    const thumbnailUrl = curated?.data.thumbnail ? withBase(curated.data.thumbnail) : video.thumbnailUrl;
+
     items.push({
       slug: curated ? curated.slug : video.videoId,
       title: curated ? curated.data.title : video.title,
@@ -72,7 +77,7 @@ export async function getGespraeche(): Promise<GespraechItem[]> {
       date: curated ? curated.data.date : new Date(video.publishedAt),
       category: curated ? curated.data.category : null,
       videoId: video.videoId,
-      thumbnailUrl: video.thumbnailUrl,
+      thumbnailUrl,
       curated,
     });
   }
@@ -89,7 +94,7 @@ export async function getGespraeche(): Promise<GespraechItem[]> {
       date: entry.data.date,
       category: entry.data.category,
       videoId: curatedVideoId(entry),
-      thumbnailUrl: null,
+      thumbnailUrl: entry.data.thumbnail ? withBase(entry.data.thumbnail) : null,
       curated: entry,
     });
   }
