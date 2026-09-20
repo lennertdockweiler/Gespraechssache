@@ -7,7 +7,7 @@ import { platforms } from '@/config/site';
 const entries = Object.entries(platforms);
 ---
 
-<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
   {
     entries.map(([, platform], i) => {
       const available = Boolean(platform.url);
