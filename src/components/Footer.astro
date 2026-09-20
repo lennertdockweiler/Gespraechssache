@@ -4,9 +4,9 @@ import { footerNav, legalNav, platforms, siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
 const year = new Date().getFullYear();
-// Alle Plattformen werden gelistet, auch ohne finale URL – dann als
-// nicht-klickbarer "bald verfügbar"-Eintrag, statt komplett ausgeblendet zu
-// werden (analog zur "Überall verfügbar"-Sektion, siehe PlatformLinks.astro).
+// Alle Plattformen werden gelistet, auch ohne finale URL – dann als reiner
+// Text statt komplett ausgeblendet, bis die echten Links feststehen (siehe
+// auch PlatformLinks.astro).
 const platformEntries = Object.entries(platforms);
 ---
 
@@ -49,7 +49,7 @@ const platformEntries = Object.entries(platforms);
                     {p.label}
                   </a>
                 ) : (
-                  <span class="text-sm text-paper/50">{p.label} · bald verfügbar</span>
+                  <span class="text-sm text-paper/50">{p.label}</span>
                 )}
               </li>
             ))

@@ -29,7 +29,8 @@ export const siteConfig = {
 };
 
 // Plattformen für Header/Footer/„Überall hören und sehen“-Sektion.
-// `url: null` → Button wird als „bald verfügbar“ dargestellt bzw. optional ausgeblendet.
+// `url: null` → Eintrag bleibt sichtbar, aber nicht-klickbar, bis die
+// echte URL eingetragen wird.
 export const platforms: Record<string, PlatformLink> = {
   youtubeMain: { label: 'YouTube – Hauptkanal', url: null },
   youtubeFull: { label: 'YouTube – Ganze Gespräche', url: null },
