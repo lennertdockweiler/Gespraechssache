@@ -4,13 +4,11 @@
 import Hero from './Hero.astro';
 import FeaturedEpisode from './FeaturedEpisode.astro';
 import EpisodeCard from './EpisodeCard.astro';
-import PersonCard from './PersonCard.astro';
 import FormatPipeline from './FormatPipeline.astro';
 import PlatformLinks from './PlatformLinks.astro';
 import Newsletter from './Newsletter.astro';
 import SectionHeading from './SectionHeading.astro';
 import InstagramFeed from './InstagramFeed.astro';
-import { getCollection } from 'astro:content';
 import { getGespraeche } from '@/lib/gespraeche';
 import { withBase } from '@/utils/paths';
 
@@ -20,8 +18,6 @@ import { withBase } from '@/utils/paths';
 const gespraeche = await getGespraeche();
 const featured = gespraeche.find((g) => g.curated?.data.featured) ?? gespraeche[0];
 const recentGespraeche = gespraeche.filter((g) => g.slug !== featured?.slug).slice(0, 3);
-
-const people = (await getCollection('people')).slice(0, 4);
 ---
 
 <Hero />
@@ -35,8 +31,8 @@ const people = (await getCollection('people')).slice(0, 4);
       title="Gespräche entdecken"
       description="Eine wachsende Sammlung von Interviews mit Menschen, die etwas zu erzählen haben."
     />
-    <a href={withBase('/gespraeche/')} class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
-      Alle Gespräche ansehen →
+    <a href={withBase('/gespraeche/')} class="link-animated whitespace-nowrap text-sm font-medium text-accent">
+      Alle Gespräche ansehen <span class="arrow-move">→</span>
     </a>
   </div>
 
@@ -49,24 +45,7 @@ const people = (await getCollection('people')).slice(0, 4);
   <FormatPipeline />
 </div>
 
-<section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
-  <div class="flex flex-wrap items-end justify-between gap-4">
-    <SectionHeading
-      eyebrow="Die Gäste"
-      title="Menschen mit Geschichten"
-      description="Nicht Prominenz entscheidet, sondern die Geschichte. Ein Ausschnitt der Menschen, die bei Gesprächssache zu Wort kommen."
-    />
-    <a href={withBase('/menschen/')} class="whitespace-nowrap text-sm font-medium text-accent hover:underline">
-      Alle Menschen ansehen →
-    </a>
-  </div>
-
-  <div class="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-    {people.map((person) => <PersonCard person={person} />)}
-  </div>
-</section>
-
-<section class="border-t border-line bg-paper-soft" data-reveal>
+<section class="border-t border-[var(--color-petrol-wash-line)] bg-[var(--color-petrol-wash)]" data-reveal>
   <div class="mx-auto max-w-content px-5 py-16 sm:px-8">
     <SectionHeading
       eyebrow="Kurz gefragt"
@@ -75,9 +54,9 @@ const people = (await getCollection('people')).slice(0, 4);
     />
     <a
       href={withBase('/kurz-gefragt/')}
-      class="mt-8 inline-block rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
+      class="mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent"
     >
-      Kurz gefragt ansehen
+      Kurz gefragt ansehen <span class="arrow-move">→</span>
     </a>
   </div>
 </section>
@@ -99,13 +78,16 @@ const people = (await getCollection('people')).slice(0, 4);
 <Newsletter />
 
 <section class="mx-auto max-w-content px-5 py-20 text-center sm:px-8 sm:py-28" data-reveal>
-  <h2 class="font-serif text-3xl text-ink sm:text-4xl">Kennst du jemanden, mit dem wir sprechen sollten?</h2>
+  <h2 class="mx-auto max-w-[22ch] font-serif text-3xl text-ink sm:text-4xl">
+    <span class="line-mask"><span style="transition-delay:0ms">Kennst du jemanden,</span></span>
+    <span class="line-mask"><span style="transition-delay:80ms">mit dem wir sprechen sollten?</span></span>
+  </h2>
   <p class="mx-auto mt-4 max-w-[52ch] text-stone">
     Wir suchen nicht nach dem größten Namen, sondern nach Menschen, die etwas zu erzählen haben.
   </p>
   <a
     href={withBase('/gast-vorschlagen/')}
-    class="mt-8 inline-block rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-paper transition-opacity hover:opacity-90"
+    class="mt-8 inline-block rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-paper transition-opacity duration-400 hover:opacity-90"
   >
     Gast vorschlagen
   </a>

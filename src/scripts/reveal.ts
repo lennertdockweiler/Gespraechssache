@@ -1,6 +1,13 @@
 // Aktiviert dezente Fade/Translate-Reveals für alle Elemente mit
 // [data-reveal]. Nutzt IntersectionObserver statt einer Animations-
 // Library, um die JS-Menge minimal zu halten.
+//
+// Leerer export: macht die Datei zu einem echten ES-Modul mit eigenem
+// Scope. Ohne jeden import/export behandelt TypeScript Skript-Dateien
+// sonst als globales Script – dann kollidieren gleichnamige Variablen
+// (z.B. `reduceMotion`) mit anderen <script>-Dateien wie mobile-nav.ts.
+export {};
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const elements = document.querySelectorAll<HTMLElement>('[data-reveal]');

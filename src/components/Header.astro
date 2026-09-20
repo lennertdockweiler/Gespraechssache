@@ -16,9 +16,9 @@ function isActive(href: string) {
 }
 ---
 
-<header class="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
+<header id="site-header" class="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur transition-shadow duration-400">
   <div class="mx-auto flex max-w-content items-center justify-between px-5 py-4 sm:px-8">
-    <a href={withBase('/')} class="text-ink transition-opacity hover:opacity-70">
+    <a href={withBase('/')} class="text-ink transition-opacity duration-400 hover:opacity-70">
       <Logo />
     </a>
 
@@ -28,8 +28,8 @@ function isActive(href: string) {
           <a
             href={withBase(item.href)}
             class:list={[
-              'text-sm tracking-widish transition-colors hover:text-accent',
-              isActive(item.href) ? 'text-ink font-medium' : 'text-stone',
+              'link-animated text-sm tracking-widish',
+              isActive(item.href) ? 'text-ink font-medium' : 'text-stone hover:text-accent',
             ]}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
@@ -42,7 +42,7 @@ function isActive(href: string) {
     <div class="hidden items-center gap-4 md:flex">
       <a
         href={withBase('/gast-vorschlagen/')}
-        class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-accent"
+        class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent"
       >
         Gast vorschlagen
       </a>
@@ -66,18 +66,18 @@ function isActive(href: string) {
 
   <div
     id="mobile-nav-panel"
-    class="fixed inset-0 z-50 hidden bg-ink/40 md:hidden"
+    class="fixed inset-0 z-50 hidden md:hidden"
     role="dialog"
     aria-modal="true"
     aria-label="Mobile Navigation"
   >
-    <div class="ml-auto flex h-full w-[82%] max-w-sm flex-col bg-paper px-6 py-6 shadow-xl">
+    <div class="panel-inner ml-auto flex h-full w-[82%] max-w-sm flex-col bg-paper px-6 py-6 shadow-xl">
       <div class="flex items-center justify-between">
         <Logo />
         <button
           id="mobile-nav-close"
           type="button"
-          class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink"
+          class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors duration-400 hover:border-accent hover:text-accent"
           aria-label="Menü schließen"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -88,10 +88,11 @@ function isActive(href: string) {
 
       <nav class="mt-10 flex flex-col gap-1" aria-label="Mobile Hauptnavigation">
         {
-          primaryNav.map((item) => (
+          primaryNav.map((item, i) => (
             <a
               href={withBase(item.href)}
-              class="border-b border-line py-4 font-serif text-2xl text-ink"
+              class="panel-item border-b border-line py-4 font-serif text-2xl text-ink transition-colors duration-400 hover:text-accent"
+              style={`transition-delay:${i * 60}ms`}
             >
               {item.label}
             </a>
@@ -101,12 +102,46 @@ function isActive(href: string) {
 
       <a
         href={withBase('/gast-vorschlagen/')}
-        class="mt-8 rounded-full bg-ink px-5 py-3 text-center text-sm font-medium text-paper"
+        class="panel-item mt-8 rounded-full bg-ink px-5 py-3 text-center text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent"
+        style={`transition-delay:${primaryNav.length * 60 + 40}ms`}
       >
         Gast vorschlagen
       </a>
     </div>
   </div>
+
+  <style>
+    #mobile-nav-panel {
+      background-color: rgb(24 20 15 / 0);
+      transition: background-color var(--dur-base) var(--ease-editorial);
+    }
+    #mobile-nav-panel.is-open {
+      background-color: rgb(24 20 15 / 0.4);
+    }
+    #mobile-nav-panel .panel-inner {
+      transform: translateX(100%);
+      transition: transform var(--dur-base) var(--ease-editorial);
+    }
+    #mobile-nav-panel.is-open .panel-inner {
+      transform: translateX(0);
+    }
+    #mobile-nav-panel .panel-item {
+      opacity: 0;
+      transform: translateY(10px);
+      transition:
+        opacity var(--dur-fast) var(--ease-editorial),
+        transform var(--dur-fast) var(--ease-editorial),
+        color var(--dur-base) var(--ease-editorial),
+        background-color var(--dur-base) var(--ease-editorial);
+    }
+    #mobile-nav-panel.is-open .panel-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #site-header.is-scrolled {
+      box-shadow: 0 8px 24px -18px rgb(24 20 15 / 0.35);
+    }
+  </style>
 </header>
 
 <script>

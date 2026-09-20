@@ -31,14 +31,12 @@ export const siteConfig = {
 // Plattformen für Header/Footer/„Überall hören und sehen“-Sektion.
 // `url: null` → Button wird als „bald verfügbar“ dargestellt bzw. optional ausgeblendet.
 export const platforms: Record<string, PlatformLink> = {
-  youtubeFull: { label: 'YouTube – Ganze Gespräche', url: null },
   youtubeMain: { label: 'YouTube – Hauptkanal', url: null },
-  spotify: { label: 'Spotify', url: null },
-  applePodcasts: { label: 'Apple Podcasts', url: null },
+  youtubeFull: { label: 'YouTube – Ganze Gespräche', url: null },
   instagram: { label: 'Instagram', url: null },
   tiktok: { label: 'TikTok', url: null },
-  threads: { label: 'Threads', url: null },
-  facebook: { label: 'Facebook', url: null },
+  spotify: { label: 'Spotify', url: null },
+  applePodcasts: { label: 'Apple Podcasts', url: null },
 };
 
 export const primaryNav = [

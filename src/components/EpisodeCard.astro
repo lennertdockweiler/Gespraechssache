@@ -41,9 +41,13 @@ const searchable = `${item.title} ${guest?.data.name ?? ''} ${guest?.data.profes
         {item.category && (
           <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">{item.category}</p>
         )}
-        <h3 class="mt-1 font-serif text-xl leading-snug text-ink group-hover:text-accent">
+        <h3 class="mt-1 inline font-serif text-xl leading-snug text-ink transition-colors duration-400 group-hover:text-accent">
           {item.title}
         </h3>
+        <span
+          class="mt-1 block h-px w-8 origin-left scale-x-0 bg-accent transition-transform duration-400 ease-out group-hover:scale-x-100"
+          aria-hidden="true"
+        ></span>
         {guest && (
           <p class="mt-1 text-sm text-stone">
             {guest.data.name} · {guest.data.profession}

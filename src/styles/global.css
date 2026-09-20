@@ -21,8 +21,19 @@
   --color-accent: #35615d;
   --color-accent-soft: #7fa39f;
   --color-line: #ded3bd;
+  /* Sehr dezenter Petrol-Wash für einzelne Sektionen (z.B. "Kurz gefragt"),
+     damit die Markenfarbe im Layout präsenter wird, ohne Flächen bunt
+     wirken zu lassen. */
+  --color-petrol-wash: #eaf0ee;
+  --color-petrol-wash-line: #d2e0dc;
 
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Zentrale Motion-Tokens, damit Timings/Staffelungen konsistent bleiben
+     statt an jeder Stelle einzeln erfunden zu werden. */
+  --dur-fast: 350ms;
+  --dur-base: 600ms;
+  --dur-slow: 900ms;
+  --stagger-step: 70ms;
 }
 
 * {
@@ -100,6 +111,97 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   MOTION-UTILITIES
+   Wiederverwendbare Bausteine für hochwertige, zurückhaltende
+   Microinteractions – zentral definiert, damit Timings/Farben überall
+   konsistent bleiben statt pro Komponente neu erfunden zu werden.
+   ------------------------------------------------------------------------- */
+
+/* Animierte Unterstreichung: wächst beim Hover von links nach rechts. */
+.link-animated {
+  position: relative;
+  padding-bottom: 0.15em;
+}
+
+.link-animated::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-editorial);
+}
+
+.link-animated:hover::after {
+  transform: scaleX(1);
+}
+
+/* Pfeil-Suffix in Buttons/Links: rückt beim Hover des Elternelements
+   minimal nach rechts, statt komplett neuer Icon-Wechsel. */
+.arrow-move {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-editorial);
+}
+
+*:hover > .arrow-move {
+  transform: translateX(4px);
+}
+
+/* Zeilenweiser Text-Reveal für kurze, feste Editorial-Headlines (nicht für
+   beliebig langen, dynamischen Content – dort bleibt der einfache
+   Fade/Translate-Reveal). Jede Zeile liegt in einer Overflow-Maske und
+   fährt aus einer leichten Verschiebung nach oben ein. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.line-mask > span {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform var(--dur-slow) var(--ease-editorial);
+}
+
+.line-mask.is-visible > span,
+[data-reveal].is-visible .line-mask > span {
+  transform: translateY(0);
+}
+
+/* "Gesprächslinie": dünne Linie, die sich beim Sichtbarwerden von links
+   nach rechts auffährt. Signature-Element, bewusst nur an 1–2 Stellen
+   eingesetzt (siehe FormatPipeline.astro). */
+.reveal-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.1s var(--ease-editorial);
+}
+
+[data-reveal].is-visible .reveal-line {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-animated::after {
+    transition: none;
+  }
+  .arrow-move {
+    transition: none;
+  }
+  .line-mask > span {
+    transform: none;
+    transition: none;
+  }
+  .reveal-line {
+    transform: none;
+    transition: none;
   }
 }
 

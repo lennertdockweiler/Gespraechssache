@@ -8,7 +8,9 @@ import { withBase } from '@/utils/paths';
     <div data-reveal>
       <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent-soft">Gesprächssache</p>
       <h1 class="mt-4 font-serif text-4xl leading-[1.06] sm:text-5xl lg:text-6xl">
-        Jeder Mensch hat etwas zu erzählen.
+        <span class="line-mask"><span style="transition-delay:0ms">Jeder Mensch</span></span>
+        <span class="line-mask"><span style="transition-delay:90ms">hat etwas</span></span>
+        <span class="line-mask"><span style="transition-delay:180ms">zu erzählen.</span></span>
       </h1>
       <p class="mt-6 max-w-[46ch] text-base text-paper/70 sm:text-lg">
         Gespräche mit Menschen über ihre Arbeit, ihre Entscheidungen, Erfahrungen, Leidenschaften
@@ -17,13 +19,13 @@ import { withBase } from '@/utils/paths';
       <div class="mt-9 flex flex-col gap-3 sm:flex-row">
         <a
           href={withBase('/gespraeche/')}
-          class="rounded-full bg-paper px-6 py-3 text-center text-sm font-medium text-ink transition-colors hover:bg-accent hover:text-paper"
+          class="rounded-full bg-paper px-6 py-3 text-center text-sm font-medium text-ink transition-colors duration-400 hover:bg-accent hover:text-paper"
         >
           Gespräche entdecken
         </a>
         <a
           href={withBase('/gast-vorschlagen/')}
-          class="rounded-full border border-paper/30 px-6 py-3 text-center text-sm font-medium text-paper transition-colors hover:border-accent-soft hover:text-accent-soft"
+          class="rounded-full border border-paper/30 px-6 py-3 text-center text-sm font-medium text-paper transition-colors duration-400 hover:border-accent-soft hover:text-accent-soft"
         >
           Gast vorschlagen
         </a>
