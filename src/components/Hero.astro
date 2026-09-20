@@ -3,7 +3,7 @@ import PlaceholderVisual from './PlaceholderVisual.astro';
 import { withBase } from '@/utils/paths';
 ---
 
-<section class="border-b border-line bg-ink text-paper">
+<section class="relative border-b border-line bg-ink text-paper">
   <div class="mx-auto grid max-w-content gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16">
     <div data-reveal>
       <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent-soft">Gesprächssache</p>
@@ -19,12 +19,14 @@ import { withBase } from '@/utils/paths';
       <div class="mt-9 flex flex-col gap-3 sm:flex-row">
         <a
           href={withBase('/gespraeche/')}
+          data-magnetic
           class="rounded-full bg-paper px-6 py-3 text-center text-sm font-medium text-ink transition-colors duration-400 hover:bg-accent hover:text-paper"
         >
           Gespräche entdecken
         </a>
         <a
           href={withBase('/gast-vorschlagen/')}
+          data-magnetic
           class="rounded-full border border-paper/30 px-6 py-3 text-center text-sm font-medium text-paper transition-colors duration-400 hover:border-accent-soft hover:text-accent-soft"
         >
           Gast vorschlagen
@@ -32,7 +34,7 @@ import { withBase } from '@/utils/paths';
       </div>
     </div>
 
-    <div class="hover-media rounded-xl" data-reveal data-reveal-delay="150">
+    <div class="hover-media mask-reveal rounded-xl" data-parallax data-reveal data-reveal-delay="150">
       <PlaceholderVisual
         aspect="video"
         label="Interview-Visual"
@@ -40,5 +42,9 @@ import { withBase } from '@/utils/paths';
         class="rounded-xl"
       />
     </div>
+  </div>
+
+  <div class="pointer-events-none absolute inset-x-0 bottom-6 hidden justify-center sm:flex" aria-hidden="true">
+    <span class="scroll-cue h-8 w-px origin-bottom bg-paper/40"></span>
   </div>
 </section>

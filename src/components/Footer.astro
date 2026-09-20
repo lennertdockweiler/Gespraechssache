@@ -4,24 +4,27 @@ import { footerNav, legalNav, platforms, siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
 const year = new Date().getFullYear();
-const socialEntries = Object.entries(platforms).filter(([, p]) => p.url);
+// Alle Plattformen werden gelistet, auch ohne finale URL – dann als
+// nicht-klickbarer "bald verfügbar"-Eintrag, statt komplett ausgeblendet zu
+// werden (analog zur "Überall verfügbar"-Sektion, siehe PlatformLinks.astro).
+const platformEntries = Object.entries(platforms);
 ---
 
 <footer class="border-t border-line bg-ink text-paper">
   <div class="mx-auto max-w-content px-5 py-16 sm:px-8">
     <div class="grid gap-12 sm:grid-cols-2 md:grid-cols-4">
-      <div class="md:col-span-1">
+      <div class="md:col-span-1" data-reveal>
         <Logo class="text-paper" />
         <p class="mt-4 max-w-[26ch] text-sm text-paper/60">{siteConfig.tagline}</p>
       </div>
 
-      <div>
+      <div data-reveal data-reveal-delay="80">
         <h2 class="font-mono text-[0.65rem] uppercase tracking-label text-paper/50">Navigation</h2>
         <ul class="mt-4 flex flex-col gap-2.5">
           {
             footerNav.map((item) => (
               <li>
-                <a href={withBase(item.href)} class="text-sm text-paper/80 hover:text-accent-soft">
+                <a href={withBase(item.href)} class="link-animated text-sm text-paper/80 hover:text-accent-soft">
                   {item.label}
                 </a>
               </li>
@@ -30,37 +33,37 @@ const socialEntries = Object.entries(platforms).filter(([, p]) => p.url);
         </ul>
       </div>
 
-      <div>
+      <div data-reveal data-reveal-delay="160">
         <h2 class="font-mono text-[0.65rem] uppercase tracking-label text-paper/50">Plattformen</h2>
         <ul class="mt-4 flex flex-col gap-2.5">
           {
-            socialEntries.length > 0 ? (
-              socialEntries.map(([, p]) => (
-                <li>
+            platformEntries.map(([, p]) => (
+              <li>
+                {p.url ? (
                   <a
-                    href={p.url!}
+                    href={p.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-sm text-paper/80 hover:text-accent-soft"
+                    class="link-animated text-sm text-paper/80 hover:text-accent-soft"
                   >
                     {p.label}
                   </a>
-                </li>
-              ))
-            ) : (
-              <li class="text-sm text-paper/60">Folgt in Kürze</li>
-            )
+                ) : (
+                  <span class="text-sm text-paper/50">{p.label} · bald verfügbar</span>
+                )}
+              </li>
+            ))
           }
         </ul>
       </div>
 
-      <div>
+      <div data-reveal data-reveal-delay="240">
         <h2 class="font-mono text-[0.65rem] uppercase tracking-label text-paper/50">Rechtliches</h2>
         <ul class="mt-4 flex flex-col gap-2.5">
           {
             legalNav.map((item) => (
               <li>
-                <a href={withBase(item.href)} class="text-sm text-paper/80 hover:text-accent-soft">
+                <a href={withBase(item.href)} class="link-animated text-sm text-paper/80 hover:text-accent-soft">
                   {item.label}
                 </a>
               </li>
@@ -70,7 +73,11 @@ const socialEntries = Object.entries(platforms).filter(([, p]) => p.url);
       </div>
     </div>
 
-    <div class="mt-14 flex flex-col gap-2 border-t border-paper/10 pt-6 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
+    <div
+      class="mt-14 flex flex-col gap-2 border-t border-paper/10 pt-6 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between"
+      data-reveal
+      data-reveal-delay="300"
+    >
       <p>&copy; {year} {siteConfig.projectName}</p>
       <p>Gestaltet als eigenständige Medienmarke · V1</p>
     </div>

@@ -70,7 +70,7 @@ const breadcrumbSchema = {
     </div>
 
     <div class="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-      {gespraeche.map((item) => <EpisodeCard item={item} />)}
+      {gespraeche.map((item, i) => <EpisodeCard item={item} index={i % 6} />)}
     </div>
 
     <p id="episode-empty-state" class="hidden py-16 text-center text-stone">

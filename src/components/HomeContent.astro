@@ -10,6 +10,7 @@ import Newsletter from './Newsletter.astro';
 import SectionHeading from './SectionHeading.astro';
 import InstagramFeed from './InstagramFeed.astro';
 import { getGespraeche } from '@/lib/gespraeche';
+import { categories } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
 // getGespraeche() vereint redaktionelle Episoden mit automatisch über die
@@ -24,8 +25,8 @@ const recentGespraeche = gespraeche.filter((g) => g.slug !== featured?.slug).sli
 
 {featured && <FeaturedEpisode item={featured} />}
 
-<section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
-  <div class="flex flex-wrap items-end justify-between gap-4">
+<section class="mx-auto max-w-content px-5 py-16 sm:px-8">
+  <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
     <SectionHeading
       eyebrow="Archiv"
       title="Gespräche entdecken"
@@ -37,15 +38,29 @@ const recentGespraeche = gespraeche.filter((g) => g.slug !== featured?.slug).sli
   </div>
 
   <div class="mt-10 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-    {recentGespraeche.map((item) => <EpisodeCard item={item} />)}
+    {recentGespraeche.map((item, i) => <EpisodeCard item={item} index={i} />)}
   </div>
 </section>
+
+<!-- Editorial-Ticker: dezente, endlos laufende Themenzeile – bewusst nur
+     an dieser einen Stelle eingesetzt, siehe .ticker in global.css. -->
+<div class="ticker border-y border-line bg-paper-soft py-3" data-reveal>
+  <div class="ticker-track">
+    {[...categories, ...categories].map((category) => (
+      <span class="flex items-center gap-6 px-6 font-mono text-[0.65rem] uppercase tracking-label text-stone">
+        {category}
+        <span aria-hidden="true" class="text-accent-soft">·</span>
+      </span>
+    ))}
+  </div>
+</div>
 
 <div class="border-t border-line">
   <FormatPipeline />
 </div>
 
-<section class="border-t border-[var(--color-petrol-wash-line)] bg-[var(--color-petrol-wash)]" data-reveal>
+<section class="relative border-t border-[var(--color-petrol-wash-line)] bg-[var(--color-petrol-wash)]" data-reveal>
+  <div class="section-fade-edge absolute inset-x-0 top-0" aria-hidden="true"></div>
   <div class="mx-auto max-w-content px-5 py-16 sm:px-8">
     <SectionHeading
       eyebrow="Kurz gefragt"
@@ -54,16 +69,19 @@ const recentGespraeche = gespraeche.filter((g) => g.slug !== featured?.slug).sli
     />
     <a
       href={withBase('/kurz-gefragt/')}
-      class="mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent"
+      data-magnetic
+      class="mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors ease-out"
+      style="transition-duration:var(--dur-snappy)"
     >
       Kurz gefragt ansehen <span class="arrow-move">→</span>
     </a>
   </div>
+  <div class="section-fade-edge is-bottom absolute inset-x-0 bottom-0" aria-hidden="true"></div>
 </section>
 
 <InstagramFeed />
 
-<section class="mx-auto max-w-content px-5 py-16 sm:px-8" data-reveal>
+<section class="mx-auto max-w-content px-5 py-16 sm:px-8">
   <SectionHeading
     eyebrow="Überall verfügbar"
     title="Gesprächssache überall hören und sehen"

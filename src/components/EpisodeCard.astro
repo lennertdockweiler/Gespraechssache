@@ -6,12 +6,18 @@ import { withBase } from '@/utils/paths';
 
 interface Props {
   item: GespraechItem;
+  /** Position in einem gleichzeitig erscheinenden Kartenraster – steuert
+   *  einen kurzen Stagger-Delay (~80ms/Karte), siehe Brief-Vorgabe für
+   *  "gleichzeitig erscheinende Karten". Optional, da EpisodeCard auch
+   *  einzeln bzw. ohne Grid-Kontext verwendet wird. */
+  index?: number;
 }
 
-const { item } = Astro.props;
+const { item, index } = Astro.props;
 const guest = item.curated ? await getEntry(item.curated.data.guest) : null;
 const href = withBase(`/gespraeche/${item.slug}/`);
 const searchable = `${item.title} ${guest?.data.name ?? ''} ${guest?.data.profession ?? ''} ${item.category ?? ''}`.toLowerCase();
+const episodeNumber = item.curated?.data.episodeNumber;
 ---
 
 <article
@@ -19,22 +25,35 @@ const searchable = `${item.title} ${guest?.data.name ?? ''} ${guest?.data.profes
   data-category={item.category ?? ''}
   data-searchable={searchable}
   class="group"
+  data-reveal
+  data-reveal-delay={index !== undefined ? index * 80 : undefined}
 >
   <a href={href} class="block">
-    <div class="hover-media rounded-lg">
-      {
-        item.thumbnailUrl ? (
-          <img
-            src={item.thumbnailUrl}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            class="aspect-video w-full rounded-lg object-cover"
-          />
-        ) : (
-          <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} />
-        )
-      }
+    <div class="relative overflow-hidden rounded-lg" transition:name={`gespraech-visual-${item.slug}`}>
+      <div class="hover-media">
+        {
+          item.thumbnailUrl ? (
+            <img
+              src={item.thumbnailUrl}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              class="aspect-video w-full rounded-lg object-cover"
+            />
+          ) : (
+            <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} />
+          )
+        }
+      </div>
+      <div class="card-overlay absolute inset-0" aria-hidden="true" />
+      {episodeNumber && (
+        <span
+          class="episode-number absolute bottom-3 left-3 font-mono text-xs uppercase tracking-label text-paper"
+          aria-hidden="true"
+        >
+          Nr. {episodeNumber}
+        </span>
+      )}
     </div>
     <div class="mt-4 flex items-start justify-between gap-3">
       <div>

@@ -4,6 +4,7 @@ import '@fontsource-variable/inter';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 import SEO from '@/components/SEO.astro';
 import ScrollProgress from '@/components/ScrollProgress.astro';
@@ -86,6 +87,14 @@ const allSchemas = [organizationSchema, websiteSchema, ...structuredData];
         <script type="application/ld+json" set:html={JSON.stringify(schema)} />
       ))
     }
+
+    <!--
+      View-Transitions API mit progressivem Enhancement: Navigation
+      funktioniert vollständig ohne JS/Animation (normale Seitenwechsel),
+      bekommt mit Unterstützung aber einen weichen Crossfade statt eines
+      harten Cuts. Respektiert automatisch prefers-reduced-motion.
+    -->
+    <ClientRouter />
   </head>
   <body class="flex min-h-screen flex-col" style={accentStyle}>
     <a
@@ -94,6 +103,9 @@ const allSchemas = [organizationSchema, websiteSchema, ...structuredData];
     >
       Zum Inhalt springen
     </a>
+
+    <div class="film-grain" aria-hidden="true"></div>
+    <div id="custom-cursor" aria-hidden="true"></div>
 
     <ScrollProgress />
     <Header />
@@ -106,6 +118,10 @@ const allSchemas = [organizationSchema, websiteSchema, ...structuredData];
 
     <script>
       import '@/scripts/reveal';
+      import '@/scripts/cursor';
+      import '@/scripts/magnetic';
+      import '@/scripts/parallax';
+      import '@/scripts/ticker';
     </script>
   </body>
 </html>

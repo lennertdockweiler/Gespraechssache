@@ -4,6 +4,12 @@
 // datenschutzfreundlichere Embed-Variante): Vor dem Klick entstehen dadurch
 // keine Requests oder Cookies von YouTube auf dieser Seite (siehe
 // Datenschutz-Hinweise im Abschlussbericht).
+//
+// Siehe Kommentar in mobile-nav.ts zu init()/"astro:page-load": nötig,
+// damit nach einer client-seitigen Navigation auch die Facade(s) der neuen
+// Seite klickbar werden.
+export {};
+
 function activateFacade(facade: HTMLElement) {
   const videoId = facade.dataset.videoId;
   if (!videoId) return;
@@ -21,12 +27,32 @@ function activateFacade(facade: HTMLElement) {
   facade.removeAttribute('tabindex');
 }
 
-document.querySelectorAll<HTMLElement>('[data-yt-facade]').forEach((facade) => {
-  facade.addEventListener('click', () => activateFacade(facade));
-  facade.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      activateFacade(facade);
-    }
+let cleanup: (() => void) | null = null;
+
+function init() {
+  cleanup?.();
+  const cleanups: (() => void)[] = [];
+
+  document.querySelectorAll<HTMLElement>('[data-yt-facade]').forEach((facade) => {
+    const onClick = () => activateFacade(facade);
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        activateFacade(facade);
+      }
+    };
+
+    facade.addEventListener('click', onClick);
+    facade.addEventListener('keydown', onKeydown);
+    cleanups.push(() => {
+      facade.removeEventListener('click', onClick);
+      facade.removeEventListener('keydown', onKeydown);
+    });
   });
-});
+
+  cleanup = () => cleanups.forEach((fn) => fn());
+}
+
+document.addEventListener('astro:before-swap', () => cleanup?.());
+document.addEventListener('astro:page-load', init);
+init();

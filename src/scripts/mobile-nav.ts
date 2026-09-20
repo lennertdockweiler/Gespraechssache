@@ -4,83 +4,106 @@
 // dann (nächster Frame) `.is-open` setzen, damit der Browser den
 // Übergang tatsächlich animiert statt direkt zum Endzustand zu springen.
 //
-// Leerer export: siehe Kommentar in reveal.ts – verhindert Namenskollisionen
-// zwischen den einzelnen <script>-Dateien beim Typecheck.
+// Wegen <ClientRouter /> (View Transitions, siehe Layout.astro) wird HTML
+// bei jeder Navigation ausgetauscht, aber dieses Modul-Skript vom Browser
+// nur ein einziges Mal ausgeführt (ES-Module werden pro URL gecacht). Ohne
+// weiteres Zutun würden Menü/Header-Scroll deshalb nach der ersten
+// Client-seitigen Navigation nicht mehr reagieren. Die eigentliche Logik
+// läuft daher in init(), das sowohl sofort als auch bei jedem weiteren
+// "astro:page-load" erneut aufgerufen wird; "astro:before-swap" räumt vorher
+// die Listener der jeweils vorherigen Seite ab.
 export {};
 
-const toggle = document.getElementById('mobile-nav-toggle');
-const panel = document.getElementById('mobile-nav-panel');
-const closeBtn = document.getElementById('mobile-nav-close');
+let cleanup: (() => void) | null = null;
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const OPEN_TRANSITION_MS = reduceMotion ? 0 : 600;
+function init() {
+  cleanup?.();
+  const cleanups: (() => void)[] = [];
 
-if (toggle && panel) {
-  const open = () => {
-    panel.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    toggle.setAttribute('aria-expanded', 'true');
-    requestAnimationFrame(() => {
+  const toggle = document.getElementById('mobile-nav-toggle');
+  const panel = document.getElementById('mobile-nav-panel');
+  const closeBtn = document.getElementById('mobile-nav-close');
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const OPEN_TRANSITION_MS = reduceMotion ? 0 : 600;
+
+  if (toggle && panel) {
+    const open = () => {
+      panel.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      toggle.setAttribute('aria-expanded', 'true');
       requestAnimationFrame(() => {
-        panel.classList.add('is-open');
+        requestAnimationFrame(() => {
+          panel.classList.add('is-open');
+        });
       });
-    });
-    const firstLink = panel.querySelector<HTMLElement>('a');
-    firstLink?.focus();
-  };
+      const firstLink = panel.querySelector<HTMLElement>('a');
+      firstLink?.focus();
+    };
 
-  const close = () => {
-    panel.classList.remove('is-open');
-    document.body.style.overflow = '';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.focus();
-    window.setTimeout(() => {
-      panel.classList.add('hidden');
-    }, OPEN_TRANSITION_MS);
-  };
+    const close = () => {
+      panel.classList.remove('is-open');
+      document.body.style.overflow = '';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus();
+      window.setTimeout(() => {
+        panel.classList.add('hidden');
+      }, OPEN_TRANSITION_MS);
+    };
 
-  toggle.addEventListener('click', () => {
-    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-    isOpen ? close() : open();
-  });
+    const onToggleClick = () => {
+      const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      isOpen ? close() : open();
+    };
+    toggle.addEventListener('click', onToggleClick);
+    cleanups.push(() => toggle.removeEventListener('click', onToggleClick));
 
-  closeBtn?.addEventListener('click', close);
+    closeBtn?.addEventListener('click', close);
 
-  panel.addEventListener('click', (event) => {
-    if (event.target === panel) close();
-  });
+    const onPanelClick = (event: MouseEvent) => {
+      if (event.target === panel) close();
+    };
+    panel.addEventListener('click', onPanelClick);
+    cleanups.push(() => panel.removeEventListener('click', onPanelClick));
 
-  panel.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
+    panel.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-      close();
-    }
-  });
-}
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        close();
+      }
+    };
+    document.addEventListener('keydown', onKeydown);
+    cleanups.push(() => document.removeEventListener('keydown', onKeydown));
+  }
 
-// Dezentes Header-Verhalten beim Scrollen: leichter Schatten statt eines
-// auffälligen Größen-/Farbwechsels.
-const header = document.getElementById('site-header');
+  // Dezentes Header-Verhalten beim Scrollen: leichter Schatten statt eines
+  // auffälligen Größen-/Farbwechsels.
+  const header = document.getElementById('site-header');
 
-if (header) {
-  let ticking = false;
+  if (header) {
+    let ticking = false;
 
-  const update = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 8);
-    ticking = false;
-  };
+    const update = () => {
+      header.classList.toggle('is-scrolled', window.scrollY > 8);
+      ticking = false;
+    };
 
-  window.addEventListener(
-    'scroll',
-    () => {
+    const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(update);
         ticking = true;
       }
-    },
-    { passive: true },
-  );
+    };
 
-  update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+    cleanups.push(() => window.removeEventListener('scroll', onScroll));
+  }
+
+  cleanup = () => cleanups.forEach((fn) => fn());
 }
+
+document.addEventListener('astro:before-swap', () => cleanup?.());
+document.addEventListener('astro:page-load', init);
+init();

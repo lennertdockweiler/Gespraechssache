@@ -41,13 +41,28 @@
 
 <script>
   // Kein Newsletter-Backend in V1 angebunden – UI + Integration Point.
-  const form = document.getElementById('newsletter-form');
-  const status = document.getElementById('newsletter-status');
-  form?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (status) {
-      status.textContent =
-        'Newsletter-Anbindung folgt in einer späteren Version. Formular ist technisch vorbereitet.';
-    }
-  });
+  // Siehe Kommentar in mobile-nav.ts zu init()/"astro:page-load".
+  let cleanup: (() => void) | null = null;
+
+  function init() {
+    cleanup?.();
+
+    const form = document.getElementById('newsletter-form');
+    const status = document.getElementById('newsletter-status');
+
+    const onSubmit = (event: SubmitEvent) => {
+      event.preventDefault();
+      if (status) {
+        status.textContent =
+          'Newsletter-Anbindung folgt in einer späteren Version. Formular ist technisch vorbereitet.';
+      }
+    };
+
+    form?.addEventListener('submit', onSubmit);
+    cleanup = () => form?.removeEventListener('submit', onSubmit);
+  }
+
+  document.addEventListener('astro:before-swap', () => cleanup?.());
+  document.addEventListener('astro:page-load', init);
+  init();
 </script>

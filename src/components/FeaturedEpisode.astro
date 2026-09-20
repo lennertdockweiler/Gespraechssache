@@ -15,21 +15,23 @@ const href = withBase(`/gespraeche/${item.slug}/`);
 const showVideo = item.videoId && !item.curated?.data.placeholder;
 ---
 
-<section class="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-24" data-reveal>
-  <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent">Neuestes Gespräch</p>
+<section class="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-24">
+  <p class="font-mono text-[0.65rem] uppercase tracking-label text-accent" data-reveal>Neuestes Gespräch</p>
 
   <div class="mt-6 grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-12">
-    {
-      showVideo ? (
-        <YouTubePlayer url={`https://www.youtube.com/watch?v=${item.videoId}`} title={item.title} class="rounded-lg" />
-      ) : (
-        <a href={href} class="hover-media block rounded-lg">
-          <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} />
-        </a>
-      )
-    }
+    <div data-cursor-parallax data-scroll-zoom data-reveal transition:name={`gespraech-visual-${item.slug}`}>
+      {
+        showVideo ? (
+          <YouTubePlayer url={`https://www.youtube.com/watch?v=${item.videoId}`} title={item.title} class="rounded-lg" />
+        ) : (
+          <a href={href} class="hover-media block rounded-lg">
+            <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} />
+          </a>
+        )
+      }
+    </div>
 
-    <div>
+    <div data-reveal data-reveal-delay="180">
       <h2 class="font-serif text-3xl leading-tight text-ink sm:text-4xl">
         <a href={href} class="hover:text-accent">{item.title}</a>
       </h2>

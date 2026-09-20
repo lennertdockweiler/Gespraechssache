@@ -104,7 +104,7 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
       </p>
     )}
 
-    <div class="mt-10 rounded-xl">
+    <div class="mt-10 rounded-xl" data-reveal transition:name={`gespraech-visual-${item.slug}`}>
       {heroVideoUrl ? (
         <YouTubePlayer url={heroVideoUrl} title={item.title} class="rounded-xl" />
       ) : item.thumbnailUrl ? (

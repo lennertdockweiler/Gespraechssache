@@ -74,7 +74,10 @@ const breadcrumbSchema = {
         <p class="mt-2 text-lg text-stone">{person.data.profession}</p>
 
         {person.data.shortQuote && (
-          <blockquote class="mt-6 border-l-2 border-accent pl-4 font-serif text-xl italic text-ink/80">
+          <blockquote
+            class="mt-6 border-l-2 border-accent pl-4 font-serif text-xl italic text-ink/80"
+            data-quote-reveal
+          >
             „{person.data.shortQuote}"
           </blockquote>
         )}
@@ -110,3 +113,7 @@ const breadcrumbSchema = {
     )}
   </article>
 </Layout>
+
+<script>
+  import '@/scripts/quote-reveal';
+</script>
