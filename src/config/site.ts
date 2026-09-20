@@ -43,7 +43,7 @@ export const platforms: Record<string, PlatformLink> = {
 
 export const primaryNav = [
   { label: 'Gespräche', href: '/gespraeche/' },
-  { label: 'Menschen', href: '/menschen/' },
+  { label: 'Ganze Gespräche', href: '/ganze-gespraeche/' },
   { label: 'Kurz gefragt', href: '/kurz-gefragt/' },
   { label: 'Über das Projekt', href: '/ueber-gespraechssache/' },
 ];

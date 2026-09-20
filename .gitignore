@@ -24,3 +24,8 @@ yarn-error.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+
+# Lokale Design-Explorationen (Homepage-Stilvarianten) – bewusst nicht Teil
+# des Repos, nur zur lokalen Ansicht im Browser.
+design-previews/
