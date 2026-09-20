@@ -64,85 +64,96 @@ function isActive(href: string) {
     </button>
   </div>
 
-  <div
-    id="mobile-nav-panel"
-    class="fixed inset-0 z-50 hidden md:hidden"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Mobile Navigation"
-  >
-    <div class="panel-inner ml-auto flex h-full w-[82%] max-w-sm flex-col bg-paper px-6 py-6 shadow-xl">
-      <div class="flex items-center justify-between">
-        <Logo />
-        <button
-          id="mobile-nav-close"
-          type="button"
-          class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors duration-400 hover:border-accent hover:text-accent"
-          aria-label="Menü schließen"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="1.5"></path>
-          </svg>
-        </button>
-      </div>
-
-      <nav class="mt-10 flex flex-col gap-1" aria-label="Mobile Hauptnavigation">
-        {
-          primaryNav.map((item, i) => (
-            <a
-              href={withBase(item.href)}
-              class="panel-item border-b border-line py-4 font-serif text-2xl text-ink transition-colors duration-400 hover:text-accent"
-              style={`transition-delay:${i * 60}ms`}
-            >
-              {item.label}
-            </a>
-          ))
-        }
-      </nav>
-
-      <a
-        href={withBase('/gast-vorschlagen/')}
-        class="panel-item mt-8 rounded-full bg-ink px-5 py-3 text-center text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent"
-        style={`transition-delay:${primaryNav.length * 60 + 40}ms`}
-      >
-        Gast vorschlagen
-      </a>
-    </div>
-  </div>
-
   <style>
-    #mobile-nav-panel {
-      background-color: rgb(24 20 15 / 0);
-      transition: background-color var(--dur-base) var(--ease-editorial);
-    }
-    #mobile-nav-panel.is-open {
-      background-color: rgb(24 20 15 / 0.4);
-    }
-    #mobile-nav-panel .panel-inner {
-      transform: translateX(100%);
-      transition: transform var(--dur-base) var(--ease-editorial);
-    }
-    #mobile-nav-panel.is-open .panel-inner {
-      transform: translateX(0);
-    }
-    #mobile-nav-panel .panel-item {
-      opacity: 0;
-      transform: translateY(10px);
-      transition:
-        opacity var(--dur-fast) var(--ease-editorial),
-        transform var(--dur-fast) var(--ease-editorial),
-        color var(--dur-base) var(--ease-editorial),
-        background-color var(--dur-base) var(--ease-editorial);
-    }
-    #mobile-nav-panel.is-open .panel-item {
-      opacity: 1;
-      transform: translateY(0);
-    }
     #site-header.is-scrolled {
       box-shadow: 0 8px 24px -18px rgb(24 20 15 / 0.35);
     }
   </style>
 </header>
+
+<!--
+  Bewusst AUSSERHALB von <header>: `backdrop-blur` auf dem Header erzeugt
+  per Spezifikation einen neuen Containing Block für `position: fixed`-
+  Nachfahren (wie jedes `filter`/`backdrop-filter`). Läge das Panel innerhalb
+  des Headers, würde `inset-0` sich nur auf die ~72px hohe Header-Box statt
+  auf den echten Viewport beziehen – das Menü wäre dann nur ein schmaler
+  Streifen oben statt eines vollflächigen Panels.
+-->
+<div
+  id="mobile-nav-panel"
+  class="fixed inset-0 z-50 hidden md:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Mobile Navigation"
+>
+  <div class="panel-inner ml-auto flex h-full w-[82%] max-w-sm flex-col bg-paper px-6 py-6 shadow-xl">
+    <div class="flex items-center justify-between">
+      <Logo />
+      <button
+        id="mobile-nav-close"
+        type="button"
+        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors duration-400 hover:border-accent hover:text-accent"
+        aria-label="Menü schließen"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="1.5"></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="mt-10 flex flex-col gap-1" aria-label="Mobile Hauptnavigation">
+      {
+        primaryNav.map((item, i) => (
+          <a
+            href={withBase(item.href)}
+            class="panel-item border-b border-line py-4 font-serif text-2xl text-ink transition-colors duration-400 hover:text-accent"
+            style={`transition-delay:${i * 60}ms`}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <a
+      href={withBase('/gast-vorschlagen/')}
+      class="panel-item mt-8 rounded-full bg-ink px-5 py-3 text-center text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent"
+      style={`transition-delay:${primaryNav.length * 60 + 40}ms`}
+    >
+      Gast vorschlagen
+    </a>
+  </div>
+</div>
+
+<style>
+  #mobile-nav-panel {
+    background-color: rgb(24 20 15 / 0);
+    transition: background-color var(--dur-base) var(--ease-editorial);
+  }
+  #mobile-nav-panel.is-open {
+    background-color: rgb(24 20 15 / 0.4);
+  }
+  #mobile-nav-panel .panel-inner {
+    transform: translateX(100%);
+    transition: transform var(--dur-base) var(--ease-editorial);
+  }
+  #mobile-nav-panel.is-open .panel-inner {
+    transform: translateX(0);
+  }
+  #mobile-nav-panel .panel-item {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity var(--dur-fast) var(--ease-editorial),
+      transform var(--dur-fast) var(--ease-editorial),
+      color var(--dur-base) var(--ease-editorial),
+      background-color var(--dur-base) var(--ease-editorial);
+  }
+  #mobile-nav-panel.is-open .panel-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
 
 <script>
   import '@/scripts/mobile-nav';
