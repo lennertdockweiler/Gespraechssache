@@ -10,7 +10,7 @@ import SEO from '@/components/SEO.astro';
 import ScrollProgress from '@/components/ScrollProgress.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import { siteConfig } from '@/config/site';
+import { platforms, siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
 interface Props {
@@ -52,12 +52,22 @@ const accentStyle = accentOverride
 const fullPath = withBase(path);
 const homeUrl = siteConfig.siteUrl + withBase('/');
 
+// `sameAs` zieht automatisch alle bereits eingetragenen Plattform-URLs
+// (siteConfig.platforms) – sobald dort echte Links stehen, tauchen sie
+// hier ohne weiteres Zutun auf und stärken die Entität in Google/KI-
+// Wissensgraphen, statt an einer zweiten Stelle separat gepflegt zu werden.
+const sameAs = Object.values(platforms)
+  .map((platform) => platform.url)
+  .filter((url): url is string => Boolean(url));
+
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: siteConfig.projectName,
   url: homeUrl,
   description: siteConfig.tagline,
+  logo: siteConfig.siteUrl + withBase('/favicon-512.png'),
+  ...(sameAs.length > 0 && { sameAs }),
 };
 
 const websiteSchema = {
@@ -77,6 +87,8 @@ const allSchemas = [organizationSchema, websiteSchema, ...structuredData];
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon-32.png')} type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#18140f" />
 
