@@ -9,28 +9,22 @@ import Layout from '@/layouts/Layout.astro';
   noindex={true}
 >
   <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
-    <div class="max-w-prose" data-reveal>
+    <div class="max-w-prose">
       <h1 class="font-serif text-4xl text-ink sm:text-5xl">Impressum</h1>
-
-      <div class="mt-8 rounded-lg border border-dashed border-accent/50 bg-paper-soft p-5 text-sm text-stone">
-        <strong class="text-ink">Platzhalter-Inhalt.</strong> Dieses Impressum muss vor
-        Veröffentlichung mit den tatsächlichen, rechtlich verbindlichen Angaben ergänzt und
-        idealerweise juristisch geprüft werden. Es wurden bewusst keine Adress- oder Kontaktdaten
-        erfunden.
-      </div>
 
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">Angaben gemäß § 5 TMG</h2>
         <p class="mt-3 text-stone">
-          [TODO: Name und Anschrift des Anbieters/der verantwortlichen Person eintragen]
+          Lennert Dockweiler<br />
+          Muntpratstr. 15<br />
+          78462 Konstanz
         </p>
       </section>
 
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">Kontakt</h2>
         <p class="mt-3 text-stone">
-          E-Mail: [TODO: Kontakt-E-Mail eintragen]<br />
-          Telefon: [TODO: optional]
+          E-Mail: hallo@gesprächssache.de
         </p>
       </section>
 
@@ -38,13 +32,30 @@ import Layout from '@/layouts/Layout.astro';
         <h2 class="font-serif text-2xl text-ink">Umsatzsteuer-ID</h2>
         <p class="mt-3 text-stone">
           [TODO: Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz eintragen,
-          falls vorhanden]
+          sobald vorhanden. Falls keine USt-ID vorliegt und die Kleinunternehmerregelung
+          (§ 19 UStG) gilt, stattdessen: „Gemäß § 19 UStG wird keine Umsatzsteuer erhoben.“]
         </p>
       </section>
 
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
-        <p class="mt-3 text-stone">[TODO: Name und Anschrift eintragen]</p>
+        <p class="mt-3 text-stone">
+          Lennert Dockweiler<br />
+          Muntpratstr. 15<br />
+          78462 Konstanz
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">Streitschlichtung</h2>
+        <p class="mt-3 text-stone">
+          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
+          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+            https://ec.europa.eu/consumers/odr/
+          </a>
+          . Wir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor
+          einer Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
       </section>
     </div>
   </div>

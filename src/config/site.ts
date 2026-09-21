@@ -24,8 +24,12 @@ export const siteConfig = {
   // Schreibweisen derselben Domain im ausgelieferten HTML zu mischen.
   // Muss mit `site` in astro.config.mjs übereinstimmen.
   siteUrl: 'https://xn--gesprchssache-ffb.de',
-  // TODO: echte Kontakt-/Presse-Adresse eintragen, sobald vorhanden.
-  contactEmail: null as string | null,
+  // Hinweis: Unicode-Domain im lokalen Teil einer E-Mail-Adresse wird nicht von
+  // jedem Mailserver unterstützt (Email Address Internationalization/EAI ist
+  // noch nicht überall verbreitet) – Zustellbarkeit von extern am besten einmal
+  // testen, sonst ggf. auf die Punycode-Form (hallo@xn--gesprchssache-ffb.de)
+  // ausweichen, falls das eigene Postfach darüber läuft.
+  contactEmail: 'hallo@gesprächssache.de' as string | null,
   locale: 'de-DE',
 
   host: {

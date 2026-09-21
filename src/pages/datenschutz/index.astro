@@ -10,55 +10,111 @@ import { withBase } from '@/utils/paths';
   noindex={true}
 >
   <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
-    <div class="max-w-prose" data-reveal>
+    <div class="max-w-prose">
       <h1 class="font-serif text-4xl text-ink sm:text-5xl">Datenschutzerklärung</h1>
 
       <div class="mt-8 rounded-lg border border-dashed border-accent/50 bg-paper-soft p-5 text-sm text-stone">
-        <strong class="text-ink">Entwurf, kein Rechtsdokument.</strong> Diese Seite ist ein
-        strukturelles Gerüst für V1 und muss vor Veröffentlichung durch eine tatsächlich
-        rechtssichere, auf die konkret eingesetzten Dienste (Hosting, Formular-Backend,
-        Analyse-Tools, Video-/Podcast-Einbettungen) zugeschnittene Datenschutzerklärung ersetzt
-        bzw. juristisch geprüft werden.
+        <strong class="text-ink">Hinweis, kein Ersatz für Rechtsberatung.</strong> Diese Erklärung
+        beschreibt bewusst umfassend sowohl die aktuell tatsächlich eingesetzten Dienste als auch
+        einige, die noch nicht aktiv sind, aber vorbereitet werden (klar als solche markiert,
+        siehe Abschnitte 12–13). Vor einem produktiven Einsatz von Google Analytics oder einem
+        Meta-Pixel ist zusätzlich eine Einwilligungslösung (Cookie-Banner) erforderlich – das ist
+        hier noch nicht umgesetzt. Eine juristische Prüfung wird trotz der Ausführlichkeit
+        empfohlen.
       </div>
 
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">1. Verantwortlicher</h2>
-        <p class="mt-3 text-stone">[TODO: Name und Anschrift des Verantwortlichen eintragen]</p>
+        <p class="mt-3 text-stone">
+          Lennert Dockweiler<br />
+          Muntpratstr. 15<br />
+          78462 Konstanz<br />
+          E-Mail: hallo@gesprächssache.de
+        </p>
       </section>
 
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">2. Hosting und Server-Logfiles</h2>
         <p class="mt-3 text-stone">
-          [TODO: Hosting-Anbieter eintragen, sobald final gewählt, sowie Umfang der dort
-          verarbeiteten Server-Logfiles.]
+          Diese Website wird über GitHub Pages gehostet, ein Angebot von GitHub, Inc., 88 Colin
+          P. Kelly Jr. Street, San Francisco, CA 94107, USA (Teil der Microsoft Corporation).
+          Beim Aufruf der Website verarbeitet GitHub automatisch technische Zugriffsdaten
+          (Server-Logfiles), u.a. IP-Adresse, Datum und Uhrzeit des Zugriffs, aufgerufene Seite,
+          Referrer-URL sowie Browser- und Betriebssystem-Informationen. Diese Verarbeitung ist
+          für den technischen Betrieb der Website zwingend erforderlich (Art. 6 Abs. 1 lit. f
+          DSGVO, berechtigtes Interesse an einer funktionierenden, sicheren Auslieferung der
+          Website). Details zur Verarbeitung durch GitHub:{' '}
+          <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
+            GitHub Privacy Statement
+          </a>.
         </p>
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">3. Formular „Gast vorschlagen"</h2>
+        <h2 class="font-serif text-2xl text-ink">3. SSL-/TLS-Verschlüsselung</h2>
+        <p class="mt-3 text-stone">
+          Diese Website nutzt aus Sicherheitsgründen und zum Schutz der Übertragung
+          personenbezogener Daten eine SSL-/TLS-Verschlüsselung (erkennbar am „https://" in der
+          Adresszeile). Sind SSL bzw. TLS aktiviert, können die Daten, die Besucher:innen an uns
+          übermitteln, nicht von Dritten mitgelesen werden.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">4. Cookies und lokale Speicherung</h2>
+        <p class="mt-3 text-stone">
+          Diese Website setzt aktuell keine Cookies zu Tracking-, Analyse- oder Marketingzwecken
+          ein. Es werden keine Analyse- oder Werbe-Cookies gesetzt. Für einzelne
+          Interface-Einstellungen (z.B. ob eine Animation reduziert angezeigt werden soll) kann
+          der Browser der/des Nutzenden Informationen lokal im Browser speichern
+          (Local Storage); diese Daten verbleiben ausschließlich auf dem Endgerät und werden
+          nicht an uns oder Dritte übertragen.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">5. Formular „Gast vorschlagen"</h2>
         <p class="mt-3 text-stone">
           Über das Formular unter <a href={withBase('/gast-vorschlagen/')} class="underline decoration-line hover:text-accent">/gast-vorschlagen/</a>
           werden Name, E-Mail-Adresse und freiwillige Angaben zur vorgeschlagenen Person
-          übermittelt, um den Vorschlag zu bearbeiten und ggf. Kontakt aufzunehmen. In V1 ist noch
-          kein Versand-Backend angebunden (siehe README.md). Sobald ein Dienst angebunden wird,
-          muss dieser Abschnitt um den konkreten Anbieter, die Rechtsgrundlage (Art. 6 Abs. 1 lit.
-          b/f DSGVO) und die Speicherdauer ergänzt werden.
+          übermittelt, um den Vorschlag zu bearbeiten und ggf. Kontakt aufzunehmen. Rechtsgrundlage
+          ist Art. 6 Abs. 1 lit. b bzw. f DSGVO (Bearbeitung einer aktiven Anfrage bzw. berechtigtes
+          Interesse an der Programmauswahl). In V1 ist noch kein Versand-Backend angebunden (siehe
+          README.md) – es werden aktuell keine Formulareingaben tatsächlich übermittelt oder
+          gespeichert. Sobald ein Dienst (z.B. Formspree) angebunden wird, wird dieser Abschnitt um
+          den konkreten Anbieter und die Speicherdauer ergänzt.
         </p>
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">4. Newsletter</h2>
+        <h2 class="font-serif text-2xl text-ink">6. Newsletter</h2>
         <p class="mt-3 text-stone">
           Die Newsletter-Anmeldung ist aktuell nur als Oberfläche vorbereitet und technisch noch
-          nicht mit einem Versanddienst verbunden. Sobald ein Anbieter angebunden wird, wird diese
-          Erklärung entsprechend ergänzt (inkl. Double-Opt-in-Verfahren und Widerrufsrecht).
+          nicht mit einem Versanddienst verbunden – es werden aktuell keine E-Mail-Adressen
+          tatsächlich gespeichert oder verarbeitet. Sobald ein Versanddienst angebunden wird,
+          erfolgt die Anmeldung im Double-Opt-in-Verfahren (Bestätigung per E-Mail vor dem ersten
+          Versand), Rechtsgrundlage ist die Einwilligung (Art. 6 Abs. 1 lit. a DSGVO); diese
+          Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden, z.B. über
+          einen Abmeldelink in jeder E-Mail. Dieser Abschnitt wird dann um den konkreten Anbieter
+          und dessen Datenverarbeitung ergänzt.
         </p>
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">5. YouTube-Einbettungen</h2>
+        <h2 class="font-serif text-2xl text-ink">7. Schriftarten (Google Fonts)</h2>
         <p class="mt-3 text-stone">
-          Auf Episoden-Detailseiten und in der Sektion „Neu auf dem Kanal" auf der Startseite
+          Diese Website nutzt die Schriftarten Fraunces, Inter und JetBrains Mono, die
+          ursprünglich über Google Fonts veröffentlicht werden. Die Schriftdateien werden jedoch
+          lokal auf unserem eigenen Server bzw. bei GitHub Pages gehostet und beim Seitenaufruf
+          direkt von dort geladen – es findet <strong class="text-ink">keine</strong> Verbindung
+          zu Servern von Google statt, und es werden dabei keine Daten an Google übertragen.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">8. YouTube-Einbettungen</h2>
+        <p class="mt-3 text-stone">
+          Auf Episoden-Detailseiten und in der Sektion „Neuestes Gespräch" auf der Startseite
           kann ein Video über den offiziellen YouTube-Player eingebunden sein. Technisch kommt
           zunächst nur ein Vorschaubild ohne Verbindung zu YouTube zur Anzeige; erst durch einen
           bewussten Klick auf das Vorschaubild wird der eigentliche Player von der
@@ -67,14 +123,19 @@ import { withBase } from '@/utils/paths';
           verarbeitet Google (Google Ireland Ltd. bzw. Google LLC) u.a. IP-Adresse und
           Nutzungsdaten gemäß eigener Datenschutzerklärung. Die Vorschaubilder selbst werden über
           die offizielle, öffentlich erreichbare YouTube-Thumbnail-URL geladen (i.ytimg.com); auch
-          dabei erhält Google die IP-Adresse des Aufrufs. [TODO: Rechtsgrundlage/Einwilligungslösung
-          juristisch festlegen, insbesondere ob eine Consent-Lösung vor dem Laden der
-          Vorschaubilder erforderlich ist.]
+          dabei erhält Google bereits beim Laden der Seite die IP-Adresse des Aufrufs. Rechtsgrundlage
+          ist unser berechtigtes Interesse an einer ansprechenden Darstellung unserer Inhalte
+          (Art. 6 Abs. 1 lit. f DSGVO); [TODO: juristisch festlegen, ob dafür zusätzlich eine
+          Einwilligungslösung vor dem Laden der Vorschaubilder erforderlich ist]. Weitere
+          Informationen:{' '}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
+            Google-Datenschutzerklärung
+          </a>.
         </p>
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">6. Instagram-Beiträge („Gedanken &amp; Begegnungen")</h2>
+        <h2 class="font-serif text-2xl text-ink">9. Instagram-Beiträge („Gedanken &amp; Begegnungen")</h2>
         <p class="mt-3 text-stone">
           Sofern konfiguriert, lädt die Startseite in der Sektion „Gedanken &amp; Begegnungen" die
           neuesten Beiträge des offiziellen Gesprächssache-Instagram-Accounts über die offizielle
@@ -83,17 +144,91 @@ import { withBase } from '@/utils/paths';
           angezeigten Bilder werden jedoch direkt von Instagrams eigenen Servern geladen (kein
           eigenes Hosting) – dadurch erhält Meta bei jedem Seitenaufruf dieser Sektion die
           IP-Adresse und Nutzungsdaten der Besucher:innen. Ein Klick auf einen Beitrag führt auf
-          die Originalseite auf instagram.com. [TODO: Rechtsgrundlage/Einwilligungslösung
-          juristisch festlegen.]
+          die Originalseite auf instagram.com. Rechtsgrundlage ist unser berechtigtes Interesse an
+          der Darstellung unserer Social-Media-Aktivität (Art. 6 Abs. 1 lit. f DSGVO); [TODO:
+          juristisch festlegen, ob dafür zusätzlich eine Einwilligungslösung erforderlich ist].
+          Weitere Informationen:{' '}
+          <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
+            Meta-Datenschutzrichtlinie
+          </a>.
         </p>
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">7. Rechte der betroffenen Person</h2>
+        <h2 class="font-serif text-2xl text-ink">10. TikTok, Spotify und Apple Podcasts</h2>
+        <p class="mt-3 text-stone">
+          Im Footer und in der Sektion „Überall verfügbar" verlinken wir auf unsere Profile bei
+          TikTok, Spotify und Apple Podcasts. Diese Inhalte werden nicht eingebettet, sondern als
+          gewöhnliche Links dargestellt – erst mit einem aktiven Klick verlässt man
+          gesprächssache.de, und erst dann verarbeitet der jeweilige Anbieter (TikTok Technology
+          Limited/TikTok Inc., Spotify AB bzw. Apple Distribution International) Daten gemäß
+          seiner eigenen Datenschutzerklärung. Bis zu diesem Klick findet keine Datenübertragung
+          an diese Anbieter statt.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">11. Kontaktaufnahme per E-Mail</h2>
+        <p class="mt-3 text-stone">
+          Bei Kontaktaufnahme per E-Mail (z.B. an hallo@gesprächssache.de) werden die von der
+          absendenden Person mitgeteilten Daten (E-Mail-Adresse, ggf. Name und Inhalt der
+          Nachricht) zur Bearbeitung der Anfrage gespeichert. Rechtsgrundlage ist Art. 6 Abs. 1
+          lit. b bzw. f DSGVO. Die Daten werden gelöscht, sobald sie für die Bearbeitung der
+          Anfrage nicht mehr erforderlich sind, sofern keine gesetzlichen Aufbewahrungspflichten
+          entgegenstehen.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">12. Google Analytics (noch nicht aktiv)</h2>
+        <p class="mt-3 text-stone">
+          <strong class="text-ink">Aktuell nicht im Einsatz.</strong> Sollte künftig Google
+          Analytics (Google Ireland Ltd.) zur Reichweitenmessung eingesetzt werden, würde dies
+          auf Basis einer vorherigen, aktiven Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) über eine
+          Cookie-Consent-Lösung erfolgen; IP-Adressen würden dabei anonymisiert bzw. gekürzt
+          übertragen. Diese Erklärung wird vor Aktivierung um den konkreten Funktionsumfang,
+          Speicherdauern und die Widerrufsmöglichkeit ergänzt.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">13. Meta-/Facebook-Pixel (noch nicht aktiv)</h2>
+        <p class="mt-3 text-stone">
+          <strong class="text-ink">Aktuell nicht im Einsatz.</strong> Sollte künftig ein
+          Meta-Pixel (Meta Platforms Ireland Ltd.) zur Analyse und für Werbezwecke eingesetzt
+          werden, würde dies ebenfalls erst nach aktiver Einwilligung über eine
+          Cookie-Consent-Lösung erfolgen (Art. 6 Abs. 1 lit. a DSGVO); dabei können Daten in die
+          USA übertragen werden. Diese Erklärung wird vor Aktivierung entsprechend ergänzt.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">14. Rechte der betroffenen Person</h2>
         <p class="mt-3 text-stone">
           Nutzer:innen haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der
           Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung ihrer
-          personenbezogenen Daten. [TODO: Kontaktweg für die Ausübung dieser Rechte ergänzen.]
+          personenbezogenen Daten. Anfragen dazu bitte an hallo@gesprächssache.de.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">15. Beschwerderecht bei einer Aufsichtsbehörde</h2>
+        <p class="mt-3 text-stone">
+          Unbeschadet eines anderweitigen verwaltungsrechtlichen oder gerichtlichen Rechtsbehelfs
+          besteht das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde, insbesondere in
+          dem Mitgliedstaat des gewöhnlichen Aufenthalts, des Arbeitsplatzes oder des Orts des
+          mutmaßlichen Verstoßes. Für Konstanz zuständig ist der Landesbeauftragte für den
+          Datenschutz und die Informationsfreiheit Baden-Württemberg.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">16. Änderungen dieser Datenschutzerklärung</h2>
+        <p class="mt-3 text-stone">
+          Diese Datenschutzerklärung wird angepasst, sobald sich die beschriebenen Dienste oder
+          die Rechtslage ändern – etwa wenn Newsletter, Analyse-Tools oder ein Meta-Pixel
+          tatsächlich aktiviert werden. Es gilt jeweils die zum Zeitpunkt des Website-Besuchs
+          aktuelle Fassung.
         </p>
       </section>
     </div>
