@@ -80,6 +80,12 @@ const allSchemas = [organizationSchema, websiteSchema, ...structuredData];
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#18140f" />
 
+    <!-- Verbindung zu den YouTube-Domains früh aufbauen, statt erst wenn
+         der Browser das erste Thumbnail/den Facade-Klick entdeckt – spart
+         DNS/TLS-Handshake-Zeit für praktisch jede Seite dieser Website. -->
+    <link rel="preconnect" href="https://i.ytimg.com" />
+    <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin />
+
     <SEO title={title} description={description} path={fullPath} image={image} type={type} noindex={noindex} />
 
     {

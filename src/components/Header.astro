@@ -29,7 +29,7 @@ function isActive(href: string) {
             href={withBase(item.href)}
             class:list={[
               'link-animated text-sm tracking-widish',
-              isActive(item.href) ? 'text-ink font-medium' : 'text-stone hover:text-accent',
+              isActive(item.href) ? 'text-accent font-medium' : 'text-stone hover:text-accent',
             ]}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
@@ -106,7 +106,11 @@ function isActive(href: string) {
         primaryNav.map((item, i) => (
           <a
             href={withBase(item.href)}
-            class="panel-item border-b border-line py-4 font-serif text-2xl text-ink transition-colors duration-400 hover:text-accent"
+            class:list={[
+              'panel-item border-b border-line py-4 font-serif text-2xl transition-colors duration-400 hover:text-accent',
+              isActive(item.href) ? 'text-accent' : 'text-ink',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
             style={`transition-delay:${i * 60}ms`}
           >
             {item.label}

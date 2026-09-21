@@ -9,7 +9,7 @@
 import Layout from '@/layouts/Layout.astro';
 import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import { getLatestUncutVideos } from '@/lib/youtube';
+import { getLatestUncutVideos, youtubeThumbnailSrcset } from '@/lib/youtube';
 import { siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
@@ -52,7 +52,11 @@ const breadcrumbSchema = {
                 {video.thumbnailUrl ? (
                   <img
                     src={video.thumbnailUrl}
-                    alt=""
+                    srcset={youtubeThumbnailSrcset(video.thumbnailUrl)}
+                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                    alt={video.title}
+                    width="480"
+                    height="270"
                     loading="lazy"
                     decoding="async"
                     class="aspect-video w-full rounded-lg object-cover"

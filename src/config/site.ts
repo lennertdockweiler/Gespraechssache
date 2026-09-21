@@ -16,8 +16,14 @@ export interface PlatformLink {
 export const siteConfig = {
   projectName: 'Gesprächssache',
   tagline: 'Interessante Menschen. Gute Fragen. Echte Gespräche.',
+  // Punycode/ASCII-Form der Domain (siehe public/CNAME), nicht die
+  // Unicode-Schreibweise: `new URL()` (SEO.astro) und @astrojs/sitemap
+  // normalisieren IDN-Domains ohnehin automatisch dahin – mit dieser Form
+  // als Quelle stimmen auch die von Hand gebauten JSON-LD-/robots.txt-URLs
+  // (die kein `new URL()` durchlaufen) überein, statt zwei unterschiedliche
+  // Schreibweisen derselben Domain im ausgelieferten HTML zu mischen.
   // Muss mit `site` in astro.config.mjs übereinstimmen.
-  siteUrl: 'https://gesprächssache.de',
+  siteUrl: 'https://xn--gesprchssache-ffb.de',
   // TODO: echte Kontakt-/Presse-Adresse eintragen, sobald vorhanden.
   contactEmail: null as string | null,
   locale: 'de-DE',

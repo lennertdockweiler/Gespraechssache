@@ -39,13 +39,27 @@ const breadcrumbSchema = {
     { '@type': 'ListItem', position: 3, name: person.data.name, item: siteConfig.siteUrl + withBase(path) },
   ],
 };
+
+// Person-Schema: hilft Suchmaschinen (und zunehmend auch KI-/Antwort-
+// Systemen), Gast und Profil eindeutig als dieselbe Entität zu erkennen,
+// statt den Namen nur als Fließtext zu sehen.
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: person.data.name,
+  jobTitle: person.data.profession,
+  description: person.data.shortQuote ?? undefined,
+  url: siteConfig.siteUrl + withBase(path),
+  image: person.data.portrait ? siteConfig.siteUrl + withBase(person.data.portrait) : undefined,
+  sameAs: socialLinks.map((link) => link.url).filter((url): url is string => Boolean(url)),
+};
 ---
 
 <Layout
   title={person.data.name}
   description={`${person.data.name} – ${person.data.profession}. Porträt und Gespräche bei Gesprächssache.`}
   path={path}
-  structuredData={[breadcrumbSchema]}
+  structuredData={[breadcrumbSchema, personSchema]}
 >
   <article class="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20">
     <nav class="text-xs text-stone" aria-label="Breadcrumb">
@@ -60,7 +74,10 @@ const breadcrumbSchema = {
           <img
             src={withBase(person.data.portrait)}
             alt={person.data.name}
-            loading="lazy"
+            width="400"
+            height="500"
+            loading="eager"
+            fetchpriority="high"
             decoding="async"
             class="aspect-[4/5] w-full rounded-xl object-cover"
           />
@@ -107,7 +124,7 @@ const breadcrumbSchema = {
       <div class="mt-20 border-t border-line pt-14">
         <h2 class="font-serif text-2xl text-ink">Gespräche mit {person.data.name}</h2>
         <div class="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {episodes.map((item) => <EpisodeCard item={item} />)}
+          {episodes.map((item, i) => <EpisodeCard item={item} index={i} />)}
         </div>
       </div>
     )}

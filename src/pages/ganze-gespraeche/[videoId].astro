@@ -61,7 +61,7 @@ const videoSchema = {
     </time>
 
     <div class="mt-10 rounded-xl">
-      <YouTubePlayer url={`https://www.youtube.com/watch?v=${video.videoId}`} title={video.title} class="rounded-xl" />
+      <YouTubePlayer url={`https://www.youtube.com/watch?v=${video.videoId}`} title={video.title} class="rounded-xl" priority />
     </div>
 
     {video.description && (

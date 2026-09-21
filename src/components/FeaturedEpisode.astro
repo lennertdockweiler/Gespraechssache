@@ -22,7 +22,12 @@ const showVideo = item.videoId && !item.curated?.data.placeholder;
     <div data-cursor-parallax data-scroll-zoom data-reveal transition:name={`gespraech-visual-${item.slug}`}>
       {
         showVideo ? (
-          <YouTubePlayer url={`https://www.youtube.com/watch?v=${item.videoId}`} title={item.title} class="rounded-lg" />
+          <YouTubePlayer
+            url={`https://www.youtube.com/watch?v=${item.videoId}`}
+            title={item.title}
+            class="rounded-lg"
+            priority
+          />
         ) : (
           <a href={href} class="hover-media block rounded-lg">
             <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} />

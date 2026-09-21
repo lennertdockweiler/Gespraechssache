@@ -15,7 +15,10 @@ const {
   title,
   description,
   path,
-  image = '/og/default.svg',
+  // PNG statt SVG: viele Crawler/Messenger (Facebook, LinkedIn, WhatsApp,
+  // Slack, …) rendern SVGs als Link-Vorschaubild nicht zuverlässig oder gar
+  // nicht. Erzeugt aus og/default.svg, siehe dortigen Kommentar.
+  image = '/og/default.png',
   type = 'website',
   noindex = false,
 } = Astro.props;
@@ -36,6 +39,9 @@ const fullTitle = isHome ? title : `${title} · ${siteConfig.projectName}`;
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/png" />
 <meta property="og:locale" content="de_DE" />
 <meta property="og:site_name" content={siteConfig.projectName} />
 

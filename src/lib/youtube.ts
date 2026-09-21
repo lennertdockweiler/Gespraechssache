@@ -58,6 +58,21 @@ const API_BASE = 'https://www.googleapis.com/youtube/v3';
  * Episoden-Frontmatter-Feldern (`youtubeFull`/`youtubeCut`) hinterlegten
  * vollständigen URLs die ID für den offiziellen Embed zu gewinnen.
  */
+// Baut ein srcset aus den offiziellen, immer verfügbaren YouTube-
+// Thumbnail-Größen (mqdefault 320×180, hqdefault 480×360), damit das
+// Grid auf kleinen Bildschirmen nicht unnötig die große Variante lädt.
+// Nur für echte i.ytimg.com-Thumbnails – kuratierte, lokale Vorschaubilder
+// (siehe gespraeche.ts) durchlaufen diese Funktion nicht, da deren URL
+// nicht auf das erwartete Muster passt und dann unverändert (ohne srcset)
+// bleibt.
+export function youtubeThumbnailSrcset(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  const match = url.match(/^(https:\/\/i\.ytimg\.com\/vi\/[^/]+\/)(?:hqdefault|mqdefault|sddefault)\.jpg$/);
+  if (!match) return undefined;
+  const base = match[1];
+  return `${base}mqdefault.jpg 320w, ${base}hqdefault.jpg 480w`;
+}
+
 export function extractYouTubeId(url: string | null | undefined): string | null {
   if (!url) return null;
   try {

@@ -8,6 +8,7 @@ import { getGespraeche } from '@/lib/gespraeche';
 import type { GespraechItem } from '@/lib/gespraeche';
 import { siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
+import { toIso8601Duration } from '@/utils/duration';
 
 export async function getStaticPaths() {
   const items = await getGespraeche();
@@ -57,7 +58,9 @@ const breadcrumbSchema = {
 
 // VideoObject nur ausspielen, wenn es sich um ein echtes (nicht
 // Platzhalter-)Video handelt – es werden keine erfundenen Video-/
-// Thumbnail-Daten strukturiert ausgezeichnet.
+// Thumbnail-Daten strukturiert ausgezeichnet. `thumbnailUrl` ist laut
+// Google für die Video-Rich-Result-Berechtigung praktisch verpflichtend,
+// deshalb hier zusätzlich ein Fallback direkt aus der Video-ID.
 const videoSchema = heroVideoUrl
   ? {
       '@context': 'https://schema.org',
@@ -66,6 +69,9 @@ const videoSchema = heroVideoUrl
       description: item.teaser,
       uploadDate: item.date.toISOString(),
       contentUrl: heroVideoUrl,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${item.videoId}`,
+      thumbnailUrl: item.thumbnailUrl ?? `https://i.ytimg.com/vi/${item.videoId}/hqdefault.jpg`,
+      duration: episode?.data.durationFull ? toIso8601Duration(episode.data.durationFull) : undefined,
     }
   : null;
 
@@ -106,9 +112,18 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
 
     <div class="mt-10 rounded-xl" data-reveal transition:name={`gespraech-visual-${item.slug}`}>
       {heroVideoUrl ? (
-        <YouTubePlayer url={heroVideoUrl} title={item.title} class="rounded-xl" />
+        <YouTubePlayer url={heroVideoUrl} title={item.title} class="rounded-xl" priority />
       ) : item.thumbnailUrl ? (
-        <img src={item.thumbnailUrl} alt="" loading="lazy" decoding="async" class="aspect-video w-full rounded-xl object-cover" />
+        <img
+          src={item.thumbnailUrl}
+          alt={item.title}
+          width="480"
+          height="270"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          class="aspect-video w-full rounded-xl object-cover"
+        />
       ) : (
         <PlaceholderVisual aspect="video" label={item.title} sublabel={guest?.data.name} class="rounded-xl" />
       )}
@@ -205,7 +220,7 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
       <div class="mt-20 border-t border-line pt-14">
         <h2 class="font-serif text-2xl text-ink">Ähnliche Gespräche</h2>
         <div class="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {similarItems.map((i) => <EpisodeCard item={i} />)}
+          {similarItems.map((i, index) => <EpisodeCard item={i} index={index} />)}
         </div>
       </div>
     )}

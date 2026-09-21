@@ -11,9 +11,12 @@ interface Props {
   url: string;
   title: string;
   class?: string;
+  /** true für above-the-fold-Einsatz (Hero/Featured), lädt das Thumbnail
+   *  dann eager statt lazy für ein besseres LCP-Timing. */
+  priority?: boolean;
 }
 
-const { url, title, class: className = '' } = Astro.props;
+const { url, title, class: className = '', priority = false } = Astro.props;
 const videoId = extractYouTubeId(url);
 ---
 
@@ -30,7 +33,10 @@ const videoId = extractYouTubeId(url);
       <img
         src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
         alt=""
-        loading="lazy"
+        width="480"
+        height="360"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
         decoding="async"
         class="absolute inset-0 h-full w-full object-cover"
       />
