@@ -55,6 +55,9 @@ jobs:
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
           INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
           PUBLIC_FORMSPREE_ENDPOINT: ${{ secrets.PUBLIC_FORMSPREE_ENDPOINT }}
+          PUBLIC_NEWSLETTER_ENDPOINT: ${{ secrets.PUBLIC_NEWSLETTER_ENDPOINT }}
+          PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.PUBLIC_GA_MEASUREMENT_ID }}
+          PUBLIC_META_PIXEL_ID: ${{ secrets.PUBLIC_META_PIXEL_ID }}
 
       - name: Pages konfigurieren
         uses: actions/configure-pages@v5

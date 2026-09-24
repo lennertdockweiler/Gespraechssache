@@ -561,3 +561,29 @@ a {
   font-style: italic;
   color: var(--color-ink-soft);
 }
+
+/* -------------------------------------------------------------------------
+   COOKIE-BANNER
+   Siehe CookieBanner.astro + src/scripts/cookie-consent.ts.
+   ------------------------------------------------------------------------- */
+#cookie-banner {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 80;
+  transform: translateY(100%);
+  transition: transform var(--dur-base) var(--ease-editorial);
+}
+
+#cookie-banner.is-open {
+  transform: translateY(0);
+}
+
+#cookie-settings-dialog[open] {
+  display: grid;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #cookie-banner {
+    transition: none;
+  }
+}

@@ -6,7 +6,7 @@ import { withBase } from '@/utils/paths';
 // und dem Astro-`base`-Pfad übereinstimmt – keine zweite Stelle, die bei
 // Domain-/Pfad-Wechsel vergessen werden könnte.
 export const GET: APIRoute = () => {
-  const body = `User-agent: *\nAllow: /\nDisallow: ${withBase('/admin/')}\nDisallow: ${withBase('/preview/')}\n\nSitemap: ${siteConfig.siteUrl}${withBase('/sitemap-index.xml')}\n`;
+  const body = `User-agent: *\nAllow: /\nDisallow: ${withBase('/admin/')}\n\nSitemap: ${siteConfig.siteUrl}${withBase('/sitemap-index.xml')}\n`;
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });

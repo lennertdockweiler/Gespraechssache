@@ -15,11 +15,10 @@ import { withBase } from '@/utils/paths';
 
       <div class="mt-8 rounded-lg border border-dashed border-accent/50 bg-paper-soft p-5 text-sm text-stone">
         <strong class="text-ink">Hinweis, kein Ersatz für Rechtsberatung.</strong> Diese Erklärung
-        beschreibt bewusst umfassend sowohl die aktuell tatsächlich eingesetzten Dienste als auch
-        einige, die noch nicht aktiv sind, aber vorbereitet werden (klar als solche markiert,
-        siehe Abschnitte 12–13). Vor einem produktiven Einsatz von Google Analytics oder einem
-        Meta-Pixel ist zusätzlich eine Einwilligungslösung (Cookie-Banner) erforderlich – das ist
-        hier noch nicht umgesetzt. Eine juristische Prüfung wird trotz der Ausführlichkeit
+        beschreibt bewusst umfassend alle eingesetzten bzw. technisch vorbereiteten Dienste.
+        Google Analytics und Meta-Pixel (Abschnitte 12–13) laden erst, nachdem über den
+        Cookie-Banner aktiv zugestimmt wurde – ohne Zustimmung wird kein einziges Cookie dieser
+        beiden Kategorien gesetzt. Eine juristische Prüfung wird trotz der Ausführlichkeit
         empfohlen.
       </div>
 
@@ -61,42 +60,79 @@ import { withBase } from '@/utils/paths';
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">4. Cookies und lokale Speicherung</h2>
+        <h2 class="font-serif text-2xl text-ink">4. Cookie-Banner und Einwilligung</h2>
         <p class="mt-3 text-stone">
-          Diese Website setzt aktuell keine Cookies zu Tracking-, Analyse- oder Marketingzwecken
-          ein. Es werden keine Analyse- oder Werbe-Cookies gesetzt. Für einzelne
-          Interface-Einstellungen (z.B. ob eine Animation reduziert angezeigt werden soll) kann
-          der Browser der/des Nutzenden Informationen lokal im Browser speichern
-          (Local Storage); diese Daten verbleiben ausschließlich auf dem Endgerät und werden
-          nicht an uns oder Dritte übertragen.
+          Beim ersten Besuch dieser Website erscheint ein Cookie-Banner mit drei Kategorien:
+          „Notwendig" (immer aktiv, keine Einwilligung erforderlich, Art. 6 Abs. 1 lit. f DSGVO),
+          „Analyse" (Google Analytics, siehe Abschnitt 12) und „Marketing" (Meta-Pixel, siehe
+          Abschnitt 13). Analyse- und Marketing-Cookies werden ausschließlich nach aktiver,
+          freiwilliger Einwilligung gesetzt (Art. 6 Abs. 1 lit. a DSGVO) – bis zur Entscheidung
+          bzw. bei Ablehnung wird kein einziges Cookie dieser beiden Kategorien geladen. Die
+          Entscheidung wird lokal im Browser gespeichert (Local Storage, verbleibt auf dem
+          Endgerät) und kann jederzeit über den Link „Cookie-Einstellungen" im Footer geändert
+          bzw. widerrufen werden.
         </p>
+        <div class="mt-4 overflow-x-auto">
+          <table class="w-full min-w-[480px] border-collapse text-left text-sm">
+            <thead>
+              <tr class="border-b border-line text-stone">
+                <th class="py-2 pr-4 font-medium">Name</th>
+                <th class="py-2 pr-4 font-medium">Kategorie</th>
+                <th class="py-2 pr-4 font-medium">Zweck</th>
+                <th class="py-2 font-medium">Laufzeit</th>
+              </tr>
+            </thead>
+            <tbody class="text-stone">
+              <tr class="border-b border-line">
+                <td class="py-2 pr-4">gespraechssache-cookie-consent</td>
+                <td class="py-2 pr-4">Notwendig</td>
+                <td class="py-2 pr-4">Speichert die Cookie-Entscheidung (Local Storage, kein Cookie im technischen Sinn)</td>
+                <td class="py-2">bis zur Löschung durch Nutzer:in</td>
+              </tr>
+              <tr class="border-b border-line">
+                <td class="py-2 pr-4">_ga, _ga_*</td>
+                <td class="py-2 pr-4">Analyse</td>
+                <td class="py-2 pr-4">Google Analytics – unterscheidet Besucher:innen</td>
+                <td class="py-2">bis zu 14 Monate</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-4">_fbp</td>
+                <td class="py-2 pr-4">Marketing</td>
+                <td class="py-2 pr-4">Meta-Pixel – Zuordnung von Besuchen für Werbezwecke</td>
+                <td class="py-2">bis zu 90 Tage</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">5. Formular „Gast vorschlagen"</h2>
         <p class="mt-3 text-stone">
           Über das Formular unter <a href={withBase('/gast-vorschlagen/')} class="underline decoration-line hover:text-accent">/gast-vorschlagen/</a>
-          werden Name, E-Mail-Adresse und freiwillige Angaben zur vorgeschlagenen Person
-          übermittelt, um den Vorschlag zu bearbeiten und ggf. Kontakt aufzunehmen. Rechtsgrundlage
-          ist Art. 6 Abs. 1 lit. b bzw. f DSGVO (Bearbeitung einer aktiven Anfrage bzw. berechtigtes
-          Interesse an der Programmauswahl). In V1 ist noch kein Versand-Backend angebunden (siehe
-          README.md) – es werden aktuell keine Formulareingaben tatsächlich übermittelt oder
-          gespeichert. Sobald ein Dienst (z.B. Formspree) angebunden wird, wird dieser Abschnitt um
-          den konkreten Anbieter und die Speicherdauer ergänzt.
+          werden Name, E-Mail-Adresse und freiwillige Angaben zur vorgeschlagenen Person an
+          Formspree, Inc. (Denver, USA) übermittelt und von dort per E-Mail an uns weitergeleitet,
+          um den Vorschlag zu bearbeiten und ggf. Kontakt aufzunehmen. Rechtsgrundlage ist Art. 6
+          Abs. 1 lit. b bzw. f DSGVO (Bearbeitung einer aktiven Anfrage bzw. berechtigtes Interesse
+          an der Programmauswahl). Die Daten werden gelöscht, sobald sie für die Bearbeitung nicht
+          mehr benötigt werden. Weitere Informationen:{' '}
+          <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
+            Formspree-Datenschutzerklärung
+          </a>.
         </p>
       </section>
 
       <section class="mt-8">
         <h2 class="font-serif text-2xl text-ink">6. Newsletter</h2>
         <p class="mt-3 text-stone">
-          Die Newsletter-Anmeldung ist aktuell nur als Oberfläche vorbereitet und technisch noch
-          nicht mit einem Versanddienst verbunden – es werden aktuell keine E-Mail-Adressen
-          tatsächlich gespeichert oder verarbeitet. Sobald ein Versanddienst angebunden wird,
-          erfolgt die Anmeldung im Double-Opt-in-Verfahren (Bestätigung per E-Mail vor dem ersten
-          Versand), Rechtsgrundlage ist die Einwilligung (Art. 6 Abs. 1 lit. a DSGVO); diese
-          Einwilligung kann jederzeit mit Wirkung für die Zukunft widerrufen werden, z.B. über
-          einen Abmeldelink in jeder E-Mail. Dieser Abschnitt wird dann um den konkreten Anbieter
-          und dessen Datenverarbeitung ergänzt.
+          Für den Versand ist der Einsatz von Brevo SAS (Paris, Frankreich) vorgesehen. Sobald
+          die Anmeldung technisch aktiv ist, wird die eingegebene E-Mail-Adresse im
+          Double-Opt-in-Verfahren verarbeitet (Bestätigung per Link in einer E-Mail, bevor die
+          Anmeldung wirksam wird). Rechtsgrundlage ist die Einwilligung (Art. 6 Abs. 1 lit. a
+          DSGVO); diese kann jederzeit mit Wirkung für die Zukunft widerrufen werden, z.B. über
+          den Abmeldelink in jeder Newsletter-E-Mail. Solange die Anmeldung auf der Website den
+          Hinweis „Newsletter-Anbindung folgt" zeigt, ist noch kein Versanddienst verbunden und es
+          werden keine E-Mail-Adressen gespeichert.
         </p>
       </section>
 
@@ -180,25 +216,34 @@ import { withBase } from '@/utils/paths';
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">12. Google Analytics (noch nicht aktiv)</h2>
+        <h2 class="font-serif text-2xl text-ink">12. Google Analytics</h2>
         <p class="mt-3 text-stone">
-          <strong class="text-ink">Aktuell nicht im Einsatz.</strong> Sollte künftig Google
-          Analytics (Google Ireland Ltd.) zur Reichweitenmessung eingesetzt werden, würde dies
-          auf Basis einer vorherigen, aktiven Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) über eine
-          Cookie-Consent-Lösung erfolgen; IP-Adressen würden dabei anonymisiert bzw. gekürzt
-          übertragen. Diese Erklärung wird vor Aktivierung um den konkreten Funktionsumfang,
-          Speicherdauern und die Widerrufsmöglichkeit ergänzt.
+          Nur nach aktiver Einwilligung über den Cookie-Banner (Kategorie „Analyse") setzen wir
+          Google Analytics (Google Ireland Ltd., Gordon House, Barrow Street, Dublin 4, Irland;
+          bzw. Google LLC in den USA) zur Reichweitenmessung ein. Verarbeitet werden dabei u.a.
+          IP-Adresse (gekürzt), Geräte- und Browserinformationen, besuchte Seiten und
+          Verweildauer. Rechtsgrundlage ist die Einwilligung (Art. 6 Abs. 1 lit. a DSGVO); sie
+          kann jederzeit über „Cookie-Einstellungen" im Footer mit Wirkung für die Zukunft
+          widerrufen werden. Weitere Informationen:{' '}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
+            Google-Datenschutzerklärung
+          </a>.
         </p>
       </section>
 
       <section class="mt-8">
-        <h2 class="font-serif text-2xl text-ink">13. Meta-/Facebook-Pixel (noch nicht aktiv)</h2>
+        <h2 class="font-serif text-2xl text-ink">13. Meta-/Facebook-Pixel</h2>
         <p class="mt-3 text-stone">
-          <strong class="text-ink">Aktuell nicht im Einsatz.</strong> Sollte künftig ein
-          Meta-Pixel (Meta Platforms Ireland Ltd.) zur Analyse und für Werbezwecke eingesetzt
-          werden, würde dies ebenfalls erst nach aktiver Einwilligung über eine
-          Cookie-Consent-Lösung erfolgen (Art. 6 Abs. 1 lit. a DSGVO); dabei können Daten in die
-          USA übertragen werden. Diese Erklärung wird vor Aktivierung entsprechend ergänzt.
+          Nur nach aktiver Einwilligung über den Cookie-Banner (Kategorie „Marketing") setzen wir
+          ein Meta-Pixel (Meta Platforms Ireland Ltd., bzw. Meta Platforms, Inc. in den USA) zur
+          Analyse und Ausspielung von Werbung ein. Dabei können Daten (u.a. IP-Adresse,
+          Geräteinformationen, besuchte Seiten) an Meta übertragen und mit einem
+          Meta-/Instagram-Konto verknüpft werden; eine Datenübertragung in die USA ist möglich.
+          Rechtsgrundlage ist die Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), jederzeit widerruflich
+          über „Cookie-Einstellungen" im Footer. Weitere Informationen:{' '}
+          <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
+            Meta-Datenschutzrichtlinie
+          </a>.
         </p>
       </section>
 

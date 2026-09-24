@@ -1,8 +1,10 @@
 ---
-// Zurückhaltende Newsletter-Sektion. Kein Backend in V1 – Formular ist ein
-// Integration Point: sobald ein Anbieter (z.B. ein simpler Double-Opt-in-
-// Dienst) feststeht, wird `action`/`ENDPOINT` hier bzw. in guest-form.ts
-// analog ergänzt.
+// Newsletter-Sektion mit echtem (aber optionalem) Backend: sobald
+// PUBLIC_NEWSLETTER_ENDPOINT gesetzt ist (siehe .env.example – z.B. die
+// Formular-Aktions-URL eines Anbieters wie Brevo), sendet das Formular
+// tatsächlich ab. Ohne gesetzten Endpoint bleibt es beim bisherigen
+// "noch nicht angebunden"-Hinweis – kein Fehler, kein Crash.
+const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefined;
 ---
 
 <section class="border-y border-line bg-paper-soft" data-reveal>
@@ -16,6 +18,7 @@
 
       <form
         id="newsletter-form"
+        data-endpoint={endpoint}
         class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center"
       >
         <label for="newsletter-email" class="sr-only">E-Mail-Adresse</label>
@@ -28,6 +31,7 @@
           class="w-full rounded-full border border-line bg-paper px-5 py-3 text-sm text-ink placeholder:text-stone/60 focus:border-accent sm:w-72"
         />
         <button
+          id="newsletter-submit"
           type="submit"
           class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
         >
@@ -40,21 +44,60 @@
 </section>
 
 <script>
-  // Kein Newsletter-Backend in V1 angebunden – UI + Integration Point.
   // Siehe Kommentar in mobile-nav.ts zu init()/"astro:page-load".
   let cleanup: (() => void) | null = null;
 
   function init() {
     cleanup?.();
 
-    const form = document.getElementById('newsletter-form');
+    const form = document.getElementById('newsletter-form') as HTMLFormElement | null;
     const status = document.getElementById('newsletter-status');
+    const submitBtn = document.getElementById('newsletter-submit') as HTMLButtonElement | null;
+    const endpoint = form?.dataset.endpoint;
 
-    const onSubmit = (event: SubmitEvent) => {
+    const onSubmit = async (event: SubmitEvent) => {
       event.preventDefault();
-      if (status) {
-        status.textContent =
-          'Newsletter-Anbindung folgt in einer späteren Version. Formular ist technisch vorbereitet.';
+      if (!form) return;
+
+      if (!endpoint) {
+        if (status) {
+          status.textContent =
+            'Newsletter-Anbindung folgt in einer späteren Version. Formular ist technisch vorbereitet.';
+        }
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Wird gesendet …';
+      }
+
+      try {
+        // "no-cors": die Formular-Endpunkte gängiger Newsletter-Anbieter
+        // (z.B. Brevo) sind auf klassisches Formular-POST/Redirect
+        // ausgelegt, nicht auf eine JSON-API – wir können die Antwort
+        // deshalb nicht auslesen, werten aber "kein Netzwerkfehler" als
+        // Erfolg. Das ist Standardpraxis bei dieser Art Formular.
+        await fetch(endpoint, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: new FormData(form),
+        });
+        form.reset();
+        if (status) {
+          status.textContent = 'Danke! Bitte bestätige die Anmeldung über den Link in der E-Mail, die dir gleich zugeschickt wird.';
+          status.className = 'mt-3 text-xs text-accent';
+        }
+      } catch {
+        if (status) {
+          status.textContent = 'Etwas ist schiefgelaufen. Bitte versuche es später erneut.';
+          status.className = 'mt-3 text-xs text-accent';
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Updates erhalten';
+        }
       }
     };
 

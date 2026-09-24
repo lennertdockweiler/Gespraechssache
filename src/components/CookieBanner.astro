@@ -1,0 +1,84 @@
+---
+// Cookie-Consent-Banner: siehe src/scripts/cookie-consent.ts für die Logik
+// und src/scripts/tracking.ts für das eigentliche (erst nach Einwilligung
+// ladende) Google-Analytics-/Meta-Pixel-Skript. Rendert immer (auch ohne
+// gesetzte GA4-/Pixel-IDs) – die "Analyse"/"Marketing"-Kategorien greifen
+// einfach ins Leere, solange PUBLIC_GA_MEASUREMENT_ID/PUBLIC_META_PIXEL_ID
+// nicht gesetzt sind (kein Fehler, kein Cookie wird tatsächlich gesetzt).
+import { withBase } from '@/utils/paths';
+---
+
+<div id="cookie-banner" class="hidden border-t border-line bg-paper" role="region" aria-label="Cookie-Hinweis">
+  <div class="mx-auto flex max-w-content flex-col gap-4 px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+    <p class="max-w-prose text-sm text-stone">
+      Wir nutzen Cookies bzw. vergleichbare Technologien für den technischen Betrieb dieser
+      Website sowie – nur mit deiner Einwilligung – für Analyse (Google Analytics) und Marketing
+      (Meta-Pixel). Mehr dazu in unserer{' '}
+      <a href={withBase('/datenschutz/')} class="underline decoration-line hover:text-accent">Datenschutzerklärung</a>.
+    </p>
+    <div class="flex flex-wrap gap-3">
+      <button id="cookie-settings-open" type="button" class="rounded-full border border-line px-5 py-2.5 text-sm text-ink transition-colors duration-400 hover:border-accent hover:text-accent">
+        Einstellungen
+      </button>
+      <button id="cookie-reject" type="button" class="rounded-full border border-line px-5 py-2.5 text-sm text-ink transition-colors duration-400 hover:border-accent hover:text-accent">
+        Nur notwendige
+      </button>
+      <button id="cookie-accept" type="button" class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent">
+        Alle akzeptieren
+      </button>
+    </div>
+  </div>
+</div>
+
+<dialog
+  id="cookie-settings-dialog"
+  class="m-auto w-[min(92vw,32rem)] rounded-xl border border-line bg-paper p-0 shadow-2xl backdrop:bg-ink/50"
+  aria-label="Cookie-Einstellungen"
+>
+  <div class="p-6 sm:p-8">
+    <h2 class="font-serif text-2xl text-ink">Cookie-Einstellungen</h2>
+    <p class="mt-2 text-sm text-stone">
+      Wähle aus, welche Kategorien du zulassen möchtest. „Notwendig" ist immer aktiv, da ohne
+      diese Funktionen die Website nicht sinnvoll nutzbar wäre.
+    </p>
+
+    <div class="mt-6 flex flex-col gap-4">
+      <label class="flex items-start gap-3">
+        <input type="checkbox" checked disabled class="mt-1 h-4 w-4 accent-accent" />
+        <span>
+          <span class="block text-sm font-medium text-ink">Notwendig</span>
+          <span class="block text-sm text-stone">Technischer Betrieb der Website. Kann nicht deaktiviert werden.</span>
+        </span>
+      </label>
+
+      <label class="flex items-start gap-3">
+        <input type="checkbox" id="consent-analytics" class="mt-1 h-4 w-4 accent-accent" />
+        <span>
+          <span class="block text-sm font-medium text-ink">Analyse</span>
+          <span class="block text-sm text-stone">Google Analytics – hilft uns zu verstehen, wie die Website genutzt wird.</span>
+        </span>
+      </label>
+
+      <label class="flex items-start gap-3">
+        <input type="checkbox" id="consent-marketing" class="mt-1 h-4 w-4 accent-accent" />
+        <span>
+          <span class="block text-sm font-medium text-ink">Marketing</span>
+          <span class="block text-sm text-stone">Meta-Pixel (Facebook/Instagram) – für die Auswertung und Ausspielung von Werbung.</span>
+        </span>
+      </label>
+    </div>
+
+    <div class="mt-8 flex flex-wrap justify-end gap-3">
+      <button id="cookie-settings-close" type="button" class="rounded-full border border-line px-5 py-2.5 text-sm text-ink transition-colors duration-400 hover:border-accent hover:text-accent">
+        Abbrechen
+      </button>
+      <button id="cookie-settings-save" type="button" class="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors duration-400 hover:bg-accent">
+        Auswahl speichern
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import '@/scripts/cookie-consent';
+</script>

@@ -58,11 +58,14 @@ export const footerNav = [
   { label: 'Kurz gefragt', href: '/kurz-gefragt/' },
   { label: 'Gast vorschlagen', href: '/gast-vorschlagen/' },
   { label: 'Über das Projekt', href: '/ueber-gespraechssache/' },
+  { label: 'Häufige Fragen', href: '/faq/' },
+  { label: 'Presse', href: '/presse/' },
 ];
 
 export const legalNav = [
   { label: 'Impressum', href: '/impressum/' },
   { label: 'Datenschutz', href: '/datenschutz/' },
+  { label: 'Nutzungsbedingungen', href: '/nutzungsbedingungen/' },
   { label: 'Kontakt', href: '/kontakt/' },
 ];
 

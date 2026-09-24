@@ -1,0 +1,89 @@
+---
+// Neue Seite, Vorschlag zur Sichtung: FAQ. Häufige Fragen sind bei
+// Interview-/Podcast-Formaten ein bewährter, gering aufwändiger Baustein
+// (SEO- und GEO-relevant über FAQPage-Schema) – bei Bedarf löschen, wenn
+// sie inhaltlich nicht passt.
+import Layout from '@/layouts/Layout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { siteConfig } from '@/config/site';
+import { withBase } from '@/utils/paths';
+
+const faqs = [
+  {
+    question: 'Was ist Gesprächssache?',
+    answer:
+      'Gesprächssache ist ein deutschsprachiges Long-Form-Interviewformat: ausführliche Gespräche mit Menschen über ihre Arbeit, Entscheidungen, Erfahrungen und die Geschichten, die sie geprägt haben – nicht nur mit bekannten Namen.',
+  },
+  {
+    question: 'Was ist der Unterschied zwischen „Gespräche" und „Ganze Gespräche"?',
+    answer:
+      '„Gespräche" zeigt redaktionell aufbereitete Best-of-Fassungen mit Hintergrundinfos zu Gast und Episode. „Ganze Gespräche" zeigt dieselben Interviews vollständig und ungeschnitten, für alle, die es genau wissen wollen.',
+  },
+  {
+    question: 'Was ist „Kurz gefragt"?',
+    answer:
+      'Kurz gefragt ist das Straßenformat von Gesprächssache: eine wiederkehrende Frage an fremde Menschen, kurze und spontane Antworten statt eines langen Interviews.',
+  },
+  {
+    question: 'Wie kann ich einen Gast vorschlagen?',
+    answer:
+      'Über das Formular unter „Gast vorschlagen". Entscheidend für die Auswahl ist nicht Prominenz, sondern ob die Person etwas zu erzählen hat.',
+  },
+  {
+    question: 'Wo kann ich Gesprächssache hören oder sehen?',
+    answer:
+      'Auf YouTube (Hauptkanal und Ganze Gespräche), Instagram, TikTok, Spotify und Apple Podcasts – Links dazu stehen im Footer und unter „Überall verfügbar" auf der Startseite.',
+  },
+  {
+    question: 'Wie oft erscheinen neue Gespräche?',
+    answer:
+      'Es gibt keinen festen Rhythmus – Qualität und die richtige Geschichte stehen vor einem starren Veröffentlichungsplan.',
+  },
+  {
+    question: 'Wie kann ich Gesprächssache kontaktieren?',
+    answer: 'Für Presse, Kooperationen oder sonstige Anfragen über die Kontaktseite oder per E-Mail.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: siteConfig.siteUrl + withBase('/') },
+    { '@type': 'ListItem', position: 2, name: 'Häufige Fragen', item: siteConfig.siteUrl + withBase('/faq/') },
+  ],
+};
+---
+
+<Layout
+  title="Häufige Fragen"
+  description="Häufige Fragen zu Gesprächssache: zum Format, zur Gastauswahl und dazu, wo man die Gespräche hören und sehen kann."
+  path="/faq/"
+  structuredData={[breadcrumbSchema, faqSchema]}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <SectionHeading eyebrow="FAQ" title="Häufige Fragen" level="h1" />
+
+    <div class="mt-12 max-w-prose divide-y divide-line">
+      {faqs.map((faq) => (
+        <details class="group py-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-lg text-ink">
+            {faq.question}
+            <span class="arrow-move flex-shrink-0 text-accent transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-3 text-stone">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</Layout>

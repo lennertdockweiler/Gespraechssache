@@ -1,0 +1,84 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { withBase } from '@/utils/paths';
+---
+
+<Layout
+  title="Nutzungsbedingungen"
+  description="Nutzungsbedingungen von Gesprächssache."
+  path="/nutzungsbedingungen/"
+  noindex={true}
+>
+  <div class="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+    <div class="max-w-prose">
+      <h1 class="font-serif text-4xl text-ink sm:text-5xl">Nutzungsbedingungen</h1>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">1. Geltungsbereich</h2>
+        <p class="mt-3 text-stone">
+          Diese Nutzungsbedingungen gelten für die Nutzung der Website gespraechssache.de.
+          Gesprächssache ist ein redaktionelles Medienprojekt ohne kostenpflichtige Produkte oder
+          Dienstleistungen; es handelt sich nicht um Allgemeine Geschäftsbedingungen (AGB) im
+          Sinne eines Kaufvertrags, sondern um allgemeine Regeln für die Nutzung der Inhalte und
+          Funktionen dieser Website.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">2. Inhalte und Urheberrecht</h2>
+        <p class="mt-3 text-stone">
+          Die auf dieser Website veröffentlichten Texte, Bilder, Grafiken und eingebetteten
+          Videos sind, soweit nicht anders gekennzeichnet, urheberrechtlich geschützt. Eine
+          Vervielfältigung, Bearbeitung oder Verbreitung außerhalb der Grenzen des Urheberrechts
+          bedarf der vorherigen schriftlichen Zustimmung. Eingebettete YouTube-Videos verbleiben
+          im Eigentum der jeweiligen Rechteinhaber:innen.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">3. Gastvorschläge</h2>
+        <p class="mt-3 text-stone">
+          Über das Formular unter <a href={withBase('/gast-vorschlagen/')} class="underline decoration-line hover:text-accent">/gast-vorschlagen/</a>
+          eingereichte Vorschläge begründen keinen Anspruch auf Rückmeldung, Berücksichtigung
+          oder Veröffentlichung. Über die Auswahl der Gäste entscheidet Gesprächssache nach
+          eigenem Ermessen.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">4. Externe Links und eingebettete Inhalte</h2>
+        <p class="mt-3 text-stone">
+          Diese Website verlinkt auf und bindet Inhalte Dritter ein (u.a. YouTube, Instagram,
+          TikTok, Spotify, Apple Podcasts). Für die Inhalte verlinkter externer Seiten sind
+          ausschließlich deren Betreiber:innen verantwortlich. Bei Bekanntwerden von
+          Rechtsverletzungen werden entsprechende Links umgehend entfernt.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">5. Haftungsausschluss</h2>
+        <p class="mt-3 text-stone">
+          Die Inhalte dieser Website wurden mit Sorgfalt erstellt, es wird jedoch keine Gewähr
+          für Richtigkeit, Vollständigkeit und Aktualität übernommen. Die Nutzung der Website
+          erfolgt auf eigene Verantwortung.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">6. Änderungen</h2>
+        <p class="mt-3 text-stone">
+          Diese Nutzungsbedingungen können bei Bedarf angepasst werden, etwa wenn sich Umfang
+          oder Funktionen der Website ändern. Es gilt jeweils die zum Zeitpunkt des
+          Website-Besuchs aktuelle Fassung.
+        </p>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="font-serif text-2xl text-ink">7. Anwendbares Recht</h2>
+        <p class="mt-3 text-stone">
+          Es gilt deutsches Recht.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>
