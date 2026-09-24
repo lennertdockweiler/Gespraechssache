@@ -16,20 +16,15 @@ export interface PlatformLink {
 export const siteConfig = {
   projectName: 'Gesprächssache',
   tagline: 'Interessante Menschen. Gute Fragen. Echte Gespräche.',
-  // Punycode/ASCII-Form der Domain (siehe public/CNAME), nicht die
-  // Unicode-Schreibweise: `new URL()` (SEO.astro) und @astrojs/sitemap
-  // normalisieren IDN-Domains ohnehin automatisch dahin – mit dieser Form
-  // als Quelle stimmen auch die von Hand gebauten JSON-LD-/robots.txt-URLs
-  // (die kein `new URL()` durchlaufen) überein, statt zwei unterschiedliche
-  // Schreibweisen derselben Domain im ausgelieferten HTML zu mischen.
+  // Haupt-/Kaufdomain, bewusst die reine ASCII-Schreibweise ("ae" statt "ä")
+  // statt der früheren IDN-Domain gesprächssache.de – dadurch keine
+  // Punycode-Normalisierungsfragen mehr (siehe Git-Historie: canonical/OG/
+  // Sitemap normalisierten IDN-Domains automatisch, von Hand gebaute
+  // JSON-LD-/robots.txt-URLs taten das nicht – dieses Problem existiert mit
+  // einer reinen ASCII-Domain gar nicht erst).
   // Muss mit `site` in astro.config.mjs übereinstimmen.
-  siteUrl: 'https://xn--gesprchssache-ffb.de',
-  // Hinweis: Unicode-Domain im lokalen Teil einer E-Mail-Adresse wird nicht von
-  // jedem Mailserver unterstützt (Email Address Internationalization/EAI ist
-  // noch nicht überall verbreitet) – Zustellbarkeit von extern am besten einmal
-  // testen, sonst ggf. auf die Punycode-Form (hallo@xn--gesprchssache-ffb.de)
-  // ausweichen, falls das eigene Postfach darüber läuft.
-  contactEmail: 'hallo@gesprächssache.de' as string | null,
+  siteUrl: 'https://gespraechssache.de',
+  contactEmail: 'hallo@gespraechssache.de' as string | null,
   locale: 'de-DE',
 
   host: {
