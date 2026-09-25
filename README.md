@@ -235,11 +235,12 @@ Link im UI automatisch als „bald verfügbar" dargestellt statt verlinkt.
 
 ## Deployment
 
-Statischer Build (`npm run build` → `dist/`), lauffähig auf Vercel, Netlify oder
-jedem anderen Static-Hosting. Vor dem Go-Live:
+Statischer Build (`npm run build` → `dist/`), aktuell auf GitHub Pages unter
+der finalen Domain `gespraechssache.de` deployed (siehe `CNAME`,
+`astro.config.mjs` → `SITE_URL`, `src/config/site.ts` → `siteUrl` – steuert
+Sitemap, Canonical-URLs, robots.txt), grundsätzlich aber auch auf Vercel,
+Netlify oder jedem anderen Static-Hosting lauffähig.
 
-- `astro.config.mjs` → `SITE_URL` und `src/config/site.ts` → `siteUrl` auf die
-  finale Domain setzen (steuert Sitemap, Canonical-URLs, robots.txt).
-- `public/og/default.svg` durch ein echtes PNG/JPG (1200×630) ersetzen — viele
-  Plattformen (u.a. X/Twitter, teils Facebook) rendern SVG-`og:image`s nicht
-  zuverlässig.
+`public/og/default.png` (1200×630) ist bereits das echte `og:image` – die
+frühere SVG-Variante (`public/og/default.svg`, von vielen Plattformen wie
+X/Twitter nicht zuverlässig gerendert) bleibt nur als Quelldatei erhalten.
