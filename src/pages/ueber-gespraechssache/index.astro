@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
+import { Image } from 'astro:assets';
+import lennertPortrait from '@/assets/host/lennert.jpg';
 import { siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
 
@@ -54,10 +55,20 @@ const breadcrumbSchema = {
       </div>
 
       <div>
-        <PlaceholderVisual aspect="portrait" label="Lennert" sublabel="Host von Gesprächssache" class="rounded-xl" />
+        <Image
+          src={lennertPortrait}
+          alt={`${siteConfig.host.name}, Host von Gesprächssache`}
+          width={800}
+          height={1000}
+          widths={[400, 600, 800]}
+          sizes="(min-width: 1024px) 40vw, 90vw"
+          loading="eager"
+          decoding="async"
+          class="aspect-[4/5] w-full rounded-xl object-cover"
+        />
         <p class="mt-4 text-sm text-stone">
-          Host-Portrait folgt. Eine ausführlichere Host-Biografie wird ergänzt, sobald finale
-          Inhalte vorliegen.
+          {siteConfig.host.name}, Host von Gesprächssache. Eine ausführlichere Host-Biografie wird
+          ergänzt, sobald finale Inhalte vorliegen.
         </p>
       </div>
     </div>
