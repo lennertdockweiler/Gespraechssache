@@ -1,12 +1,15 @@
 import { defineCollection, z, reference } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 // ---------------------------------------------------------------------------
 // PERSONEN
 // ---------------------------------------------------------------------------
 // Jede Person entspricht später einer Seite unter /menschen/[slug]/.
-// Der Dateiname (ohne .md) wird als slug verwendet.
+// Der Dateiname (ohne .md) wird über den glob()-Loader zur `id` (ersetzt das
+// frühere `slug` der Legacy-Content-Collections-API, aber identisch
+// generiert – siehe Astro-Upgrade-Notizen).
 const people = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/people' }),
   schema: ({ image }) =>
     z.object({
       name: z.string(),
@@ -45,7 +48,7 @@ const episodeChapter = z.object({
 });
 
 const episodes = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/episodes' }),
   schema: () =>
     z.object({
       title: z.string(),
@@ -87,7 +90,7 @@ const episodes = defineCollection({
 // KURZ GEFRAGT (STRASSENFORMAT)
 // ---------------------------------------------------------------------------
 const streetInterviews = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/streetInterviews' }),
   schema: () =>
     z.object({
       question: z.string(),

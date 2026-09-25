@@ -38,6 +38,9 @@ export interface GespraechItem {
 
 let cachedItems: GespraechItem[] | null = null;
 
+// Hinweis: `entry.id` (Content-Layer-API) ersetzt das frühere `entry.slug`
+// der Legacy-Collections – für glob()-geladene Markdown-Dateien wird es per
+// Default identisch aus dem Dateinamen generiert.
 function curatedVideoId(entry: CollectionEntry<'episodes'>): string | null {
   return extractYouTubeId(entry.data.youtubeCut) ?? extractYouTubeId(entry.data.youtubeFull);
 }
@@ -64,14 +67,14 @@ export async function getGespraeche(): Promise<GespraechItem[]> {
 
   for (const video of videos) {
     const curated = curatedByVideoId.get(video.videoId) ?? null;
-    if (curated) matchedCuratedSlugs.add(curated.slug);
+    if (curated) matchedCuratedSlugs.add(curated.id);
 
     // Ein im CMS/Frontmatter hinterlegtes Thumbnail geht vor dem
     // automatisch von YouTube gelieferten Vorschaubild.
     const thumbnailUrl = curated?.data.thumbnail ? withBase(curated.data.thumbnail) : video.thumbnailUrl;
 
     items.push({
-      slug: curated ? curated.slug : video.videoId,
+      slug: curated ? curated.id : video.videoId,
       title: curated ? curated.data.title : video.title,
       teaser: curated ? curated.data.description : video.description,
       date: curated ? curated.data.date : new Date(video.publishedAt),
@@ -86,9 +89,9 @@ export async function getGespraeche(): Promise<GespraechItem[]> {
   // Fenster liegt (z.B. der Demo-Platzhalter ohne echte YouTube-URL, oder
   // ältere Videos jenseits von maxResults) – nicht verschwinden lassen.
   for (const entry of curatedEntries) {
-    if (matchedCuratedSlugs.has(entry.slug)) continue;
+    if (matchedCuratedSlugs.has(entry.id)) continue;
     items.push({
-      slug: entry.slug,
+      slug: entry.id,
       title: entry.data.title,
       teaser: entry.data.description,
       date: entry.data.date,

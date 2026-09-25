@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import EpisodeCard from '@/components/EpisodeCard.astro';
 import YouTubePlayer from '@/components/YouTubePlayer.astro';
-import { getEntry } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import { getGespraeche } from '@/lib/gespraeche';
 import type { GespraechItem } from '@/lib/gespraeche';
 import { siteConfig } from '@/config/site';
@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 
 const { item } = Astro.props as { item: GespraechItem };
 const episode = item.curated; // redaktionelle Anreicherung, falls vorhanden
-const { Content } = episode ? await episode.render() : { Content: null };
+const { Content } = episode ? await render(episode) : { Content: null };
 const guest = episode ? await getEntry(episode.data.guest) : null;
 
 const allItems = await getGespraeche();
@@ -106,7 +106,7 @@ const structuredData = videoSchema ? [breadcrumbSchema, videoSchema] : [breadcru
     </h1>
     {guest && (
       <p class="mt-4 text-lg text-stone">
-        Mit <a href={withBase(`/menschen/${guest.slug}/`)} class="text-ink underline decoration-line hover:text-accent">{guest.data.name}</a> · {guest.data.profession}
+        Mit <a href={withBase(`/menschen/${guest.id}/`)} class="text-ink underline decoration-line hover:text-accent">{guest.data.name}</a> · {guest.data.profession}
       </p>
     )}
 

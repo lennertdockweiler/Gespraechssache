@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 // Deployment auf die eigene Hauptdomain gespraechssache.de über GitHub
@@ -15,12 +15,10 @@ const BASE_PATH = '/';
 export default defineConfig({
   site: SITE_URL,
   base: BASE_PATH,
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    sitemap(),
-  ],
+  integrations: [sitemap()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   trailingSlash: 'always',
   build: {
     format: 'directory',
