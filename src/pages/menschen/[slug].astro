@@ -2,7 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import PlaceholderVisual from '@/components/PlaceholderVisual.astro';
 import EpisodeCard from '@/components/EpisodeCard.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import { getGespraeche } from '@/lib/gespraeche';
 import { siteConfig } from '@/config/site';
@@ -11,18 +11,18 @@ import { withBase } from '@/utils/paths';
 export async function getStaticPaths() {
   const people = await getCollection('people');
   return people.map((person) => ({
-    params: { slug: person.slug },
+    params: { slug: person.id },
     props: { person },
   }));
 }
 
 const { person } = Astro.props;
-const { Content } = await person.render();
+const { Content } = await render(person);
 
 const allGespraeche = await getGespraeche();
 const episodes = allGespraeche.filter((item) => item.curated?.data.guest.id === person.id);
 
-const path = `/menschen/${person.slug}/`;
+const path = `/menschen/${person.id}/`;
 
 const socialLinks = [
   { label: 'Website', url: person.data.website },

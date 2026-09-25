@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { person } = Astro.props;
-const href = withBase(`/menschen/${person.slug}/`);
+const href = withBase(`/menschen/${person.id}/`);
 ---
 
 <a href={href} class="group block">
