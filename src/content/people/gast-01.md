@@ -1,10 +1,10 @@
 ---
-name: "Gastname – Platzhalter"
-profession: "Beruf / Tätigkeit – Platzhalter"
-shortQuote: "Ein kurzer, einprägsamer Satz aus dem Gespräch steht hier – Platzhalter."
+name: "Erster Gast folgt"
+profession: "Wird bald bekanntgegeben"
+shortQuote: "Hier erscheint bald ein Zitat aus dem ersten Gespräch."
 placeholder: true
 ---
 
-Kurzbiografie – Platzhalter. Hier steht später ein einordnender Absatz über
-Werdegang, Tätigkeit und den roten Faden des Gesprächs. Kein echter Inhalt,
-solange kein reales Interview stattgefunden hat.
+Die Kurzbiografie des ersten Gasts folgt, sobald das erste Gespräch
+veröffentlicht ist – mit Werdegang, Tätigkeit und dem roten Faden des
+Gesprächs.

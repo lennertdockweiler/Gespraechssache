@@ -18,8 +18,10 @@ import { withBase } from '@/utils/paths';
         beschreibt bewusst umfassend alle eingesetzten bzw. technisch vorbereiteten Dienste.
         Google Analytics und Meta-Pixel (Abschnitte 12–13) laden erst, nachdem über den
         Cookie-Banner aktiv zugestimmt wurde – ohne Zustimmung wird kein einziges Cookie dieser
-        beiden Kategorien gesetzt. Eine juristische Prüfung wird trotz der Ausführlichkeit
-        empfohlen.
+        beiden Kategorien gesetzt. Aktuell ist zusätzlich für keinen der beiden Dienste eine
+        Mess-/Pixel-ID hinterlegt: selbst nach erteilter Einwilligung findet derzeit technisch
+        <strong class="text-ink"> kein</strong> Tracking statt, bis diese ID gesetzt wird. Eine
+        juristische Prüfung wird trotz der Ausführlichkeit empfohlen.
       </div>
 
       <section class="mt-8">
@@ -161,9 +163,11 @@ import { withBase } from '@/utils/paths';
           die offizielle, öffentlich erreichbare YouTube-Thumbnail-URL geladen (i.ytimg.com); auch
           dabei erhält Google bereits beim Laden der Seite die IP-Adresse des Aufrufs. Rechtsgrundlage
           ist unser berechtigtes Interesse an einer ansprechenden Darstellung unserer Inhalte
-          (Art. 6 Abs. 1 lit. f DSGVO); [TODO: juristisch festlegen, ob dafür zusätzlich eine
-          Einwilligungslösung vor dem Laden der Vorschaubilder erforderlich ist]. Weitere
-          Informationen:{' '}
+          (Art. 6 Abs. 1 lit. f DSGVO). Ob dieses berechtigte Interesse für das Laden der
+          Vorschaubilder bereits vor einer Einwilligung ausreicht oder ob dafür zusätzlich eine
+          Einwilligungslösung erforderlich ist, wird aktuell gesondert juristisch geprüft; bis zum
+          Abschluss dieser Prüfung ändert sich am hier beschriebenen technischen Verhalten nichts.
+          Weitere Informationen:{' '}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
             Google-Datenschutzerklärung
           </a>.
@@ -181,9 +185,11 @@ import { withBase } from '@/utils/paths';
           eigenes Hosting) – dadurch erhält Meta bei jedem Seitenaufruf dieser Sektion die
           IP-Adresse und Nutzungsdaten der Besucher:innen. Ein Klick auf einen Beitrag führt auf
           die Originalseite auf instagram.com. Rechtsgrundlage ist unser berechtigtes Interesse an
-          der Darstellung unserer Social-Media-Aktivität (Art. 6 Abs. 1 lit. f DSGVO); [TODO:
-          juristisch festlegen, ob dafür zusätzlich eine Einwilligungslösung erforderlich ist].
-          Weitere Informationen:{' '}
+          der Darstellung unserer Social-Media-Aktivität (Art. 6 Abs. 1 lit. f DSGVO). Wie bei den
+          YouTube-Vorschaubildern (Abschnitt 8) wird auch hier aktuell gesondert juristisch
+          geprüft, ob zusätzlich eine Einwilligungslösung erforderlich ist; bis zum Abschluss
+          dieser Prüfung ändert sich am hier beschriebenen technischen Verhalten nichts. Weitere
+          Informationen:{' '}
           <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" class="underline decoration-line hover:text-accent">
             Meta-Datenschutzrichtlinie
           </a>.

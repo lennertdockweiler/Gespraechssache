@@ -101,7 +101,7 @@ async function getUploadsPlaylistId(apiKey: string, channelId: string): Promise<
   if (cached !== undefined) return cached;
 
   const url = `${API_BASE}/channels?part=contentDetails&id=${encodeURIComponent(channelId)}&key=${apiKey}`;
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
   if (!response.ok) {
     uploadsPlaylistIdCache.set(channelId, null);
     return null;
@@ -131,7 +131,7 @@ async function getLatestVideosForChannel(channelId: string, maxResults: number):
     if (!uploadsPlaylistId) return [];
 
     const url = `${API_BASE}/playlistItems?part=snippet&playlistId=${encodeURIComponent(uploadsPlaylistId)}&maxResults=${maxResults}&key=${apiKey}`;
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
     if (!response.ok) return [];
 
     const data = (await response.json()) as YouTubePlaylistItemsResponse;

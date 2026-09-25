@@ -33,7 +33,15 @@ collections:
           name: portrait,
           widget: image,
           required: false,
-          hint: 'Wird als 4:5-Portrait ausgespielt. Leer lassen für den typografischen Platzhalter.',
+          # Relativ zu src/content/people/ (nicht public/uploads wie der
+          # globale Standard unten) – landet damit unter src/assets/, wo
+          # Astros image()-Schema-Helper (siehe src/content/config.ts) das
+          # Bild zur Build-Zeit automatisch optimieren kann (WebP/AVIF,
+          # srcset). Bilder unter public/ durchlaufen diese Optimierung
+          # grundsätzlich nicht.
+          media_folder: '../../assets/uploads/people',
+          public_folder: '../../assets/uploads/people',
+          hint: 'Wird als 4:5-Portrait ausgespielt und automatisch optimiert. Leer lassen für den typografischen Platzhalter.',
         }
       - { label: Website, name: website, widget: string, required: false }
       - label: Social Links

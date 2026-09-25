@@ -29,7 +29,7 @@ function isActive(href: string) {
             href={withBase(item.href)}
             class:list={[
               'link-animated text-sm tracking-widish',
-              isActive(item.href) ? 'text-accent font-medium' : 'text-stone hover:text-accent',
+              isActive(item.href) ? 'is-active text-accent font-medium' : 'text-stone hover:text-accent',
             ]}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
@@ -51,7 +51,7 @@ function isActive(href: string) {
     <button
       id="mobile-nav-toggle"
       type="button"
-      class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink md:hidden"
+      class="flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink md:hidden"
       aria-expanded="false"
       aria-controls="mobile-nav-panel"
       aria-label="Menü öffnen"
@@ -67,6 +67,15 @@ function isActive(href: string) {
   <style>
     #site-header.is-scrolled {
       box-shadow: 0 8px 24px -18px rgb(24 20 15 / 0.35);
+    }
+
+    /* Permanenter Petrol-Unterstrich für den aktiven Nav-Punkt – nutzt
+       dieselbe ::after-Mechanik wie .link-animated (siehe global.css),
+       bleibt aber unabhängig vom Hover dauerhaft eingefahren. Signalisiert
+       "aktuelle Seite" zusätzlich zur Farbe (nicht nur farbcodiert). */
+    .link-animated.is-active::after {
+      transform: scaleX(1);
+      background-color: var(--color-accent);
     }
   </style>
 </header>
@@ -92,7 +101,7 @@ function isActive(href: string) {
       <button
         id="mobile-nav-close"
         type="button"
-        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors duration-400 hover:border-accent hover:text-accent"
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink transition-colors duration-400 hover:border-accent hover:text-accent"
         aria-label="Menü schließen"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">

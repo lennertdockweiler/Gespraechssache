@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import PlaceholderVisual from './PlaceholderVisual.astro';
 import { withBase } from '@/utils/paths';
 
@@ -15,11 +16,11 @@ const href = withBase(`/menschen/${person.slug}/`);
   <div class="hover-media rounded-lg">
     {
       person.data.portrait ? (
-        <img
-          src={withBase(person.data.portrait)}
+        <Image
+          src={person.data.portrait}
           alt={person.data.name}
-          width="400"
-          height="500"
+          widths={[300, 400, 600]}
+          sizes="(min-width: 1024px) 22vw, (min-width: 640px) 40vw, 90vw"
           loading="lazy"
           decoding="async"
           class="aspect-[4/5] w-full rounded-lg object-cover"

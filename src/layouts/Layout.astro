@@ -13,6 +13,10 @@ import Footer from '@/components/Footer.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
 import { platforms, siteConfig } from '@/config/site';
 import { withBase } from '@/utils/paths';
+// Preload der wichtigsten Serif-Schriftdatei (Fraunces) für ein schnelleres
+// LCP der Überschriften – ?url gibt die von Vite/Astro gehashte, finale
+// Asset-URL zurück, dieselbe Datei, die ohnehin per @font-face geladen wird.
+import fraunces400 from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -98,8 +102,38 @@ const allSchemas = [organizationSchema, websiteSchema, ...structuredData];
          DNS/TLS-Handshake-Zeit für praktisch jede Seite dieser Website. -->
     <link rel="preconnect" href="https://i.ytimg.com" />
     <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin />
+    <link rel="preload" href={fraunces400} as="font" type="font/woff2" crossorigin />
 
     <SEO title={title} description={description} path={fullPath} image={image} type={type} noindex={noindex} />
+
+    <!--
+      Fallback ohne JavaScript: [data-reveal] (Scroll-Reveal für praktisch
+      jeden Abschnitt), .line-mask/.quote-line (Zeilen-Reveal für Hero- und
+      Zitat-Überschriften) sowie .mask-reveal/.reveal-line starten alle
+      unsichtbar/verschoben und werden nur per IntersectionObserver
+      (src/scripts/reveal.ts) sichtbar gemacht. Ohne JS (Skript-Blocker,
+      CSP-Fehler, ein anderweitiger Laufzeitfehler) bliebe sonst praktisch
+      der gesamte Seiteninhalt dauerhaft unsichtbar – hier erzwungen sofort
+      sichtbar/an Ort und Stelle, identisch zum reduced-motion-Verhalten.
+    -->
+    <noscript>
+      <style>
+        [data-reveal] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .line-mask > span,
+        [data-quote-reveal] .quote-line > span {
+          transform: none !important;
+        }
+        .mask-reveal {
+          clip-path: none !important;
+        }
+        .reveal-line {
+          transform: none !important;
+        }
+      </style>
+    </noscript>
 
     {
       allSchemas.map((schema) => (

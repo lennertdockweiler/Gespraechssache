@@ -63,7 +63,7 @@ export async function getLatestInstagramPosts(maxResults = 6): Promise<Instagram
   try {
     const fields = 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp';
     const url = `https://graph.instagram.com/${API_VERSION}/${encodeURIComponent(userId)}/media?fields=${fields}&limit=${maxResults}&access_token=${encodeURIComponent(accessToken)}`;
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
     if (!response.ok) return [];
 
     const data = (await response.json()) as InstagramMediaResponse;

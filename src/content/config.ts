@@ -7,16 +7,20 @@ import { defineCollection, z, reference } from 'astro:content';
 // Der Dateiname (ohne .md) wird als slug verwendet.
 const people = defineCollection({
   type: 'content',
-  schema: () =>
+  schema: ({ image }) =>
     z.object({
       name: z.string(),
       profession: z.string(),
       shortQuote: z.string().optional(),
-      // Portrait als Pfad relativ zum Public-Ordner (z.B. "/uploads/foo.jpg"),
-      // wie ihn das CMS (Sveltia, siehe public/admin/) beim Hochladen
-      // schreibt. Wird über withBase() ausgegeben. Solange leer, zeigt die
-      // Seite einen typografischen Platzhalter (siehe PlaceholderVisual.astro).
-      portrait: z.string().optional(),
+      // Portrait über Astros image()-Schema-Helper: Datei liegt unter
+      // src/assets/uploads/people/ (siehe public/admin/config.yml, relativ
+      // zum jeweiligen Content-Eintrag konfiguriert) und wird dadurch von
+      // Astro zur Build-Zeit automatisch optimiert (WebP/AVIF, responsives
+      // srcset) statt als rohe Datei durchgereicht zu werden – siehe
+      // <Image>-Nutzung in PersonCard.astro/menschen/[slug].astro. Solange
+      // leer, zeigt die Seite einen typografischen Platzhalter (siehe
+      // PlaceholderVisual.astro).
+      portrait: image().optional(),
       website: z.string().url().optional(),
       socials: z
         .object({

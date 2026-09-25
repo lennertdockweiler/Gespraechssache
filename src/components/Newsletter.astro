@@ -38,7 +38,9 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefine
           Updates erhalten
         </button>
       </form>
-      <p id="newsletter-status" class="mt-3 text-xs text-stone" role="status"></p>
+      <p id="newsletter-status" class="mt-3 text-xs text-stone" role="status">
+        {!endpoint && 'Die Anmeldung ist technisch vorbereitet und startet in Kürze.'}
+      </p>
     </div>
   </div>
 </section>

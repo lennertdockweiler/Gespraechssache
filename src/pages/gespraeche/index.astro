@@ -69,13 +69,15 @@ const breadcrumbSchema = {
       </div>
     </div>
 
-    <div class="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-      {gespraeche.map((item, i) => <EpisodeCard item={item} index={i % 6} />)}
-    </div>
+    <div aria-live="polite">
+      <div class="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        {gespraeche.map((item, i) => <EpisodeCard item={item} index={i % 6} />)}
+      </div>
 
-    <p id="episode-empty-state" class="hidden py-16 text-center text-stone">
-      Keine Gespräche gefunden. Versuche einen anderen Filter oder Suchbegriff.
-    </p>
+      <p id="episode-empty-state" class="hidden py-16 text-center text-stone">
+        Keine Gespräche gefunden. Versuche einen anderen Filter oder Suchbegriff.
+      </p>
+    </div>
 
     <p class="mt-20 border-t border-line pt-8 text-sm text-stone">
       Lieber ungeschnitten?
