@@ -18,6 +18,9 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefine
 
       <form
         id="newsletter-form"
+        action={endpoint || undefined}
+        method="post"
+        target="newsletter-target"
         data-endpoint={endpoint}
         class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center"
       >
@@ -50,6 +53,16 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefine
           Updates erhalten
         </button>
       </form>
+      <!--
+        Verstecktes Ziel-iframe für den echten, nativen Formular-Submit
+        (siehe Skript unten): CleverReachs Endpunkt ist auf einen "echten"
+        Browser-Formular-POST ausgelegt (inkl. eigener Cookies/Redirects,
+        genau wie im von CleverReach selbst generierten Quellcode mit
+        target="_blank") – ein reiner fetch()-Aufruf kam beim Empfänger
+        nachweislich NICHT an. Mit target="newsletter-target" bleibt die
+        Seite trotzdem unverändert, statt einen neuen Tab zu öffnen.
+      -->
+      <iframe name="newsletter-target" title="Newsletter-Anmeldung" class="hidden" aria-hidden="true"></iframe>
       <p id="newsletter-status" class="mt-3 text-xs text-stone" role="status">
         {!endpoint && 'Die Anmeldung ist technisch vorbereitet und startet in Kürze.'}
       </p>
@@ -67,13 +80,14 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefine
     const form = document.getElementById('newsletter-form') as HTMLFormElement | null;
     const status = document.getElementById('newsletter-status');
     const submitBtn = document.getElementById('newsletter-submit') as HTMLButtonElement | null;
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe[name="newsletter-target"]');
     const endpoint = form?.dataset.endpoint;
 
-    const onSubmit = async (event: SubmitEvent) => {
-      event.preventDefault();
+    const onSubmit = (event: SubmitEvent) => {
       if (!form) return;
 
       if (!endpoint) {
+        event.preventDefault();
         if (status) {
           status.textContent =
             'Newsletter-Anbindung folgt in einer späteren Version. Formular ist technisch vorbereitet.';
@@ -81,47 +95,30 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefine
         return;
       }
 
+      // Kein preventDefault: das Formular sendet sich selbst nativ ab
+      // (action/method/target sind echte Formular-Attribute, siehe oben).
+      // Die Antwort lässt sich wegen Cross-Origin nicht aus dem iframe
+      // auslesen – die Erfolgsmeldung erscheint deshalb optimistisch,
+      // sobald der Request im iframe durchgelaufen ist ("load"-Event).
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Wird gesendet …';
       }
 
-      try {
-        // "no-cors": CleverReachs Formular-Endpunkt ist auf klassisches
-        // Formular-POST/Redirect ausgelegt (kein <form enctype> gesetzt,
-        // also Standard-Encoding), nicht auf eine JSON-API – wir können
-        // die Antwort deshalb nicht auslesen, werten aber "kein
-        // Netzwerkfehler" als Erfolg. Das ist Standardpraxis bei dieser
-        // Art Formular. URLSearchParams statt FormData, damit der Body
-        // exakt wie ein natives HTML-Formular als
-        // application/x-www-form-urlencoded gesendet wird (FormData würde
-        // multipart/form-data senden, das CleverReachs Endpunkt nicht
-        // erwartet).
-        const params = new URLSearchParams();
-        for (const [key, value] of new FormData(form).entries()) {
-          params.append(key, String(value));
-        }
-        await fetch(endpoint, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: params,
-        });
+      const onLoad = () => {
+        iframe?.removeEventListener('load', onLoad);
         form.reset();
         if (status) {
-          status.textContent = 'Danke! Bitte bestätige die Anmeldung über den Link in der E-Mail, die dir gleich zugeschickt wird.';
+          status.textContent =
+            'Danke! Bitte bestätige die Anmeldung über den Link in der E-Mail, die dir gleich zugeschickt wird.';
           status.className = 'mt-3 text-xs text-accent';
         }
-      } catch {
-        if (status) {
-          status.textContent = 'Etwas ist schiefgelaufen. Bitte versuche es später erneut.';
-          status.className = 'mt-3 text-xs text-accent';
-        }
-      } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Updates erhalten';
         }
-      }
+      };
+      iframe?.addEventListener('load', onLoad);
     };
 
     form?.addEventListener('submit', onSubmit);
