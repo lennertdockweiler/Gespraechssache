@@ -1,9 +1,9 @@
 ---
 // Newsletter-Sektion mit echtem (aber optionalem) Backend: sobald
-// PUBLIC_NEWSLETTER_ENDPOINT gesetzt ist (siehe .env.example – z.B. die
-// Formular-Aktions-URL eines Anbieters wie Brevo), sendet das Formular
-// tatsächlich ab. Ohne gesetzten Endpoint bleibt es beim bisherigen
-// "noch nicht angebunden"-Hinweis – kein Fehler, kein Crash.
+// PUBLIC_NEWSLETTER_ENDPOINT gesetzt ist (siehe .env.example – die
+// Formular-Aktions-URL des CleverReach-Anmeldeformulars, Double-Opt-in),
+// sendet das Formular tatsächlich ab. Ohne gesetzten Endpoint bleibt es
+// beim bisherigen "noch nicht angebunden"-Hinweis – kein Fehler, kein Crash.
 const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefined;
 ---
 
@@ -29,6 +29,18 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefine
           required
           placeholder="deine@email.de"
           class="w-full rounded-full border border-line bg-paper px-5 py-3 text-sm text-ink placeholder:text-stone/60 focus:border-accent sm:w-72"
+        />
+        <!-- Anti-Spam-Honeypot von CleverReach (aus dem Formular-Quellcode
+             übernommen): muss exakt so heißen, für echte Nutzer:innen
+             unsichtbar bleiben und immer leer sein – ein ausgefüllter Wert
+             signalisiert CleverReach einen Bot. -->
+        <input
+          type="text"
+          name="email_confirm"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          class="sr-only"
         />
         <button
           id="newsletter-submit"
@@ -75,15 +87,24 @@ const endpoint = import.meta.env.PUBLIC_NEWSLETTER_ENDPOINT as string | undefine
       }
 
       try {
-        // "no-cors": die Formular-Endpunkte gängiger Newsletter-Anbieter
-        // (z.B. Brevo) sind auf klassisches Formular-POST/Redirect
-        // ausgelegt, nicht auf eine JSON-API – wir können die Antwort
-        // deshalb nicht auslesen, werten aber "kein Netzwerkfehler" als
-        // Erfolg. Das ist Standardpraxis bei dieser Art Formular.
+        // "no-cors": CleverReachs Formular-Endpunkt ist auf klassisches
+        // Formular-POST/Redirect ausgelegt (kein <form enctype> gesetzt,
+        // also Standard-Encoding), nicht auf eine JSON-API – wir können
+        // die Antwort deshalb nicht auslesen, werten aber "kein
+        // Netzwerkfehler" als Erfolg. Das ist Standardpraxis bei dieser
+        // Art Formular. URLSearchParams statt FormData, damit der Body
+        // exakt wie ein natives HTML-Formular als
+        // application/x-www-form-urlencoded gesendet wird (FormData würde
+        // multipart/form-data senden, das CleverReachs Endpunkt nicht
+        // erwartet).
+        const params = new URLSearchParams();
+        for (const [key, value] of new FormData(form).entries()) {
+          params.append(key, String(value));
+        }
         await fetch(endpoint, {
           method: 'POST',
           mode: 'no-cors',
-          body: new FormData(form),
+          body: params,
         });
         form.reset();
         if (status) {
