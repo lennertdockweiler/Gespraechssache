@@ -118,8 +118,28 @@ Einrichtung:
    beim Konto hinterlegte Adresse — dort ggf. Benachrichtigungen/Weiterleitung
    einrichten.
 
-Der Newsletter (`Newsletter.astro`) ist nach demselben Muster vorbereitet, aber
-noch ohne Anbieter — dafür wurde bewusst noch kein Dienst festgelegt.
+## Newsletter (CleverReach) anbinden
+
+Der Newsletter (`Newsletter.astro`) ist nach demselben Muster wie das
+Gastvorschlag-Formular vorbereitet: Anbieter ist **CleverReach**
+(https://www.cleverreach.com, deutscher Anbieter mit Sitz in Rastede — siehe
+Datenschutzerklärung Abschnitt 6). Endpunkt kommt aus der Environment-Variable
+`PUBLIC_NEWSLETTER_ENDPOINT` (siehe `.env.example` für die genaue
+Vorgehensweise, den Formular-Quellcode in CleverReach zu finden). Fehlt sie,
+bleibt das Formular wie zuvor unverdrahtet und kommuniziert das transparent
+(„Newsletter-Anbindung folgt in einer späteren Version"), statt einen Fehler
+zu zeigen.
+
+Einrichtung:
+
+1. In CleverReach ein Anmeldeformular mit aktiviertem Double-Opt-in anlegen.
+2. Im Reiter „Quellcode" den HTML-Code kopieren, daraus die `action`-URL des
+   `<form>`-Tags sowie alle `<input type="hidden">`-Felder (Formular-/
+   Listen-ID) entnehmen.
+3. Die `action`-URL als Repository-Secret `PUBLIC_NEWSLETTER_ENDPOINT` in
+   GitHub hinterlegen (Settings → Secrets and variables → Actions) und für
+   lokale Entwicklung in `.env` eintragen; die versteckten Felder in
+   `Newsletter.astro` ergänzen, falls CleverReach welche vorgibt.
 
 ## YouTube- und Instagram-Integration
 
